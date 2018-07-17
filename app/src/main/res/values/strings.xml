@@ -3,4 +3,6 @@
     <string name="emailEdit">Email</string>
     <string name="passwordEdit">Password</string>
     <string name="signInButton">Sign In</string>
+    <string name="signInLabel">Sign in with your Google Account</string>
+
 </resources>

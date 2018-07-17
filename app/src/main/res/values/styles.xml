@@ -17,7 +17,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="actionBarStyle">@color/colorPrimaryDark</item>
         <item name="android:background">@color/white</item>
-        <item name="android:textColor">@color/text</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textColorHint">@color/colorPrimaryDark</item>
     </style>
 
