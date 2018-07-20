@@ -3,9 +3,11 @@
     <string name="emailEdit">Email</string>
     <string name="passwordEdit">Password</string>
     <string name="signInButton">Sign In</string>
+    <string name="signOutLabel">Sign Out</string>
     <string name="signInLabel">Sign in with your Google Account</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="addMeal">Add Meal</string>
+    <string name="history">History</string>
+    <string name="calendar">Meals in Google\n Calendar</string>
 
 </resources>

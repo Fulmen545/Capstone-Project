@@ -67,12 +67,14 @@ public class LoginFragment extends Fragment {
                 signIn();
             }
         });
+
     }
 
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -93,7 +95,7 @@ public class LoginFragment extends Fragment {
             String token = account.getId();
             // Signed in successfully, show authenticated UI.
 //            updateUI(account);
-            Toast.makeText(getContext(),"User was signed in!", Toast.LENGTH_LONG);
+            Toast.makeText(getContext(),"Welcome " + account.getGivenName(), Toast.LENGTH_LONG).show();
             MainFragment mf = new MainFragment();
             changeTo(mf, android.R.id.content, "tag1");
         } catch (ApiException e) {

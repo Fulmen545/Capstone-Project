@@ -2,8 +2,95 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.riso.android.mealtracker.MainFragment">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/menu_item_padding"
+
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/addMealItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/menu_item_padding"
+            android:layout_marginBottom="@dimen/menu_item_padding"
+            android:background="@drawable/round_edge">
+
+            <ImageView
+                android:id="@+id/imgAddMeal"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/menu_item_image_height"
+                android:src="@drawable/meal3"
+                app:srcCompat="@drawable/meal" />
+
+            <TextView
+                android:id="@+id/titleAddMeal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/addMeal"
+                android:theme="@style/TitleLabel"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/menu_item_padding"
+            android:layout_marginBottom="@dimen/menu_item_padding"
+            android:background="@drawable/round_edge">
+
+            <ImageView
+                android:id="@+id/imgHistory"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/menu_item_image_height"
+                android:src="@drawable/history"
+                app:srcCompat="@drawable/meal" />
+
+            <TextView
+                android:id="@+id/titleHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/history"
+                android:theme="@style/TitleLabel"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/googleCal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/menu_item_padding"
+            android:layout_marginBottom="@dimen/menu_item_padding"
+            android:background="@drawable/round_edge">
+
+            <ImageView
+                android:id="@+id/imgGoogleCal"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/menu_item_image_height"
+                android:src="@drawable/googlecal"
+                app:srcCompat="@drawable/meal" />
+
+            <TextView
+                android:id="@+id/titleGoogleCal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/calendar"
+                android:theme="@style/TitleLabel"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 
 </ScrollView>

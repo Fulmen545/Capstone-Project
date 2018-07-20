@@ -10,6 +10,9 @@ import android.text.InputType;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,7 +30,17 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction ft = fragmentManager.beginTransaction();
         LoginFragment lf = new LoginFragment();
-        ft.add(android.R.id.content, lf).commit();
+        MainFragment mf = new MainFragment();
+        if (isSignedIn()) {
+            // signed in. Show the "sign out" button and explanation.
+            Toast.makeText(this,"Is signed in", Toast.LENGTH_SHORT).show();
+            ft.add(android.R.id.content, mf).commit();
+        } else {
+            // not signed in. Show the "sign in" button and explanation.
+            Toast.makeText(this,"Is not signed in", Toast.LENGTH_SHORT).show();
+            ft.add(android.R.id.content, lf).commit();
+        }
+
 //        setContentView(R.layout.activity_main);
 //        passField= (EditText)findViewById(R.id.passwordEditText);
 //        emailField= findViewById(R.id.emailEditText);
@@ -44,5 +57,10 @@ public class MainActivity extends AppCompatActivity {
 //        emailField= findViewById(R.id.passwordEditText);
 //        passField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 //        emailField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+    }
+
+
+    private boolean isSignedIn() {
+        return GoogleSignIn.getLastSignedInAccount(this) != null;
     }
 }
