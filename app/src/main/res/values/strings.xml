@@ -1,4 +1,5 @@
 <resources>
+    <!--General-->
     <string name="app_name">Meal Tracker</string>
     <string name="emailEdit">Email</string>
     <string name="passwordEdit">Password</string>
@@ -6,8 +7,23 @@
     <string name="signOutLabel">Sign Out</string>
     <string name="signInLabel">Sign in with your Google Account</string>
 
+    <!--Main screen-->
     <string name="addMeal">Add Meal</string>
     <string name="history">History</string>
     <string name="calendar">Meals in Google\n Calendar</string>
+
+    <!--Add Meal screen-->
+    <string name="screenNameAddMeal">Add Meal</string>
+    <string name="typeLabel">Type of food</string>
+    <string name="description">Description</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="location">Location</string>
+    <string name="customizable">Customizable Fields</string>
+    <string name="addBtnString">Add</string>
+    <string name="checboxGoogle">Add to Google Calendar</string>
+    <string name="saveBtn">Save</string>
+    <string name="settings">Settings</string>
+
 
 </resources>
