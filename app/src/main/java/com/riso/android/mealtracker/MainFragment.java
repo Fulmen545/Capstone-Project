@@ -33,6 +33,7 @@ import butterknife.BindView;
  * A simple {@link Fragment} subclass.
  */
 public class MainFragment extends Fragment {
+    private static final String TOKEN = "token";
 
 
     public MainFragment() {
@@ -42,7 +43,7 @@ public class MainFragment extends Fragment {
     GoogleSignInClient mGoogleSignInClient;
     @BindView(R.id.addMealItem)
     LinearLayout addMealLayout;
-
+    private String token;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,6 +58,10 @@ public class MainFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
         setHasOptionsMenu(true);
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            token = bundle.getString(TOKEN);
+        }
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -66,6 +71,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AddMealActivity.class);
+                intent.putExtra(TOKEN, token);
                 startActivity(intent);
                 ((Activity) getActivity()).overridePendingTransition(0, 0);
             }

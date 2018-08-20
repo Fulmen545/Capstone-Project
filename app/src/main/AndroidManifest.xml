@@ -20,11 +20,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:authorities="com.riso.android.mealtracker"
+            android:name=".data.DbProvider"
+            android:exported="false"
+            android:syncable="true" />
         <activity
             android:name=".AddMealActivity"
             android:label="@string/screenNameAddMeal" />
         <activity android:name=".SettingsActivity"
             android:label="@string/settings" />
+
     </application>
 
 </manifest>

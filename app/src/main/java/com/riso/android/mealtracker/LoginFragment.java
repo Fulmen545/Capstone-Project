@@ -30,6 +30,8 @@ import butterknife.ButterKnife;
 
 public class LoginFragment extends Fragment {
     private static final int RC_SIGN_IN = 1;
+    private static final String TOKEN = "token";
+
 
     @BindView(R.id.passwordEditText)
     EditText passField;
@@ -96,7 +98,10 @@ public class LoginFragment extends Fragment {
             // Signed in successfully, show authenticated UI.
 //            updateUI(account);
             Toast.makeText(getContext(),"Welcome " + account.getGivenName(), Toast.LENGTH_LONG).show();
+            Bundle bundle = new Bundle();
+            bundle.putString(TOKEN, token);
             MainFragment mf = new MainFragment();
+            mf.setArguments(bundle);
             changeTo(mf, android.R.id.content, "tag1");
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.

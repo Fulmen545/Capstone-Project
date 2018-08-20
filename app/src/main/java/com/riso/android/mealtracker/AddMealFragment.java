@@ -4,13 +4,16 @@ package com.riso.android.mealtracker;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.ContentValues;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,12 +31,10 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.riso.android.mealtracker.data.DbColumns;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 
 /**
@@ -42,7 +43,10 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 public class AddMealFragment extends Fragment {
 
     Spinner typeFoodSpinner;
+    Spinner custFieldSpinner;
     String[] arraySpinner = new String[]{"Breakfast", "Lunch", "Dinner"};
+    String[] typeFoods;
+    String[] custFields;
     EditText editDate;
     EditText editTime;
     DatePickerDialog datePickerDialog;
@@ -66,11 +70,17 @@ public class AddMealFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        getFoodTypes();
+        getCustomFields();
         typeFoodSpinner = view.findViewById(R.id.typeFoodSpinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item, arraySpinner);
+        ArrayAdapter<String> foodTypesAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_item, typeFoods);
 //        adapter.setDropDownViewResource(android.R.layout.activity_list_item);
-        typeFoodSpinner.setAdapter(adapter);
+        typeFoodSpinner.setAdapter(foodTypesAdapter);
+        custFieldSpinner = view.findViewById(R.id.customSpinner);
+        ArrayAdapter<String> custFieldsAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_item, custFields);
+        custFieldSpinner.setAdapter(custFieldsAdapter);
         editDate = view.findViewById(R.id.editDate);
         editDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,6 +194,64 @@ public class AddMealFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void insertMeal (String mealType, String desc, String date, String time, String location, String custFields, boolean gCalendar, String userToken){
+        ContentValues cv = new ContentValues();
+        cv.put(DbColumns.MealsEntry.TYPE_ML, mealType);
+        cv.put(DbColumns.MealsEntry.DESCRIPTION, desc);
+        cv.put(DbColumns.MealsEntry.DATE, date);
+        cv.put(DbColumns.MealsEntry.TIME, time);
+        cv.put(DbColumns.MealsEntry.LOCATION, location);
+        cv.put(DbColumns.MealsEntry.CUST_FIELDS, custFields);
+        cv.put(DbColumns.MealsEntry.GCALENDAR, Boolean.toString(gCalendar));
+        cv.put(DbColumns.MealsEntry.MEALS_USR, userToken);
+    }
+
+    private void getFoodTypes(){
+        try {
+            Cursor c = getActivity().getContentResolver().query(DbColumns.MealsEntry.CONTENT_URI_FIELDS,
+                new String[]{"DISTINCT " + DbColumns.MealsEntry.NAME_FLD, DbColumns.MealsEntry.COLOR},
+                DbColumns.MealsEntry.TYPE_FLD + "= 'type'",
+                null,
+                null);
+            if (c.getCount() != 0) {
+                typeFoods = new String[c.getCount()];
+                int i = 0;
+                if (c.moveToFirst()) {
+                    do {
+                        typeFoods[i] = c.getString(c.getColumnIndex(DbColumns.MealsEntry.NAME_FLD));
+                        i++;
+                    } while (c.moveToNext());
+                }
+            }
+        } catch (Exception ex) {
+            Log.e("ADDMEAL", "RISO EX: " + ex);
+        }
+
+    }
+
+    private void getCustomFields(){
+        try {
+            Cursor c = getActivity().getContentResolver().query(DbColumns.MealsEntry.CONTENT_URI_FIELDS,
+                new String[]{"DISTINCT " + DbColumns.MealsEntry.NAME_FLD},
+                DbColumns.MealsEntry.TYPE_FLD + "= 'custom'",
+                null,
+                null);
+            if (c.getCount() != 0) {
+                custFields = new String[c.getCount()];
+                int i = 0;
+                if (c.moveToFirst()) {
+                    do {
+                        custFields[i] = c.getString(c.getColumnIndex(DbColumns.MealsEntry.NAME_FLD));
+                        i++;
+                    } while (c.moveToNext());
+                }
+            }
+        } catch (Exception ex) {
+            Log.e("ADDMEAL", "RISO EX: " + ex);
+        }
+
     }
 
 
