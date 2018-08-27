@@ -22,6 +22,8 @@ public class DbProvider extends ContentProvider {
     private static final int MEAL_WITH_ID = 200;
     private static final int FIELD = 101;
     private static final int FIELD_WITH_ID = 201;
+    private static final int USER = 102;
+    private static final int USER_WITH_ID = 202;
 
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -31,6 +33,8 @@ public class DbProvider extends ContentProvider {
         matcher.addURI(authority, DbColumns.MealsEntry.TABLE_NAME_MEALS + "/#", MEAL_WITH_ID);
         matcher.addURI(authority, DbColumns.MealsEntry.TABLE_NAME_FIELDS, FIELD);
         matcher.addURI(authority, DbColumns.MealsEntry.TABLE_NAME_FIELDS + "/#", FIELD_WITH_ID);
+        matcher.addURI(authority, DbColumns.MealsEntry.TABLE_NAME_USERS, USER);
+        matcher.addURI(authority, DbColumns.MealsEntry.TABLE_NAME_USERS + "/#", USER_WITH_ID);
 
         return matcher;
     }
@@ -92,6 +96,18 @@ public class DbProvider extends ContentProvider {
                         sortOrder);
                 return retCursor;
             }
+            case USER: {
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        DbColumns.MealsEntry.TABLE_NAME_USERS,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                return retCursor;
+            }
             default:{
                 // By default, we assume a bad URI
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -115,6 +131,9 @@ public class DbProvider extends ContentProvider {
             }
             case MEAL_WITH_ID:{
                 return DbColumns.MealsEntry.CONTENT_DIR_TYPE_MEALS;
+            }
+            case USER:{
+                return DbColumns.MealsEntry.CONTENT_DIR_TYPE_USERS;
             }
             default:{
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -146,6 +165,15 @@ public class DbProvider extends ContentProvider {
                 }
                 break;
             }
+            case USER:{
+                long _id = db.insert(DbColumns.MealsEntry.TABLE_NAME_USERS, null, values);
+                if (_id > 0) {
+                    returnUri = DbColumns.MealsEntry.buildIngredientsUri(_id);
+                } else {
+                    throw new android.database.SQLException("Failed to insert row into: " + uri);
+                }
+                break;
+            }
             default: {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
 
@@ -168,6 +196,10 @@ public class DbProvider extends ContentProvider {
                 rowsDeleted = db.delete(DbColumns.MealsEntry.TABLE_NAME_FIELDS,  selection, selectionArgs);
                 break;
             }
+            case USER:{
+                rowsDeleted = db.delete(DbColumns.MealsEntry.TABLE_NAME_USERS,  selection, selectionArgs);
+                break;
+            }
             default: {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
 
@@ -188,6 +220,10 @@ public class DbProvider extends ContentProvider {
             }
             case FIELD:{
                 rowsUpdated = db.update(DbColumns.MealsEntry.TABLE_NAME_FIELDS,  values, selection, selectionArgs);
+                break;
+            }
+            case USER:{
+                rowsUpdated = db.update(DbColumns.MealsEntry.TABLE_NAME_USERS,  values, selection, selectionArgs);
                 break;
             }
             default: {

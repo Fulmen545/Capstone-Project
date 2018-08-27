@@ -1,8 +1,8 @@
 package com.riso.android.mealtracker;
 
-import android.content.Context;
+import android.content.ContentValues;
 import android.content.Intent;
-import android.net.Uri;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,6 +23,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.riso.android.mealtracker.data.DbColumns;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -95,8 +96,15 @@ public class LoginFragment extends Fragment {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             String token = account.getId();
+            String first = account.getGivenName();
+            String last = account.getEmail();
             // Signed in successfully, show authenticated UI.
 //            updateUI(account);
+            try {
+                insertUser(account.getGivenName(), account.getEmail(), account.getId());
+            } catch (Exception ex){
+                Log.e("LOGIN", "Riso: " + ex);
+            }
             Toast.makeText(getContext(),"Welcome " + account.getGivenName(), Toast.LENGTH_LONG).show();
             Bundle bundle = new Bundle();
             bundle.putString(TOKEN, token);
@@ -117,4 +125,32 @@ public class LoginFragment extends Fragment {
         fragmentManager.beginTransaction().replace(containerViewId, fragment, tag == null ? fragment.getClass().getName() : tag).commit();
 
     }
+
+    public void insertUser(String firstName, String email, String token) {
+        ContentValues cv = new ContentValues();
+        cv.put(DbColumns.MealsEntry.FIRST, firstName);
+        cv.put(DbColumns.MealsEntry.EMAIL, email);
+        cv.put(DbColumns.MealsEntry.TOKEN, token);
+        cv.put(DbColumns.MealsEntry.USER, "true");
+        getContext().getContentResolver().insert(DbColumns.MealsEntry.CONTENT_URI_USERS, cv);
+    }
+
+//    public void updateUserTbl(String email, String token){
+//        ContentValues cv = new ContentValues();
+//        cv.put(DbColumns.MealsEntry.TOKEN, token);
+//        cv.put(DbColumns.MealsEntry.USER, "true");
+//    }
+//
+//    public void isInsideDb(String firstName, String email, String token) {
+//        Cursor c = getActivity().getContentResolver().query(DbColumns.MealsEntry.CONTENT_URI_USERS,
+//                new String[]{DbColumns.MealsEntry.TOKEN},
+//                DbColumns.MealsEntry.EMAIL + "=?",
+//                new String[]{email},
+//                null);
+//        if (!c.moveToNext()) {
+//            insertUser(firstName,email,token);
+//        } else {
+//
+//        }
+//    }?
 }

@@ -133,6 +133,7 @@
             android:gravity="top" />
 
         <CheckBox
+            android:id="@+id/calChckbx"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="10dp"
@@ -143,11 +144,12 @@
             android:text="@string/checboxGoogle" />
 
         <Button
+            android:id="@+id/saveBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/Button"
             android:background="@color/colorPrimary"
-            android:text="@string/saveBtn"/>
+            android:text="@string/saveBtnString"/>
 
     </LinearLayout>
 </ScrollView>

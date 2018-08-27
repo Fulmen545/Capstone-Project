@@ -21,7 +21,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -32,6 +35,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.riso.android.mealtracker.data.DbColumns;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,9 +55,15 @@ public class AddMealFragment extends Fragment {
     String[] custFields;
     EditText editDate;
     EditText editTime;
+    EditText editDesc;
     DatePickerDialog datePickerDialog;
     GoogleApiClient mGoogleApiClient;
     EditText editLocation;
+    Button addBtn;
+    JSONObject custJson = new JSONObject();
+    EditText editCustom;
+    Button save;
+    CheckBox calendar;
 
     private ArrayList permissions = new ArrayList();
 
@@ -81,6 +93,24 @@ public class AddMealFragment extends Fragment {
         ArrayAdapter<String> custFieldsAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item, custFields);
         custFieldSpinner.setAdapter(custFieldsAdapter);
+        custFieldSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String editCustomValue = "";
+                try {
+                    editCustomValue = custJson.get(custFields[position]).toString();
+                } catch (JSONException ignored) {
+                }
+                finally {
+                    editCustom.setText(editCustomValue);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         editDate = view.findViewById(R.id.editDate);
         editDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,6 +155,32 @@ public class AddMealFragment extends Fragment {
                 }, hour, minute, true);
                 mTimePicker.setTitle("Select Time");
                 mTimePicker.show();
+            }
+        });
+        editCustom = view.findViewById(R.id.editCusotom);
+        addBtn = view.findViewById(R.id.addBtn);
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (String custValue : custFields){
+                    if (custValue == custFieldSpinner.getSelectedItem().toString()){
+                        try {
+                            custJson.put(custValue,editCustom.getText());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Toast.makeText(getContext(),"Field was added", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                }
+//                insertMeal(typeFoodSpinner.getSelectedItem().toString(),
+//                        editDesc.getText().toString(),
+//                        editDate.getText().toString(),
+//                        editTime.getText().toString(),
+//                        editLocation.getText().toString(),
+//                        custJson.toString(),
+//                        calendar.isChecked(),
+//                        selectUser());
             }
         });
 
@@ -172,6 +228,23 @@ public class AddMealFragment extends Fragment {
         } else {
             editLocation.setText("");
         }
+        editDesc = view.findViewById(R.id.editCusotom);
+        calendar = view.findViewById(R.id.calChckbx);
+        save = view.findViewById(R.id.saveBtn);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Riso test",Toast.LENGTH_SHORT);
+                insertMeal(typeFoodSpinner.getSelectedItem().toString(),
+                        editDesc.getText().toString(),
+                        editDate.getText().toString(),
+                        editTime.getText().toString(),
+                        editLocation.getText().toString(),
+                        custJson.toString(),
+                        calendar.isChecked(),
+                        selectUser());
+            }
+        });
 
 
     }
@@ -196,7 +269,20 @@ public class AddMealFragment extends Fragment {
         }
     }
 
-    private void insertMeal (String mealType, String desc, String date, String time, String location, String custFields, boolean gCalendar, String userToken){
+    public String selectUser() {
+        Cursor c = getActivity().getContentResolver().query(DbColumns.MealsEntry.CONTENT_URI_USERS,
+                new String[]{DbColumns.MealsEntry.EMAIL},
+                null,
+                null,
+                null);
+        if (c.moveToNext()) {
+            return c.getString(c.getColumnIndex("email"));
+        } else {
+            return "";
+        }
+    }
+
+    private void insertMeal (String mealType, String desc, String date, String time, String location, String custFields, boolean gCalendar, String email){
         ContentValues cv = new ContentValues();
         cv.put(DbColumns.MealsEntry.TYPE_ML, mealType);
         cv.put(DbColumns.MealsEntry.DESCRIPTION, desc);
@@ -205,7 +291,7 @@ public class AddMealFragment extends Fragment {
         cv.put(DbColumns.MealsEntry.LOCATION, location);
         cv.put(DbColumns.MealsEntry.CUST_FIELDS, custFields);
         cv.put(DbColumns.MealsEntry.GCALENDAR, Boolean.toString(gCalendar));
-        cv.put(DbColumns.MealsEntry.MEALS_USR, userToken);
+        cv.put(DbColumns.MealsEntry.MEALS_USR, email);
     }
 
     private void getFoodTypes(){

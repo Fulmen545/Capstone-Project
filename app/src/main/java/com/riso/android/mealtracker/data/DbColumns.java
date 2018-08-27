@@ -32,11 +32,21 @@ public class DbColumns {
         public static final String TYPE_FLD = "typefld";
         public static final String COLOR = "color";
 
+        //user table
+        public static final String TABLE_NAME_USERS = "users";
+        public static final String FIRST = "first";
+        public static final String EMAIL = "email";
+        public static final String TOKEN = "typefld";
+        public static final String USER = "color";
+
         public static final Uri CONTENT_URI_MEALS = BASE_CONTENT_URI.buildUpon()
                 .appendPath(TABLE_NAME_MEALS).build();
 
         public static final Uri CONTENT_URI_FIELDS = BASE_CONTENT_URI.buildUpon()
                 .appendPath(TABLE_NAME_FIELDS).build();
+
+        public static final Uri CONTENT_URI_USERS = BASE_CONTENT_URI.buildUpon()
+                .appendPath(TABLE_NAME_USERS).build();
 
         public static final String CONTENT_DIR_TYPE_MEALS =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + TABLE_NAME_MEALS;
@@ -50,12 +60,19 @@ public class DbColumns {
         public static final String CONTENT_ITEM_TYPE_FIELDS =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + TABLE_NAME_FIELDS;
 
+        public static final String CONTENT_DIR_TYPE_USERS =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + TABLE_NAME_USERS;
+
         public static Uri buildIngredientsUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI_MEALS, id);
         }
 
         public static Uri buildStepsUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI_FIELDS, id);
+        }
+
+        public static Uri buildUsersUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI_USERS, id);
         }
     }
 }

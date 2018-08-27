@@ -39,8 +39,17 @@ public class DbHelper extends SQLiteOpenHelper {
                 DbColumns.MealsEntry.FIELDS_USR + " TEXT NOT NULL" +
                 "); ";
 
+        final String SQL_CREATE_USERS_TABLE = "CREATE TABLE " + DbColumns.MealsEntry.TABLE_NAME_USERS + " (" +
+                DbColumns.MealsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                DbColumns.MealsEntry.FIRST + " TEXT NOT NULL, " +
+                DbColumns.MealsEntry.EMAIL + " TEXT NOT NULL, " +
+                DbColumns.MealsEntry.TOKEN + " TEXT NOT NULL, " +
+                DbColumns.MealsEntry.USER + " TEXT" +
+                "); ";
+
         db.execSQL(SQL_CREATE_MEALS_TABLE);
         db.execSQL(SQL_CREATE_FIELDS_TABLE);
+        db.execSQL(SQL_CREATE_USERS_TABLE);
         db.execSQL("INSERT INTO fields VALUES ('Breakfast', 'type', 'green', 'default')");
         db.execSQL("INSERT INTO fields VALUES ('Lunch', 'type', 'blue', 'default')");
         db.execSQL("INSERT INTO fields VALUES ('Dinner', 'type', 'red', 'default')");
@@ -52,6 +61,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + DbColumns.MealsEntry.TABLE_NAME_MEALS);
         db.execSQL("DROP TABLE IF EXISTS " + DbColumns.MealsEntry.TABLE_NAME_FIELDS);
+        db.execSQL("DROP TABLE IF EXISTS " + DbColumns.MealsEntry.TABLE_NAME_USERS);
         onCreate(db);
     }
 }

@@ -23,6 +23,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.riso.android.mealtracker.data.DbColumns;
 
 import java.util.concurrent.Executor;
 
@@ -101,6 +102,10 @@ public class MainFragment extends Fragment {
 
     }
 
+    private void removeUser(){
+        getContext().getContentResolver().delete(DbColumns.MealsEntry.CONTENT_URI_USERS,null,null);
+    }
+
     private void signOut() {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
@@ -110,6 +115,7 @@ public class MainFragment extends Fragment {
                         changeTo(lf, android.R.id.content, "tag1");
                     }
                 });
+        removeUser();
     }
 
 }
