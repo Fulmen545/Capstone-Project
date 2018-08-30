@@ -25,5 +25,13 @@
     <string name="saveBtnString">Save</string>
     <string name="settings">Settings</string>
 
+    <!--Settings-->
+    <string name="confirmColorBtn">Cofirm</string>
+    <string name="removeType">Remove type</string>
+    <string name="removeBtnString">Remove</string>
+    <string name="custFields">Customizable Fields</string>
+    <string name="addCustLabel">Add new Customizable Fields</string>
+
+
 
 </resources>

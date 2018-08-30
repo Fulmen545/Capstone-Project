@@ -6,6 +6,190 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="@dimen/add_meal_padding"
     tools:context="com.riso.android.mealtracker.SettingsActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/typeLabel"
+         />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Spinner
+            android:id="@+id/typeFoodSettingsSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:layout_margin="5dp" />
+
+        <Spinner
+            android:id="@+id/colorFoodSettingsSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp" />
+
+        <Button
+            android:id="@+id/confirmColor"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/custom_height"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:padding="10dp"
+            android:text="@string/confirmColorBtn"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp">
+
+        <EditText
+            android:id="@+id/typeFoodSettingsEdt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:layout_margin="5dp" />
+
+        <Spinner
+            android:id="@+id/colorNewFoodSettingsSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp" />
+
+        <Button
+            android:id="@+id/addColor"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/custom_height"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:padding="10dp"
+            android:text="@string/addBtnString"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/removeType"
+        android:theme="@style/AddMeal"
+        android:paddingTop="10dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Spinner
+            android:id="@+id/removeTypeSettingsSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:layout_margin="5dp" />
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:visibility="invisible"/>
+
+        <Button
+            android:id="@+id/removeColor"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/custom_height"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:padding="10dp"
+            android:text="@string/removeBtnString"/>
+
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorPrimary" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/custFields"
+        />
+
+    <LinearLayout
+        android:paddingTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Spinner
+            android:id="@+id/custSettingsSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:layout_margin="5dp" />
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:visibility="invisible"/>
+
+        <Button
+            android:id="@+id/removeCust"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/custom_height"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:padding="10dp"
+            android:text="@string/removeBtnString"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/addCustLabel"
+        android:theme="@style/AddMeal"
+        android:paddingTop="10dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp">
+
+        <EditText
+            android:id="@+id/addCustSettingsEdt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:layout_margin="5dp" />
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="5dp"
+            android:visibility="invisible"/>
+
+        <Button
+            android:id="@+id/addCustFld"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/custom_height"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:padding="10dp"
+            android:text="@string/addBtnString"/>
+
+    </LinearLayout>
 
 </LinearLayout>
