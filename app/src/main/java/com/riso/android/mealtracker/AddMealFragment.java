@@ -5,6 +5,7 @@ import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
@@ -27,6 +28,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -209,7 +211,8 @@ public class AddMealFragment extends Fragment {
 //        permissions.add(ACCESS_FINE_LOCATION);
 //        permissions.add(ACCESS_COARSE_LOCATION);
         editLocation = view.findViewById(R.id.editLocation);
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -224,7 +227,6 @@ public class AddMealFragment extends Fragment {
                 Toast.makeText(getContext(),"Couldn't access location", Toast.LENGTH_SHORT).show();
                 editLocation.setText("");
             }
-            return;
         } else {
             editLocation.setText("");
         }
@@ -234,7 +236,7 @@ public class AddMealFragment extends Fragment {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Riso test",Toast.LENGTH_SHORT);
+
                 insertMeal(typeFoodSpinner.getSelectedItem().toString(),
                         editDesc.getText().toString(),
                         editDate.getText().toString(),
@@ -243,9 +245,10 @@ public class AddMealFragment extends Fragment {
                         custJson.toString(),
                         calendar.isChecked(),
                         selectUser());
+                Toast.makeText(getContext(), "Meal was added",Toast.LENGTH_SHORT).show();
+                getActivity().onBackPressed();
             }
         });
-
 
     }
 
@@ -262,7 +265,9 @@ public class AddMealFragment extends Fragment {
                 getActivity().onBackPressed();
                 return true;
             case R.id.settings:
-                Toast.makeText(getContext(),"Settings", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(),"Settings", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -292,6 +297,7 @@ public class AddMealFragment extends Fragment {
         cv.put(DbColumns.MealsEntry.CUST_FIELDS, custFields);
         cv.put(DbColumns.MealsEntry.GCALENDAR, Boolean.toString(gCalendar));
         cv.put(DbColumns.MealsEntry.MEALS_USR, email);
+        getContext().getContentResolver().insert(DbColumns.MealsEntry.CONTENT_URI_MEALS, cv);
     }
 
     private void getFoodTypes(){
