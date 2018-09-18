@@ -23,6 +23,7 @@
             android:id="@+id/typeFoodSettingsSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:theme="@style/AddMeal"
             android:layout_weight="3"
             android:layout_margin="5dp" />
 
@@ -35,7 +36,7 @@
 
         <Button
             android:id="@+id/confirmColor"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/settings_btn"
             android:layout_height="@dimen/custom_height"
             android:layout_weight="1"
             android:focusable="false"
@@ -61,12 +62,13 @@
             android:id="@+id/colorNewFoodSettingsSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:theme="@style/AddMeal"
             android:layout_weight="1"
             android:layout_margin="5dp" />
 
         <Button
             android:id="@+id/addColor"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/settings_btn"
             android:layout_height="@dimen/custom_height"
             android:layout_weight="1"
             android:focusable="false"
@@ -102,7 +104,7 @@
 
         <Button
             android:id="@+id/removeColor"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/settings_btn"
             android:layout_height="@dimen/custom_height"
             android:layout_weight="1"
             android:focusable="false"
@@ -134,6 +136,7 @@
             android:id="@+id/custSettingsSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:theme="@style/AddMeal"
             android:layout_weight="3"
             android:layout_margin="5dp" />
 
@@ -146,7 +149,7 @@
 
         <Button
             android:id="@+id/removeCust"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/settings_btn"
             android:layout_height="@dimen/custom_height"
             android:layout_weight="1"
             android:focusable="false"
@@ -178,12 +181,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:theme="@style/AddMeal"
             android:layout_margin="5dp"
             android:visibility="invisible"/>
 
         <Button
             android:id="@+id/addCustFld"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/settings_btn"
             android:layout_height="@dimen/custom_height"
             android:layout_weight="1"
             android:focusable="false"

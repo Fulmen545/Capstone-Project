@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,10 +37,19 @@ public class SettingsActivity extends AppCompatActivity {
     Spinner removeFoodSpinner;
     @BindView(R.id.typeFoodSettingsEdt)
     EditText editFoodEdt;
+    @BindView(R.id.removeColor)
+    Button removeColorBtn;;
+    @BindView(R.id.addCustFld)
+    Button addCustFldBtn;
+    @BindView(R.id.addCustSettingsEdt)
+    EditText addCustEdt;
+    @BindView(R.id.removeCust)
+    Button removeCustBtn;
 
 
     private String user;
     private ArrayAdapter<String> foodTypesAdapter;
+    private ArrayAdapter<String> custFieldsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,17 +63,31 @@ public class SettingsActivity extends AppCompatActivity {
         getFoodTypes();
         getCustomFields();
         typeFoodSpinner = findViewById(R.id.typeFoodSettingsSpinner);
+
         foodTypesAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, typeFoods);
         typeFoodSpinner.setAdapter(foodTypesAdapter);
         custFieldSpinner = findViewById(R.id.custSettingsSpinner);
-        ArrayAdapter<String> custFieldsAdapter = new ArrayAdapter<String>(this,
+        custFieldsAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, custFields);
         custFieldSpinner.setAdapter(custFieldsAdapter);
         removeFoodSpinner = findViewById(R.id.removeTypeSettingsSpinner);
 //        ArrayAdapter<String> removeFoodAdapter = new ArrayAdapter<String>(this,
 //                android.R.layout.simple_spinner_item, typeFoods);
         removeFoodSpinner.setAdapter(foodTypesAdapter);
+        confirmColorBtn = findViewById(R.id.confirmColor);
+//        confirmColorBtn.setEnabled(!isRemoveTypeDefault(removeFoodSpinner));
+//        typeFoodSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                confirmColorBtn.setEnabled(!isRemoveTypeDefault(removeFoodSpinner));
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
         editFoodEdt = findViewById(R.id.typeFoodSettingsEdt);
         addColorBtn = findViewById(R.id.addColor);
         addColorBtn.setOnClickListener(new View.OnClickListener() {
@@ -74,12 +98,105 @@ public class SettingsActivity extends AppCompatActivity {
                 foodTypesAdapter = new ArrayAdapter<String>(SettingsActivity.this, android.R.layout.simple_spinner_item, typeFoods);
                 typeFoodSpinner.setAdapter(foodTypesAdapter);
                 removeFoodSpinner.setAdapter(foodTypesAdapter);
-//                foodTypesAdapter.notifyDataSetChanged();
                 editFoodEdt.setText("");
                 Toast.makeText(getApplicationContext(),"Food type was added", Toast.LENGTH_SHORT).show();
             }
         });
+        removeColorBtn = findViewById(R.id.removeColor);
+//        removeColorBtn.setEnabled(!isRemoveTypeDefault(removeFoodSpinner));
+//        removeFoodSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                removeColorBtn.setEnabled(!isRemoveTypeDefault(removeFoodSpinner));
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
+//        if (removeColorBtn.isEnabled()) {
+            removeColorBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (custFieldSpinner.getSelectedItem().toString().equals("Add field")){
+                    }else {
+                        removeFoodType(removeFoodSpinner.getSelectedItem().toString(), "type");
+                        getFoodTypes();
+                        if (typeFoods.length == 0) {
+                            typeFoods = new String[1];
+                            typeFoods[0] = "Add field";
+                        }
+                        foodTypesAdapter = new ArrayAdapter<String>(SettingsActivity.this, android.R.layout.simple_spinner_item, typeFoods);
+                        typeFoodSpinner.setAdapter(foodTypesAdapter);
+                        removeFoodSpinner.setAdapter(foodTypesAdapter);
+                        Toast.makeText(getApplicationContext(), "Food type was removed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+//        } else {
+//            removeColorBtn.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Toast.makeText(getApplicationContext(), "You can't remove default value", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        }
 
+        addCustEdt = findViewById(R.id.addCustSettingsEdt);
+        addCustFldBtn = findViewById(R.id.addCustFld);
+        addCustFldBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                insertColorCusotm(addCustEdt.getText().toString(),"custom","", user);
+                getCustomFields();
+                custFieldsAdapter = new ArrayAdapter<String>(SettingsActivity.this,
+                        android.R.layout.simple_spinner_item, custFields);
+                custFieldSpinner.setAdapter(custFieldsAdapter);
+                addCustEdt.setText("");
+                Toast.makeText(getApplicationContext(),"Custom field was added", Toast.LENGTH_SHORT).show();
+            }
+        });
+        removeCustBtn = findViewById(R.id.removeCust);
+//        removeCustBtn.setEnabled(!isRemoveCusotmDefault(custFieldSpinner));
+//        custFieldSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                removeCustBtn.setEnabled(!isRemoveCusotmDefault(custFieldSpinner));
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
+//        if (removeCustBtn.isEnabled()) {
+            removeCustBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (custFieldSpinner.getSelectedItem().toString().equals("Add field")){
+                    }else{
+                        removeFoodType(custFieldSpinner.getSelectedItem().toString(), "custom");
+                        getCustomFields();
+                        if (custFields.length == 0) {
+                            custFields = new String[1];
+                            custFields[0] = "Add field";
+                        }
+                        custFieldsAdapter = new ArrayAdapter<String>(SettingsActivity.this,
+                                android.R.layout.simple_spinner_item, custFields);
+                        custFieldSpinner.setAdapter(custFieldsAdapter);
+                        Toast.makeText(getApplicationContext(), "Custom field was removed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+//        } else {
+//            removeCustBtn.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Toast.makeText(getApplicationContext(), "You can't remove default value", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        }
 
     }
 
@@ -111,7 +228,7 @@ public class SettingsActivity extends AppCompatActivity {
         try {
             Cursor c = this.getContentResolver().query(DbColumns.MealsEntry.CONTENT_URI_FIELDS,
                     new String[]{"DISTINCT " + DbColumns.MealsEntry.NAME_FLD, DbColumns.MealsEntry.COLOR},
-                    DbColumns.MealsEntry.TYPE_FLD + "= 'type' AND " + DbColumns.MealsEntry.FIELDS_USR + " in ('default', '" + user + "')" ,
+                    DbColumns.MealsEntry.TYPE_FLD + "= 'type' AND " + DbColumns.MealsEntry.FIELDS_USR + " in ('" + user + "')" ,
                     null,
                     null);
             if (c.getCount() != 0) {
@@ -123,6 +240,9 @@ public class SettingsActivity extends AppCompatActivity {
                         i++;
                     } while (c.moveToNext());
                 }
+            } else {
+                typeFoods = new String[1];
+                typeFoods[0] = "Add field";
             }
         } catch (Exception ex) {
             Log.e("ADDMEAL", "RISO EX: " + ex);
@@ -134,7 +254,7 @@ public class SettingsActivity extends AppCompatActivity {
         try {
             Cursor c = this.getContentResolver().query(DbColumns.MealsEntry.CONTENT_URI_FIELDS,
                     new String[]{"DISTINCT " + DbColumns.MealsEntry.NAME_FLD},
-                    DbColumns.MealsEntry.TYPE_FLD + "= 'custom'",
+                    DbColumns.MealsEntry.TYPE_FLD + "= 'custom' AND " + DbColumns.MealsEntry.FIELDS_USR + " in ('" + user + "')",
                     null,
                     null);
             if (c.getCount() != 0) {
@@ -146,6 +266,9 @@ public class SettingsActivity extends AppCompatActivity {
                         i++;
                     } while (c.moveToNext());
                 }
+            } else {
+                custFields = new String[1];
+                custFields[0] = "Add field";
             }
         } catch (Exception ex) {
             Log.e("ADDMEAL", "RISO EX: " + ex);
@@ -160,5 +283,24 @@ public class SettingsActivity extends AppCompatActivity {
         cv.put(DbColumns.MealsEntry.COLOR, color);
         cv.put(DbColumns.MealsEntry.FIELDS_USR, email);
         this.getContentResolver().insert(DbColumns.MealsEntry.CONTENT_URI_FIELDS, cv);
+    }
+
+    private void removeFoodType(String color, String type){
+        getContentResolver().delete(DbColumns.MealsEntry.CONTENT_URI_FIELDS, DbColumns.MealsEntry.NAME_FLD + "= ? AND " +
+                DbColumns.MealsEntry.TYPE_FLD + "= ? ", new String[]{color, type});
+    }
+
+    private boolean isRemoveTypeDefault(Spinner spinner){
+        if (spinner.getSelectedItem().toString().equals("Breakfast") || spinner.getSelectedItem().toString().equals("Lunch") || spinner.getSelectedItem().toString().equals("Dinner"))
+            return true;
+        else
+            return false;
+    }
+
+    private boolean isRemoveCusotmDefault(Spinner spinner){
+        if (spinner.getSelectedItem().toString().equals("Calories") || spinner.getSelectedItem().toString().equals("Vegan"))
+            return true;
+        else
+            return false;
     }
 }
