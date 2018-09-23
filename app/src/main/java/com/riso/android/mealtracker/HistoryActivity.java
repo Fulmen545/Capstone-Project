@@ -65,8 +65,6 @@ public class HistoryActivity extends AppCompatActivity {
             int i = 0;
             if (c.moveToFirst()) {
                 do {
-//                    colorStored[i] = new ColorItem(c.getString(c.getColumnIndex(DbColumns.MealsEntry.NAME_FLD)),
-//                            c.getString(c.getColumnIndex(DbColumns.MealsEntry.COLOR)));
                     fields[i]=c.getString(c.getColumnIndex(DbColumns.MealsEntry.NAME_FLD));
                     color[i]=c.getString(c.getColumnIndex(DbColumns.MealsEntry.COLOR));
                     i++;
@@ -77,7 +75,8 @@ public class HistoryActivity extends AppCompatActivity {
 
     private void getStoredMeals() {
         Cursor c = getContentResolver().query(DbColumns.MealsEntry.CONTENT_URI_MEALS,
-                new String[]{DbColumns.MealsEntry.TYPE_ML,
+                new String[]{DbColumns.MealsEntry._ID,
+                        DbColumns.MealsEntry.TYPE_ML,
                         DbColumns.MealsEntry.DESCRIPTION,
                         DbColumns.MealsEntry.DATE,
                         DbColumns.MealsEntry.TIME,
@@ -92,7 +91,8 @@ public class HistoryActivity extends AppCompatActivity {
             int i = 0;
             if (c.moveToFirst()) {
                 do {
-                    mealsStored[i] = new MealItem(c.getString(c.getColumnIndex(DbColumns.MealsEntry.TYPE_ML)),
+                    mealsStored[i] = new MealItem(c.getString(c.getColumnIndex(DbColumns.MealsEntry._ID)),
+                            c.getString(c.getColumnIndex(DbColumns.MealsEntry.TYPE_ML)),
                             c.getString(c.getColumnIndex(DbColumns.MealsEntry.DESCRIPTION)),
                             c.getString(c.getColumnIndex(DbColumns.MealsEntry.DATE)),
                             c.getString(c.getColumnIndex(DbColumns.MealsEntry.TIME)),
@@ -127,5 +127,6 @@ public class HistoryActivity extends AppCompatActivity {
         }
         return "grey";
     }
+
 
 }

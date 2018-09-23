@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.riso.android.mealtracker.R;
+import com.riso.android.mealtracker.data.DatabaseQuery;
 import com.riso.android.mealtracker.data.MealItem;
 
 import butterknife.BindView;
@@ -77,6 +78,8 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
         ImageButton mailItem;
         @BindView(R.id.trahsItem)
         ImageButton trahsItem;
+        DatabaseQuery dbQuery;
+        String id;
 
         public MealViewHolder(View itemView) {
             super(itemView);
@@ -88,10 +91,11 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
             timeItem = itemView.findViewById(R.id.tiemItem);
             mailItem = itemView.findViewById(R.id.mailItem);
             trahsItem = itemView.findViewById(R.id.trahsItem);
+            dbQuery = new DatabaseQuery(itemView.getContext());
             itemView.setOnClickListener(this);
         }
 
-        void bind(int listIndex){
+        void bind(final int listIndex){
             titleItem.setText(mealItems[listIndex].typeItem);
             titleItem.setTextColor(ContextCompat.getColor(itemView.getContext(),chooseColor(mealItems[listIndex].colorItem)));
             descriptionItem.setText(mealItems[listIndex].descItem);
@@ -103,6 +107,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
             timeItem.setText(mealItems[listIndex].timeItem);
             timeItem.setTextColor(ContextCompat.getColor(itemView.getContext(),chooseColor(mealItems[listIndex].colorItem)));
             String calendar = mealItems[listIndex].gCalendarItem;
+            id = mealItems[listIndex].id;
             if (calendar.equals("true")) {
                 mailItem.setColorFilter(ContextCompat.getColor(itemView.getContext(), chooseColor(mealItems[listIndex].colorItem)), android.graphics.PorterDuff.Mode.SRC_IN);
             }
@@ -110,6 +115,15 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(itemView.getContext(),"Testujem mail", Toast.LENGTH_SHORT).show();
+                }
+            });
+            trahsItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dbQuery.removeMeal(id);
+                    newArray(listIndex);
+                    notifyItemRemoved(listIndex);
+//                    notifyDataSetChanged();
                 }
             });
 
@@ -125,6 +139,19 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
                 case "deepOrange": return R.color.deepOrange;
                 default: return R.color.grey;
 
+            }
+        }
+
+        public void newArray(int position){
+            MealItem[] newMeals;// = new MealItem[mealItems.length];
+            newMeals=mealItems;
+            mealItems = new MealItem[newMeals.length-1];
+            int j = 0;
+            for (int i=0; i<newMeals.length; i++){
+                if (i!=position) {
+                    mealItems[j]=newMeals[i];
+                    j++;
+                }
             }
         }
 

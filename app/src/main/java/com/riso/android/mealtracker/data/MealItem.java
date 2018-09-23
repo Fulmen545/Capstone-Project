@@ -5,6 +5,7 @@ package com.riso.android.mealtracker.data;
  */
 
 public class MealItem {
+    public final String id;
     public final String typeItem;
     public final String descItem;
     public final String dateItem;
@@ -14,7 +15,7 @@ public class MealItem {
     public final String gCalendarItem;
     public  String colorItem;
 
-    public MealItem(String typeItem, String descItem, String dateItem,
+    public MealItem(String id, String typeItem, String descItem, String dateItem,
                     String timeItem, String locationItem, String customItem,
                     String gCalendarItem, String colorItem) {
         this.typeItem = typeItem;
@@ -25,6 +26,8 @@ public class MealItem {
         this.customItem = customItem;
         this.gCalendarItem = gCalendarItem;
         this.colorItem = colorItem;
+        this.id=id;
+
     }
 
 }
