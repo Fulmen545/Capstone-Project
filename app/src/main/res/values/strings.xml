@@ -33,5 +33,9 @@
     <string name="addCustLabel">Add new Customizable Fields</string>
 
 
+    <!--History-->
+    <string name="recentMeals">Recent Meals</string>
+    <string name="title_activity_history">History</string>
+
 
 </resources>

@@ -27,7 +27,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 DbColumns.MealsEntry.TIME + " TEXT NOT NULL, " +
                 DbColumns.MealsEntry.LOCATION + " TEXT NOT NULL, " +
                 DbColumns.MealsEntry.CUST_FIELDS + " TEXT, " +
-                DbColumns.MealsEntry.GCALENDAR + " INTEGER NOT NULL, " +
+                DbColumns.MealsEntry.GCALENDAR + " TEXT NOT NULL, " +
                 DbColumns.MealsEntry.MEALS_USR + " TEXT NOT NULL" +
                 "); ";
 

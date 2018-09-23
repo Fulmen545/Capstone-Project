@@ -44,6 +44,8 @@ public class MainFragment extends Fragment {
     GoogleSignInClient mGoogleSignInClient;
     @BindView(R.id.addMealItem)
     LinearLayout addMealLayout;
+    @BindView(R.id.history)
+    LinearLayout historyLayout;
     private String token;
 
     @Override
@@ -73,6 +75,15 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AddMealActivity.class);
                 intent.putExtra(TOKEN, token);
+                startActivity(intent);
+                ((Activity) getActivity()).overridePendingTransition(0, 0);
+            }
+        });
+        historyLayout = view.findViewById(R.id.history);
+        historyLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), HistoryActivity.class);
                 startActivity(intent);
                 ((Activity) getActivity()).overridePendingTransition(0, 0);
             }

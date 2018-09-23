@@ -67,6 +67,9 @@ public class AddMealFragment extends Fragment {
     Button save;
     CheckBox calendar;
 
+    ArrayAdapter<String> foodTypesAdapter;
+    ArrayAdapter<String> custFieldsAdapter;
+
     private ArrayList permissions = new ArrayList();
 
     @Override
@@ -87,12 +90,12 @@ public class AddMealFragment extends Fragment {
         getFoodTypes();
         getCustomFields();
         typeFoodSpinner = view.findViewById(R.id.typeFoodSpinner);
-        ArrayAdapter<String> foodTypesAdapter = new ArrayAdapter<String>(getContext(),
+        foodTypesAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item, typeFoods);
 //        adapter.setDropDownViewResource(android.R.layout.activity_list_item);
         typeFoodSpinner.setAdapter(foodTypesAdapter);
         custFieldSpinner = view.findViewById(R.id.customSpinner);
-        ArrayAdapter<String> custFieldsAdapter = new ArrayAdapter<String>(getContext(),
+        custFieldsAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item, custFields);
         custFieldSpinner.setAdapter(custFieldsAdapter);
         custFieldSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -230,7 +233,7 @@ public class AddMealFragment extends Fragment {
         } else {
             editLocation.setText("");
         }
-        editDesc = view.findViewById(R.id.editCusotom);
+        editDesc = view.findViewById(R.id.editDescription);
         calendar = view.findViewById(R.id.calChckbx);
         save = view.findViewById(R.id.saveBtn);
         save.setOnClickListener(new View.OnClickListener() {
@@ -250,6 +253,19 @@ public class AddMealFragment extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getFoodTypes();
+        getCustomFields();
+        foodTypesAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_item, typeFoods);
+        typeFoodSpinner.setAdapter(foodTypesAdapter);
+        custFieldsAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_item, custFields);
+        custFieldSpinner.setAdapter(custFieldsAdapter);
     }
 
     @Override

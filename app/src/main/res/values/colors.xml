@@ -8,4 +8,17 @@
     <color name="editText">#ffb1e8b1</color>
     <color name="ltgray">#ffe0e0e0</color>
     <color name="textgray">#ff000000</color>
+
+    <!--Colors for food types-->
+    <color name="purple">#E040FB</color>
+    <color name="deepPurple">#673AB7</color>
+    <color name="deepOrange">#FF5722</color>
+    <color name="green">#388E3C</color>
+    <color name="grey">#9E9E9E</color>
+    <color name="brown">#795548</color>
+    <color name="blue">#536DFE</color>
+    <color name="red">#D32F2F</color>
+    <color name="cyan">#00BCD4</color>
+    <color name="yellow">#FFEB3B</color>
+    <color name="pink">#e91e63</color>
 </resources>
