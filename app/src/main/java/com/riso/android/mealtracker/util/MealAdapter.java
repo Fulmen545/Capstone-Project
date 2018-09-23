@@ -117,6 +117,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
                     Toast.makeText(itemView.getContext(),"Testujem mail", Toast.LENGTH_SHORT).show();
                 }
             });
+            trahsItem.setColorFilter(ContextCompat.getColor(itemView.getContext(), chooseColor(mealItems[listIndex].colorItem)), android.graphics.PorterDuff.Mode.SRC_IN);
             trahsItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -155,7 +155,8 @@ public class AddMealFragment extends Fragment {
                 mTimePicker = new TimePickerDialog(getActivity(), R.style.DialogTheme, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        editTime.setText(selectedHour + ":" + selectedMinute);
+//                        editTime.setText(selectedHour + ":" + selectedMinute);
+                        editTime.setText(String.format("%02d:%02d", selectedHour, selectedMinute));
                     }
                 }, hour, minute, true);
                 mTimePicker.setTitle("Select Time");

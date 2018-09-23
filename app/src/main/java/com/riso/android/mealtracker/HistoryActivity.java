@@ -1,15 +1,22 @@
 package com.riso.android.mealtracker;
 
+import android.app.DatePickerDialog;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.DatePicker;
 
+import com.riso.android.mealtracker.data.DatabaseQuery;
 import com.riso.android.mealtracker.data.DbColumns;
 import com.riso.android.mealtracker.data.MealItem;
 import com.riso.android.mealtracker.util.MealAdapter;
+
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,9 +53,39 @@ public class HistoryActivity extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.historyIcon:
+                final Calendar c = Calendar.getInstance();
+                int mYear = c.get(Calendar.YEAR); // current year
+                int mMonth = c.get(Calendar.MONTH); // current month
+                int mDay = c.get(Calendar.DAY_OF_MONTH); // current day
+                DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.DialogTheme,
+                        new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                // set day of month , month and year value in the edit text
+                                DatabaseQuery dbquery = new DatabaseQuery(HistoryActivity.this);
+                                mealsStored=dbquery.getStoredMeals(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                                mMeakAdapter = new MealAdapter(mealsStored);
+                                mRecipeNamesList.setAdapter(mMeakAdapter);
+//                                editDate.setHint("");
+//                                editDate.setText(dayOfMonth + "/"
+//                                        + (monthOfYear + 1) + "/" + year);
+
+                            }
+                        }, mYear, mMonth, mDay);
+                datePickerDialog.show();
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_history, menu);
+        return true;
     }
 
     private void getColor() {
