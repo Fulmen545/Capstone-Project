@@ -9,7 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.DatePicker;
+import android.widget.TextView;
 
 import com.riso.android.mealtracker.data.DatabaseQuery;
 import com.riso.android.mealtracker.data.DbColumns;
@@ -29,6 +31,8 @@ public class HistoryActivity extends AppCompatActivity {
     private MealAdapter mMeakAdapter;
     @BindView(R.id.rv_meals)
     RecyclerView mRecipeNamesList;
+    @BindView(R.id.no_meal_tv)
+    TextView no_meal_tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +44,20 @@ public class HistoryActivity extends AppCompatActivity {
         user = selectUser();
         getColor();
         getStoredMeals();
-        mMeakAdapter = new MealAdapter(mealsStored);
+        no_meal_tv = findViewById(R.id.no_meal_tv);
         mRecipeNamesList = findViewById(R.id.rv_meals);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecipeNamesList.setLayoutManager(layoutManager);
-        mRecipeNamesList.setAdapter(mMeakAdapter);
+        if (mealsStored == null){
+            mRecipeNamesList.setVisibility(View.GONE);
+            no_meal_tv.setVisibility(View.VISIBLE);
+            no_meal_tv.setText(R.string.no_meals);
+        } else {
+            mRecipeNamesList.setVisibility(View.VISIBLE);
+            no_meal_tv.setVisibility(View.GONE);
+            mMeakAdapter = new MealAdapter(mealsStored);
+            mRecipeNamesList.setAdapter(mMeakAdapter);
+        }
     }
 
     @Override
@@ -67,8 +80,17 @@ public class HistoryActivity extends AppCompatActivity {
                                 // set day of month , month and year value in the edit text
                                 DatabaseQuery dbquery = new DatabaseQuery(HistoryActivity.this);
                                 mealsStored=dbquery.getStoredMeals(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
-                                mMeakAdapter = new MealAdapter(mealsStored);
-                                mRecipeNamesList.setAdapter(mMeakAdapter);
+                                if (mealsStored == null){
+                                    mRecipeNamesList.setVisibility(View.GONE);
+                                    no_meal_tv.setVisibility(View.VISIBLE);
+                                    no_meal_tv.setText("No meals are recorded for day \n"+ dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                                } else {
+                                    mRecipeNamesList.setVisibility(View.VISIBLE);
+                                    no_meal_tv.setVisibility(View.GONE);
+                                    mMeakAdapter = new MealAdapter(mealsStored);
+                                    mRecipeNamesList.setAdapter(mMeakAdapter);
+                                }
+
 //                                editDate.setHint("");
 //                                editDate.setText(dayOfMonth + "/"
 //                                        + (monthOfYear + 1) + "/" + year);

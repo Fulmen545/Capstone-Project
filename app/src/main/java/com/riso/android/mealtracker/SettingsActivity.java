@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.riso.android.mealtracker.data.DatabaseQuery;
 import com.riso.android.mealtracker.data.DbColumns;
 
 import butterknife.BindView;
@@ -27,6 +28,10 @@ public class SettingsActivity extends AppCompatActivity {
     String[] custFields;
     @BindView(R.id.typeFoodSettingsSpinner)
     Spinner typeFoodSpinner;
+    @BindView(R.id.colorNewFoodSettingsSpinner)
+    Spinner colorNewFoodSettingsSpinner;
+    @BindView(R.id.colorFoodSettingsSpinner)
+    Spinner colorFoodSettingsSpinner;
     @BindView(R.id.confirmColor)
     Button confirmColorBtn;
     @BindView(R.id.addColor)
@@ -50,6 +55,8 @@ public class SettingsActivity extends AppCompatActivity {
     private String user;
     private ArrayAdapter<String> foodTypesAdapter;
     private ArrayAdapter<String> custFieldsAdapter;
+    private ArrayAdapter<String> colorAdapter;
+    private String[] colors = new String[]{"Purple","Deep Purple", "Orange", "Brown", "Cyan", "Yellow", "Pink"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +69,13 @@ public class SettingsActivity extends AppCompatActivity {
         user = selectUser();
         getFoodTypes();
         getCustomFields();
+        final DatabaseQuery databaseQuery = new DatabaseQuery(this);
+        colorAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, colors);
+        colorFoodSettingsSpinner = findViewById(R.id.colorFoodSettingsSpinner);
+        colorFoodSettingsSpinner.setAdapter(colorAdapter);
+        colorNewFoodSettingsSpinner = findViewById(R.id.colorNewFoodSettingsSpinner);
+        colorNewFoodSettingsSpinner.setAdapter(colorAdapter);
         typeFoodSpinner = findViewById(R.id.typeFoodSettingsSpinner);
 
         foodTypesAdapter = new ArrayAdapter<String>(this,
@@ -76,24 +90,20 @@ public class SettingsActivity extends AppCompatActivity {
 //                android.R.layout.simple_spinner_item, typeFoods);
         removeFoodSpinner.setAdapter(foodTypesAdapter);
         confirmColorBtn = findViewById(R.id.confirmColor);
-//        confirmColorBtn.setEnabled(!isRemoveTypeDefault(removeFoodSpinner));
-//        typeFoodSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                confirmColorBtn.setEnabled(!isRemoveTypeDefault(removeFoodSpinner));
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
+        confirmColorBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                databaseQuery.updateColor(colorFoodSettingsSpinner.getSelectedItem().toString(), typeFoodSpinner.getSelectedItem().toString());
+                Toast.makeText(SettingsActivity.this, "Color was updated", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         editFoodEdt = findViewById(R.id.typeFoodSettingsEdt);
         addColorBtn = findViewById(R.id.addColor);
         addColorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                insertColorCusotm(editFoodEdt.getText().toString(),"type","blue",user);
+                insertColorCusotm(editFoodEdt.getText().toString(),"type",colorNewFoodSettingsSpinner.getSelectedItem().toString(),user);
                 getFoodTypes();
                 foodTypesAdapter = new ArrayAdapter<String>(SettingsActivity.this, android.R.layout.simple_spinner_item, typeFoods);
                 typeFoodSpinner.setAdapter(foodTypesAdapter);

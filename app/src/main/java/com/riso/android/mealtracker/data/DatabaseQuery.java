@@ -1,5 +1,6 @@
 package com.riso.android.mealtracker.data;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -104,5 +105,13 @@ public class DatabaseQuery {
             }
         }
         return "grey";
+    }
+
+    public void updateColor(String color, String field){
+        user = selectUser();
+        ContentValues cv = new ContentValues();
+        cv.put(DbColumns.MealsEntry.COLOR, color);
+        context.getContentResolver().update(DbColumns.MealsEntry.CONTENT_URI_FIELDS,
+                cv,DbColumns.MealsEntry.NAME_FLD + "=? AND " + DbColumns.MealsEntry.FIELDS_USR + "=?",new String[]{field, user});
     }
 }

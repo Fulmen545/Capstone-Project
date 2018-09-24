@@ -96,37 +96,39 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
         }
 
         void bind(final int listIndex){
-            titleItem.setText(mealItems[listIndex].typeItem);
-            titleItem.setTextColor(ContextCompat.getColor(itemView.getContext(),chooseColor(mealItems[listIndex].colorItem)));
-            descriptionItem.setText(mealItems[listIndex].descItem);
-            descriptionItem.setTextColor(ContextCompat.getColor(itemView.getContext(),chooseColor(mealItems[listIndex].colorItem)));
-            locationItem.setText(mealItems[listIndex].locationItem);
-            locationItem.setTextColor(ContextCompat.getColor(itemView.getContext(),chooseColor(mealItems[listIndex].colorItem)));
-            dateItem.setText(mealItems[listIndex].dateItem);
-            dateItem.setTextColor(ContextCompat.getColor(itemView.getContext(),chooseColor(mealItems[listIndex].colorItem)));
-            timeItem.setText(mealItems[listIndex].timeItem);
-            timeItem.setTextColor(ContextCompat.getColor(itemView.getContext(),chooseColor(mealItems[listIndex].colorItem)));
-            String calendar = mealItems[listIndex].gCalendarItem;
-            id = mealItems[listIndex].id;
-            if (calendar.equals("true")) {
-                mailItem.setColorFilter(ContextCompat.getColor(itemView.getContext(), chooseColor(mealItems[listIndex].colorItem)), android.graphics.PorterDuff.Mode.SRC_IN);
-            }
-            mailItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(itemView.getContext(),"Testujem mail", Toast.LENGTH_SHORT).show();
+            if (mealItems != null) {
+                titleItem.setText(mealItems[listIndex].typeItem);
+                titleItem.setTextColor(ContextCompat.getColor(itemView.getContext(), chooseColor(mealItems[listIndex].colorItem)));
+                descriptionItem.setText(mealItems[listIndex].descItem);
+                descriptionItem.setTextColor(ContextCompat.getColor(itemView.getContext(), chooseColor(mealItems[listIndex].colorItem)));
+                locationItem.setText(mealItems[listIndex].locationItem);
+                locationItem.setTextColor(ContextCompat.getColor(itemView.getContext(), chooseColor(mealItems[listIndex].colorItem)));
+                dateItem.setText(mealItems[listIndex].dateItem);
+                dateItem.setTextColor(ContextCompat.getColor(itemView.getContext(), chooseColor(mealItems[listIndex].colorItem)));
+                timeItem.setText(mealItems[listIndex].timeItem);
+                timeItem.setTextColor(ContextCompat.getColor(itemView.getContext(), chooseColor(mealItems[listIndex].colorItem)));
+                String calendar = mealItems[listIndex].gCalendarItem;
+                id = mealItems[listIndex].id;
+                if (calendar.equals("true")) {
+                    mailItem.setColorFilter(ContextCompat.getColor(itemView.getContext(), chooseColor(mealItems[listIndex].colorItem)), android.graphics.PorterDuff.Mode.SRC_IN);
                 }
-            });
-            trahsItem.setColorFilter(ContextCompat.getColor(itemView.getContext(), chooseColor(mealItems[listIndex].colorItem)), android.graphics.PorterDuff.Mode.SRC_IN);
-            trahsItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dbQuery.removeMeal(id);
-                    newArray(listIndex);
-                    notifyItemRemoved(listIndex);
+                mailItem.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(itemView.getContext(), "Testujem mail", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                trahsItem.setColorFilter(ContextCompat.getColor(itemView.getContext(), chooseColor(mealItems[listIndex].colorItem)), android.graphics.PorterDuff.Mode.SRC_IN);
+                trahsItem.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dbQuery.removeMeal(id);
+                        newArray(listIndex);
+                        notifyItemRemoved(listIndex);
 //                    notifyDataSetChanged();
-                }
-            });
+                    }
+                });
+            }
 
         }
 
@@ -135,9 +137,13 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
                 case "green": return R.color.green;
                 case "red": return R.color.red;
                 case "blue": return R.color.blue;
-                case "purple": return R.color.purple;
-                case "deepPurple": return R.color.deepPurple;
-                case "deepOrange": return R.color.deepOrange;
+                case "Purple": return R.color.purple;
+                case "Deep Purple": return R.color.deepPurple;
+                case "Orange": return R.color.deepOrange;
+                case "Brown": return R.color.brown;
+                case "Cyan": return R.color.cyan;
+                case "Yellow": return R.color.yellow;
+                case "Pink": return R.color.pink;
                 default: return R.color.grey;
 
             }
@@ -147,11 +153,13 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
             MealItem[] newMeals;// = new MealItem[mealItems.length];
             newMeals=mealItems;
             mealItems = new MealItem[newMeals.length-1];
-            int j = 0;
-            for (int i=0; i<newMeals.length; i++){
-                if (i!=position) {
-                    mealItems[j]=newMeals[i];
-                    j++;
+            if (newMeals.length!=1) {
+                int j = 0;
+                for (int i = 0; i < newMeals.length; i++) {
+                    if (i != position) {
+                        mealItems[j] = newMeals[i];
+                        j++;
+                    }
                 }
             }
         }

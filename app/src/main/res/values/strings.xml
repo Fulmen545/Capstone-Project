@@ -37,6 +37,7 @@
     <string name="recentMeals">Recent Meals</string>
     <string name="title_activity_history">History</string>
     <string name="icon_calendar">Calendar</string>
+    <string name="no_meals">No meals are recorded</string>
 
 
 
