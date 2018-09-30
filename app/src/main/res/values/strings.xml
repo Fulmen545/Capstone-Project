@@ -42,6 +42,7 @@
     <!-- Meal Detail -->
     <string name="toolbar_name">Meal Detail</string>
     <string name="icon_pen">Edit</string>
+    <string name="edit_meal">Edit Meal</string>
 
 
 

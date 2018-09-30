@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -79,6 +80,10 @@ public class AddMealFragment extends Fragment {
 
     ArrayAdapter<String> foodTypesAdapter;
     ArrayAdapter<String> custFieldsAdapter;
+    int typeFoodSpinnerPosition;
+    boolean edit = false;
+    boolean saved = false;
+    Bundle bundle;
 
     private ArrayList permissions = new ArrayList();
 
@@ -97,12 +102,7 @@ public class AddMealFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        Bundle bundle = this.getArguments();
-        if (!bundle.containsKey(ID)){
-            Toast.makeText(getContext(), "AddMeal", Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(getContext(), "EditMeal", Toast.LENGTH_SHORT).show();
-        }
+
         getFoodTypes();
         getCustomFields();
         typeFoodSpinner = view.findViewById(R.id.typeFoodSpinner);
@@ -253,22 +253,60 @@ public class AddMealFragment extends Fragment {
         editDesc = view.findViewById(R.id.editDescription);
         calendar = view.findViewById(R.id.calChckbx);
         save = view.findViewById(R.id.saveBtn);
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                insertMeal(typeFoodSpinner.getSelectedItem().toString(),
-                        editDesc.getText().toString(),
-                        editDate.getText().toString(),
-                        editTime.getText().toString(),
-                        editLocation.getText().toString(),
-                        custJson.toString(),
-                        calendar.isChecked(),
-                        selectUser());
-                Toast.makeText(getContext(), "Meal was added",Toast.LENGTH_SHORT).show();
-                getActivity().onBackPressed();
+        bundle = this.getArguments();
+        if (!bundle.containsKey(ID)){
+            save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    insertMeal(typeFoodSpinner.getSelectedItem().toString(),
+                            editDesc.getText().toString(),
+                            editDate.getText().toString(),
+                            editTime.getText().toString(),
+                            editLocation.getText().toString(),
+                            custJson.toString(),
+                            calendar.isChecked(),
+                            selectUser());
+                    Toast.makeText(getContext(), "Meal was added",Toast.LENGTH_SHORT).show();
+                    getActivity().onBackPressed();
+                }
+            });
+        }else {
+            getActivity().setTitle(R.string.edit_meal);
+            edit = true;
+            typeFoodSpinnerPosition = foodTypesAdapter.getPosition(bundle.getString(TYPE));
+            typeFoodSpinner.setSelection(typeFoodSpinnerPosition, true);
+            editDesc.setText(bundle.getString(DESCRIPTION));
+            editDate.setText(bundle.getString(DATE));
+            editTime.setText(bundle.getString(TIME));
+            editLocation.setText(bundle.getString(LOCATION));
+            try {
+                custJson = new JSONObject(bundle.getString(CUST_FIELDS));
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        });
+            if(bundle.getString(GCALENDAR).equals("true")){
+                calendar.setChecked(true);
+            }
+            save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    saved=true;
+                    typeFoodSpinner.setSelection(typeFoodSpinnerPosition);
+//                    insertMeal(typeFoodSpinner.getSelectedItem().toString(),
+//                            editDesc.getText().toString(),
+//                            editDate.getText().toString(),
+//                            editTime.getText().toString(),
+//                            editLocation.getText().toString(),
+//                            custJson.toString(),
+//                            calendar.isChecked(),
+//                            selectUser());
+                    Toast.makeText(getContext(), "Meal was edited",Toast.LENGTH_SHORT).show();
+//                    getActivity().onBackPressed();
+                }
+            });
+        }
 
     }
 
@@ -280,6 +318,7 @@ public class AddMealFragment extends Fragment {
         foodTypesAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item, typeFoods);
         typeFoodSpinner.setAdapter(foodTypesAdapter);
+        typeFoodSpinner.setSelection(typeFoodSpinnerPosition, true);
         custFieldsAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item, custFields);
         custFieldSpinner.setAdapter(custFieldsAdapter);
@@ -295,7 +334,29 @@ public class AddMealFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                getActivity().onBackPressed();
+                if (edit){
+                    Bundle newbundle;
+                    if (saved) {
+                         newbundle = new Bundle();
+                        newbundle.putString(ID, bundle.getString(ID));
+                        newbundle.putString(TYPE, typeFoodSpinner.getSelectedItem().toString());
+                        newbundle.putString(DESCRIPTION, editDesc.getText().toString());
+                        newbundle.putString(DATE, editDate.getText().toString());
+                        newbundle.putString(TIME, editTime.getText().toString());
+                        newbundle.putString(LOCATION, editLocation.getText().toString());
+                        newbundle.putString(CUST_FIELDS, custJson.toString());
+                        newbundle.putString(GCALENDAR, Boolean.toString(calendar.isChecked()));
+                        newbundle.putString(COLOR, bundle.getString(COLOR));
+                        newbundle.putString(USER, bundle.getString(USER));
+                    } else {
+                         newbundle = bundle;
+                    }
+                    DetailMealFragment detailMealFragment = new DetailMealFragment();
+                    detailMealFragment.setArguments(newbundle);
+                    changeTo(detailMealFragment, android.R.id.content, "tag1");
+                } else {
+                    getActivity().onBackPressed();
+                }
                 return true;
             case R.id.settings:
 //                Toast.makeText(getContext(),"Settings", Toast.LENGTH_SHORT).show();
@@ -376,6 +437,13 @@ public class AddMealFragment extends Fragment {
         } catch (Exception ex) {
             Log.e("ADDMEAL", "RISO EX: " + ex);
         }
+
+    }
+
+    public void changeTo(Fragment fragment, int containerViewId, String tag) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        fragmentManager.beginTransaction().replace(containerViewId, fragment, tag == null ? fragment.getClass().getName() : tag).commit();
 
     }
 
