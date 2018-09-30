@@ -117,6 +117,19 @@ public class DatabaseQuery {
                 cv,DbColumns.MealsEntry.NAME_FLD + "=? AND " + DbColumns.MealsEntry.FIELDS_USR + "=?",new String[]{field, user});
     }
 
+    public void updateMeal (String id, String mealType, String desc, String date, String time, String location, String custFields, boolean gCalendar, String email){
+        ContentValues cv = new ContentValues();
+        cv.put(DbColumns.MealsEntry.TYPE_ML, mealType);
+        cv.put(DbColumns.MealsEntry.DESCRIPTION, desc);
+        cv.put(DbColumns.MealsEntry.DATE, date);
+        cv.put(DbColumns.MealsEntry.TIME, time);
+        cv.put(DbColumns.MealsEntry.LOCATION, location);
+        cv.put(DbColumns.MealsEntry.CUST_FIELDS, custFields);
+        cv.put(DbColumns.MealsEntry.GCALENDAR, Boolean.toString(gCalendar));
+        cv.put(DbColumns.MealsEntry.MEALS_USR, email);
+        context.getContentResolver().update(DbColumns.MealsEntry.CONTENT_URI_MEALS, cv, DbColumns.MealsEntry._ID + "=?",new String[]{id});
+    }
+
     public String[] getCustomFields(String user){
         try {
             Cursor c = context.getContentResolver().query(DbColumns.MealsEntry.CONTENT_URI_FIELDS,

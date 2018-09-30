@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.riso.android.mealtracker.data.DatabaseQuery;
 import com.riso.android.mealtracker.data.DbColumns;
 
 import org.json.JSONException;
@@ -289,19 +290,21 @@ public class AddMealFragment extends Fragment {
             if(bundle.getString(GCALENDAR).equals("true")){
                 calendar.setChecked(true);
             }
+            final DatabaseQuery databaseQuery = new DatabaseQuery(getContext());
             save.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     saved=true;
                     typeFoodSpinner.setSelection(typeFoodSpinnerPosition);
-//                    insertMeal(typeFoodSpinner.getSelectedItem().toString(),
-//                            editDesc.getText().toString(),
-//                            editDate.getText().toString(),
-//                            editTime.getText().toString(),
-//                            editLocation.getText().toString(),
-//                            custJson.toString(),
-//                            calendar.isChecked(),
-//                            selectUser());
+                    databaseQuery.updateMeal(bundle.getString(ID),
+                            typeFoodSpinner.getSelectedItem().toString(),
+                            editDesc.getText().toString(),
+                            editDate.getText().toString(),
+                            editTime.getText().toString(),
+                            editLocation.getText().toString(),
+                            custJson.toString(),
+                            calendar.isChecked(),
+                            selectUser());
                     Toast.makeText(getContext(), "Meal was edited",Toast.LENGTH_SHORT).show();
 //                    getActivity().onBackPressed();
                 }
