@@ -11,4 +11,8 @@
     <dimen name="settings_btn">70dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
+    <dimen name="bar_height">168dp</dimen>
+    <dimen name="fab_elevation">4dp</dimen>
+
+
 </resources>

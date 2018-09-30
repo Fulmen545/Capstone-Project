@@ -300,17 +300,4 @@ public class SettingsActivity extends AppCompatActivity {
                 DbColumns.MealsEntry.TYPE_FLD + "= ? ", new String[]{color, type});
     }
 
-    private boolean isRemoveTypeDefault(Spinner spinner){
-        if (spinner.getSelectedItem().toString().equals("Breakfast") || spinner.getSelectedItem().toString().equals("Lunch") || spinner.getSelectedItem().toString().equals("Dinner"))
-            return true;
-        else
-            return false;
-    }
-
-    private boolean isRemoveCusotmDefault(Spinner spinner){
-        if (spinner.getSelectedItem().toString().equals("Calories") || spinner.getSelectedItem().toString().equals("Vegan"))
-            return true;
-        else
-            return false;
-    }
 }

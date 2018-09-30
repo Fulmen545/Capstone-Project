@@ -49,6 +49,16 @@ import java.util.Calendar;
  * A simple {@link Fragment} subclass.
  */
 public class AddMealFragment extends Fragment {
+    private final String TYPE = "MEAL_TYPE";
+    private final String DESCRIPTION = "DESCRIPTION";
+    private final String DATE = "DATE";
+    private final String TIME = "TIME";
+    private final String LOCATION = "LOCATION";
+    private final String CUST_FIELDS = "CUST_FIELDS";
+    private final String COLOR = "COLOR";
+    private final String GCALENDAR = "GCALENDAR";
+    private final String ID = "ID";
+    private final String USER = "USER";
 
     Spinner typeFoodSpinner;
     Spinner custFieldSpinner;
@@ -87,6 +97,12 @@ public class AddMealFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        Bundle bundle = this.getArguments();
+        if (!bundle.containsKey(ID)){
+            Toast.makeText(getContext(), "AddMeal", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(getContext(), "EditMeal", Toast.LENGTH_SHORT).show();
+        }
         getFoodTypes();
         getCustomFields();
         typeFoodSpinner = view.findViewById(R.id.typeFoodSpinner);

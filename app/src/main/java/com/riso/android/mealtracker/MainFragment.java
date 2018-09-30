@@ -46,6 +46,8 @@ public class MainFragment extends Fragment {
     LinearLayout addMealLayout;
     @BindView(R.id.history)
     LinearLayout historyLayout;
+    @BindView(R.id.googleCal)
+    LinearLayout googleLayout;
     private String token;
 
     @Override
@@ -84,6 +86,15 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), HistoryActivity.class);
+                startActivity(intent);
+                ((Activity) getActivity()).overridePendingTransition(0, 0);
+            }
+        });
+        googleLayout = view.findViewById(R.id.googleCal);
+        googleLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MealDetailActivity.class);
                 startActivity(intent);
                 ((Activity) getActivity()).overridePendingTransition(0, 0);
             }

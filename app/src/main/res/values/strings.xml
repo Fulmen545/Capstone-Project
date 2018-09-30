@@ -39,6 +39,10 @@
     <string name="icon_calendar">Calendar</string>
     <string name="no_meals">No meals are recorded</string>
 
+    <!-- Meal Detail -->
+    <string name="toolbar_name">Meal Detail</string>
+    <string name="icon_pen">Edit</string>
+
 
 
 </resources>

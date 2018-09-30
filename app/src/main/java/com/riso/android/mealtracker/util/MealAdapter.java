@@ -24,14 +24,21 @@ import butterknife.ButterKnife;
 
 public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder>{
     private static final String TAG = MealAdapter.class.getSimpleName();
+    final private ListItemClickListener mOnClickListener;
 
     private MealItem[] mealItems;
     private int mealPressed;
 
 
-    public MealAdapter(MealItem[] mealItems){
+    public MealAdapter(ListItemClickListener mOnClickListener, MealItem[] mealItems){
+        this.mOnClickListener = mOnClickListener;
         this.mealItems = mealItems;
 //        this.mealPressed = mealPressed;
+    }
+
+    public interface ListItemClickListener {
+        void onListItemClick(int listItem);
+
     }
 
     @Override
@@ -166,7 +173,8 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
 
         @Override
         public void onClick(View v) {
-
+            int clickedPosition = getAdapterPosition();
+            mOnClickListener.onListItemClick(clickedPosition);
         }
     }
 }

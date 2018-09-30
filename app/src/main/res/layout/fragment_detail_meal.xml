@@ -1,0 +1,144 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.riso.android.mealtracker.DetailMealFragment">
+
+    <!--<android.support.design.widget.AppBarLayout-->
+    <!--android:id="@+id/app_bar_layout"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:elevation="@dimen/fab_elevation"-->
+    <!--android:layout_height="@dimen/bar_height">-->
+
+    <!--<android.support.design.widget.CollapsingToolbarLayout-->
+    <!--android:id="@+id/toolbar_container"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"-->
+    <!--app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"-->
+    <!--app:expandedTitleMarginStart="72dp"-->
+    <!--app:layout_scrollFlags="scroll|exitUntilCollapsed">-->
+
+    <!--<android.support.v7.widget.Toolbar-->
+    <!--android:id="@+id/toolbar"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="?actionBarSize"-->
+    <!--android:layout_gravity="bottom">-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/detailTitle"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--tools:text="Breakfast"-->
+    <!--android:textColor="@color/white"-->
+    <!--android:textSize="@dimen/menu_item_text"-->
+    <!--android:textStyle="bold"-->
+
+    <!--android:contentDescription="@string/app_name" />-->
+
+    <!--</android.support.v7.widget.Toolbar>-->
+
+    <!--</android.support.design.widget.CollapsingToolbarLayout>-->
+    <!--</android.support.design.widget.AppBarLayout>-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/detailDate"
+                android:layout_width="160dp"
+                android:layout_height="49dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:textSize="@dimen/menu_item_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Date" />
+
+            <TextView
+                android:id="@+id/detailTIme"
+                android:layout_width="138dp"
+                android:layout_height="49dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="12dp"
+                android:textSize="@dimen/menu_item_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.16"
+                app:layout_constraintStart_toEndOf="@+id/detailDate"
+                app:layout_constraintTop_toTopOf="@+id/detailDate"
+                tools:text="Time" />
+
+            <TextView
+                android:id="@+id/detailLocation"
+                android:layout_width="331dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="24dp"
+                android:textSize="@dimen/menu_item_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/detailDate"
+                app:layout_constraintTop_toBottomOf="@+id/detailDate"
+                tools:text="Location" />
+
+            <TextView
+                android:id="@+id/detailDescTV"
+                android:layout_width="88dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/description"
+                android:textColor="@color/textgray"
+                app:layout_constraintStart_toStartOf="@+id/detailLocation"
+                app:layout_constraintTop_toBottomOf="@+id/detailLocation" />
+
+            <TextView
+                android:id="@+id/detailDescription"
+                android:layout_width="331dp"
+                android:layout_height="81dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/detailDescTV"
+                app:layout_constraintTop_toBottomOf="@+id/detailDescTV"
+                tools:text="User's text" />
+
+            <TextView
+                android:id="@+id/detailCustFields"
+                android:layout_width="139dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/custFields"
+                android:textColor="@color/textgray"
+                app:layout_constraintStart_toStartOf="@+id/detailDescription"
+                app:layout_constraintTop_toBottomOf="@+id/detailDescription" />
+
+            <Spinner
+                android:id="@+id/detailSpinner"
+                android:layout_width="152dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="@+id/detailCustFields"
+                app:layout_constraintTop_toBottomOf="@+id/detailCustFields" />
+
+            <TextView
+                android:id="@+id/detailCustomfields"
+                android:layout_width="331dp"
+                android:layout_height="63dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="16dp"
+                android:paddingBottom="30dp"
+                android:text="TextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/detailSpinner"
+                app:layout_constraintTop_toBottomOf="@+id/detailSpinner" />
+
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+</FrameLayout>

@@ -3,6 +3,7 @@ package com.riso.android.mealtracker.data;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 /**
  * Created by richard.janitor on 23-Sep-18.
@@ -12,6 +13,7 @@ public class DatabaseQuery {
     Context context;
     String[] color;
     String[] fields;
+    String[] custFields;
     private String user;
     MealItem[] mealsStored;
 
@@ -113,5 +115,28 @@ public class DatabaseQuery {
         cv.put(DbColumns.MealsEntry.COLOR, color);
         context.getContentResolver().update(DbColumns.MealsEntry.CONTENT_URI_FIELDS,
                 cv,DbColumns.MealsEntry.NAME_FLD + "=? AND " + DbColumns.MealsEntry.FIELDS_USR + "=?",new String[]{field, user});
+    }
+
+    public String[] getCustomFields(String user){
+        try {
+            Cursor c = context.getContentResolver().query(DbColumns.MealsEntry.CONTENT_URI_FIELDS,
+                    new String[]{"DISTINCT " + DbColumns.MealsEntry.NAME_FLD},
+                    DbColumns.MealsEntry.TYPE_FLD + "= 'custom'",
+                    null,
+                    null);
+            if (c.getCount() != 0) {
+                custFields = new String[c.getCount()];
+                int i = 0;
+                if (c.moveToFirst()) {
+                    do {
+                        custFields[i] = c.getString(c.getColumnIndex(DbColumns.MealsEntry.NAME_FLD));
+                        i++;
+                    } while (c.moveToNext());
+                }
+            }
+        } catch (Exception ex) {
+            Log.e("ADDMEAL", "RISO EX: " + ex);
+        }
+        return custFields;
     }
 }

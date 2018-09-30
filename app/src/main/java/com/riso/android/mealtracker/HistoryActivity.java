@@ -1,6 +1,8 @@
 package com.riso.android.mealtracker;
 
 import android.app.DatePickerDialog;
+import android.app.FragmentManager;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,8 +25,18 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HistoryActivity extends AppCompatActivity {
-    private MealItem[] mealsStored;
+public class HistoryActivity extends AppCompatActivity implements MealAdapter.ListItemClickListener{
+    private final String TYPE = "MEAL_TYPE";
+    private final String DESCRIPTION = "DESCRIPTION";
+    private final String DATE = "DATE";
+    private final String TIME = "TIME";
+    private final String LOCATION = "LOCATION";
+    private final String CUST_FIELDS = "CUST_FIELDS";
+    private final String COLOR = "COLOR";
+    private final String GCALENDAR = "GCALENDAR";
+    private final String ID = "ID";
+    private final String USER = "USER";
+    public MealItem[] mealsStored;
     private String[] color;
     private String[] fields;
     private String user;
@@ -55,7 +67,7 @@ public class HistoryActivity extends AppCompatActivity {
         } else {
             mRecipeNamesList.setVisibility(View.VISIBLE);
             no_meal_tv.setVisibility(View.GONE);
-            mMeakAdapter = new MealAdapter(mealsStored);
+            mMeakAdapter = new MealAdapter(HistoryActivity.this, mealsStored);
             mRecipeNamesList.setAdapter(mMeakAdapter);
         }
     }
@@ -87,7 +99,7 @@ public class HistoryActivity extends AppCompatActivity {
                                 } else {
                                     mRecipeNamesList.setVisibility(View.VISIBLE);
                                     no_meal_tv.setVisibility(View.GONE);
-                                    mMeakAdapter = new MealAdapter(mealsStored);
+                                    mMeakAdapter = new MealAdapter(HistoryActivity.this, mealsStored);
                                     mRecipeNamesList.setAdapter(mMeakAdapter);
                                 }
 
@@ -188,4 +200,22 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onListItemClick(int listItem) {
+        getStoredMeals();
+        Bundle bundle = new Bundle();
+        bundle.putString(ID, mealsStored[listItem].id);
+        bundle.putString(TYPE, mealsStored[listItem].typeItem);
+        bundle.putString(DESCRIPTION, mealsStored[listItem].descItem);
+        bundle.putString(DATE, mealsStored[listItem].dateItem);
+        bundle.putString(TIME, mealsStored[listItem].timeItem);
+        bundle.putString(LOCATION, mealsStored[listItem].locationItem);
+        bundle.putString(CUST_FIELDS, mealsStored[listItem].customItem);
+        bundle.putString(GCALENDAR, mealsStored[listItem].gCalendarItem);
+        bundle.putString(COLOR, mealsStored[listItem].colorItem);
+        bundle.putString(USER, user);
+        Intent intent = new Intent(this, MealDetailActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
 }
