@@ -34,10 +34,10 @@ public class LoginFragment extends Fragment {
     private static final String TOKEN = "token";
 
 
-    @BindView(R.id.passwordEditText)
-    EditText passField;
-    @BindView(R.id.emailEditText)
-    EditText emailField;
+//    @BindView(R.id.passwordEditText)
+//    EditText passField;
+//    @BindView(R.id.emailEditText)
+//    EditText emailField;
     @BindView(R.id.signIn)
     Button signInBtn;
 
@@ -55,10 +55,10 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
-        passField= view.findViewById(R.id.passwordEditText);
-        emailField= view.findViewById(R.id.emailEditText);
-        passField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        emailField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+//        passField= view.findViewById(R.id.passwordEditText);
+//        emailField= view.findViewById(R.id.emailEditText);
+//        passField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+//        emailField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();

@@ -73,6 +73,14 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        getStoredMeals();
+        mMeakAdapter = new MealAdapter(HistoryActivity.this, mealsStored);
+        mRecipeNamesList.setAdapter(mMeakAdapter);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:

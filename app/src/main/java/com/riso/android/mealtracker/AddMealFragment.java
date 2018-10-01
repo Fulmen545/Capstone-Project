@@ -85,6 +85,7 @@ public class AddMealFragment extends Fragment {
     boolean edit = false;
     boolean saved = false;
     Bundle bundle;
+    String user;
 
     private ArrayList permissions = new ArrayList();
 
@@ -103,7 +104,7 @@ public class AddMealFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-
+        user = selectUser();
         getFoodTypes();
         getCustomFields();
         typeFoodSpinner = view.findViewById(R.id.typeFoodSpinner);
@@ -122,8 +123,7 @@ public class AddMealFragment extends Fragment {
                 try {
                     editCustomValue = custJson.get(custFields[position]).toString();
                 } catch (JSONException ignored) {
-                }
-                finally {
+                } finally {
                     editCustom.setText(editCustomValue);
                 }
             }
@@ -185,14 +185,14 @@ public class AddMealFragment extends Fragment {
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (String custValue : custFields){
-                    if (custValue == custFieldSpinner.getSelectedItem().toString()){
+                for (String custValue : custFields) {
+                    if (custValue == custFieldSpinner.getSelectedItem().toString()) {
                         try {
-                            custJson.put(custValue,editCustom.getText());
+                            custJson.put(custValue, editCustom.getText());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        Toast.makeText(getContext(),"Field was added", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Field was added", Toast.LENGTH_SHORT).show();
                         break;
                     }
                 }
@@ -241,11 +241,11 @@ public class AddMealFragment extends Fragment {
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
             Location mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            if(mLocation!=null) {
+            if (mLocation != null) {
                 editLocation.setText("Lat.:" + mLocation.getLatitude() + " Long.:" + mLocation.getLongitude());
 
             } else {
-                Toast.makeText(getContext(),"Couldn't access location", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Couldn't access location", Toast.LENGTH_SHORT).show();
                 editLocation.setText("");
             }
         } else {
@@ -256,7 +256,7 @@ public class AddMealFragment extends Fragment {
         save = view.findViewById(R.id.saveBtn);
 
         bundle = this.getArguments();
-        if (!bundle.containsKey(ID)){
+        if (!bundle.containsKey(ID)) {
             save.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -269,11 +269,11 @@ public class AddMealFragment extends Fragment {
                             custJson.toString(),
                             calendar.isChecked(),
                             selectUser());
-                    Toast.makeText(getContext(), "Meal was added",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Meal was added", Toast.LENGTH_SHORT).show();
                     getActivity().onBackPressed();
                 }
             });
-        }else {
+        } else {
             getActivity().setTitle(R.string.edit_meal);
             edit = true;
             typeFoodSpinnerPosition = foodTypesAdapter.getPosition(bundle.getString(TYPE));
@@ -287,14 +287,14 @@ public class AddMealFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            if(bundle.getString(GCALENDAR).equals("true")){
+            if (bundle.getString(GCALENDAR).equals("true")) {
                 calendar.setChecked(true);
             }
             final DatabaseQuery databaseQuery = new DatabaseQuery(getContext());
             save.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    saved=true;
+                    saved = true;
                     typeFoodSpinner.setSelection(typeFoodSpinnerPosition);
                     databaseQuery.updateMeal(bundle.getString(ID),
                             typeFoodSpinner.getSelectedItem().toString(),
@@ -305,7 +305,7 @@ public class AddMealFragment extends Fragment {
                             custJson.toString(),
                             calendar.isChecked(),
                             selectUser());
-                    Toast.makeText(getContext(), "Meal was edited",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Meal was edited", Toast.LENGTH_SHORT).show();
 //                    getActivity().onBackPressed();
                 }
             });
@@ -337,10 +337,10 @@ public class AddMealFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if (edit){
+                if (edit) {
                     Bundle newbundle;
                     if (saved) {
-                         newbundle = new Bundle();
+                        newbundle = new Bundle();
                         newbundle.putString(ID, bundle.getString(ID));
                         newbundle.putString(TYPE, typeFoodSpinner.getSelectedItem().toString());
                         newbundle.putString(DESCRIPTION, editDesc.getText().toString());
@@ -352,7 +352,7 @@ public class AddMealFragment extends Fragment {
                         newbundle.putString(COLOR, bundle.getString(COLOR));
                         newbundle.putString(USER, bundle.getString(USER));
                     } else {
-                         newbundle = bundle;
+                        newbundle = bundle;
                     }
                     DetailMealFragment detailMealFragment = new DetailMealFragment();
                     detailMealFragment.setArguments(newbundle);
@@ -384,7 +384,7 @@ public class AddMealFragment extends Fragment {
         }
     }
 
-    private void insertMeal (String mealType, String desc, String date, String time, String location, String custFields, boolean gCalendar, String email){
+    private void insertMeal(String mealType, String desc, String date, String time, String location, String custFields, boolean gCalendar, String email) {
         ContentValues cv = new ContentValues();
         cv.put(DbColumns.MealsEntry.TYPE_ML, mealType);
         cv.put(DbColumns.MealsEntry.DESCRIPTION, desc);
@@ -397,13 +397,13 @@ public class AddMealFragment extends Fragment {
         getContext().getContentResolver().insert(DbColumns.MealsEntry.CONTENT_URI_MEALS, cv);
     }
 
-    private void getFoodTypes(){
+    private void getFoodTypes() {
         try {
             Cursor c = getActivity().getContentResolver().query(DbColumns.MealsEntry.CONTENT_URI_FIELDS,
-                new String[]{"DISTINCT " + DbColumns.MealsEntry.NAME_FLD, DbColumns.MealsEntry.COLOR},
-                DbColumns.MealsEntry.TYPE_FLD + "= 'type'",
-                null,
-                null);
+                    new String[]{"DISTINCT " + DbColumns.MealsEntry.NAME_FLD, DbColumns.MealsEntry.COLOR},
+                    DbColumns.MealsEntry.TYPE_FLD + "= 'type' AND " + DbColumns.MealsEntry.FIELDS_USR + " in ('default', '" + user + "')",
+                    null,
+                    null);
             if (c.getCount() != 0) {
                 typeFoods = new String[c.getCount()];
                 int i = 0;
@@ -420,13 +420,13 @@ public class AddMealFragment extends Fragment {
 
     }
 
-    private void getCustomFields(){
+    private void getCustomFields() {
         try {
             Cursor c = getActivity().getContentResolver().query(DbColumns.MealsEntry.CONTENT_URI_FIELDS,
-                new String[]{"DISTINCT " + DbColumns.MealsEntry.NAME_FLD},
-                DbColumns.MealsEntry.TYPE_FLD + "= 'custom'",
-                null,
-                null);
+                    new String[]{"DISTINCT " + DbColumns.MealsEntry.NAME_FLD},
+                    DbColumns.MealsEntry.TYPE_FLD + "= 'custom' AND " + DbColumns.MealsEntry.FIELDS_USR + " in ('default', '" + user + "')",
+                    null,
+                    null);
             if (c.getCount() != 0) {
                 custFields = new String[c.getCount()];
                 int i = 0;
