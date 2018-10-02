@@ -36,7 +36,20 @@
         <activity
             android:name=".HistoryActivity"
             android:label="@string/title_activity_history" />
-        <activity android:name=".MealDetailActivity"></activity>
+        <activity android:name=".MealDetailActivity" />
+        <activity
+            android:name=".CalendarActivity"
+            android:label="@string/google_calendar" />
+
+        <receiver android:name=".MealWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/meal_widget_provider_info" />
+        </receiver>
     </application>
 
 </manifest>

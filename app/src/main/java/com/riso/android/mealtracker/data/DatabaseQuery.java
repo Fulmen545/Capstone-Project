@@ -77,7 +77,7 @@ public class DatabaseQuery {
                         DbColumns.MealsEntry.GCALENDAR},
                 DbColumns.MealsEntry.MEALS_USR + "=? AND " + DbColumns.MealsEntry.DATE + " =?",
                 new String[]{user, date},
-                DbColumns.MealsEntry.DATE);
+                DbColumns.MealsEntry.DATE + " DESC");
         if (c.getCount() != 0) {
             mealsStored = new MealItem[c.getCount()];
             int i = 0;
@@ -97,6 +97,30 @@ public class DatabaseQuery {
             }
         }
         return mealsStored;
+    }
+
+    public String[] getLastMeal() {
+        user = selectUser();
+        String[] lastMeal = new String[5];
+        Cursor c = context.getContentResolver().query(DbColumns.MealsEntry.CONTENT_URI_MEALS,
+                new String[]{DbColumns.MealsEntry.TYPE_ML,
+                        DbColumns.MealsEntry.DESCRIPTION,
+                        DbColumns.MealsEntry.DATE,
+                        DbColumns.MealsEntry.TIME,
+                        DbColumns.MealsEntry.LOCATION},
+                DbColumns.MealsEntry.MEALS_USR + "=?",
+                new String[]{user},
+                DbColumns.MealsEntry._ID + " DESC limit 1");
+        if (c.getCount() != 0) {
+            if (c.moveToFirst()) {
+                lastMeal[0]=c.getString(c.getColumnIndex(DbColumns.MealsEntry.TYPE_ML));
+                lastMeal[1]=c.getString(c.getColumnIndex(DbColumns.MealsEntry.DATE));
+                lastMeal[2]=c.getString(c.getColumnIndex(DbColumns.MealsEntry.TIME));
+                lastMeal[3]=c.getString(c.getColumnIndex(DbColumns.MealsEntry.LOCATION));
+                lastMeal[4]=c.getString(c.getColumnIndex(DbColumns.MealsEntry.DESCRIPTION));
+            }
+        }
+        return lastMeal;
     }
 
 

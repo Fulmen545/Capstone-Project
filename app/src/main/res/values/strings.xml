@@ -44,6 +44,10 @@
     <string name="icon_pen">Edit</string>
     <string name="edit_meal">Edit Meal</string>
 
+    <!--Calendar-->
+    <string name="google_calendar">Google Calendar</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 
 
 </resources>
