@@ -3,6 +3,7 @@ package com.riso.android.mealtracker;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.riso.android.mealtracker.data.DatabaseQuery;
@@ -74,8 +76,48 @@ public class SettingsActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item, colors);
         colorFoodSettingsSpinner = findViewById(R.id.colorFoodSettingsSpinner);
         colorFoodSettingsSpinner.setAdapter(colorAdapter);
+        colorFoodSettingsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (colorFoodSettingsSpinner.getSelectedItem().toString()){
+                    case "Cyan": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.cyan)); break;
+                    case "Orange": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.deepOrange));break;
+                    case "Yellow": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.yellow));break;
+                    case "Pink": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.pink));break;
+                    case "Purple": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.purple));break;
+                    case "Brown": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.brown));break;
+                    case "Deep Purple": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.deepPurple));break;
+                    default: ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.green));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         colorNewFoodSettingsSpinner = findViewById(R.id.colorNewFoodSettingsSpinner);
         colorNewFoodSettingsSpinner.setAdapter(colorAdapter);
+        colorNewFoodSettingsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (colorNewFoodSettingsSpinner.getSelectedItem().toString()){
+                    case "Cyan": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.cyan)); break;
+                    case "Orange": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.deepOrange));break;
+                    case "Yellow": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.yellow));break;
+                    case "Pink": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.pink));break;
+                    case "Purple": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.purple));break;
+                    case "Brown": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.brown));break;
+                    case "Deep Purple": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.deepPurple));break;
+                    default: ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.green));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         typeFoodSpinner = findViewById(R.id.typeFoodSettingsSpinner);
 
         foodTypesAdapter = new ArrayAdapter<String>(this,
