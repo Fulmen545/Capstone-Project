@@ -4,6 +4,8 @@ package com.riso.android.mealtracker;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -151,8 +153,7 @@ public class AddMealFragment extends Fragment {
                                                   int monthOfYear, int dayOfMonth) {
                                 // set day of month , month and year value in the edit text
                                 editDate.setHint("");
-                                editDate.setText(dayOfMonth + "/"
-                                        + (monthOfYear + 1) + "/" + year);
+                                editDate.setText(String.format("%02d/%02d/%04d", dayOfMonth, (monthOfYear + 1), year));
 
                             }
                         }, mYear, mMonth, mDay);
@@ -270,6 +271,11 @@ public class AddMealFragment extends Fragment {
                             calendar.isChecked(),
                             selectUser());
                     Toast.makeText(getContext(), "Meal was added", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getContext(), MealWidgetProvider.class);
+                    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                    int[] ids = AppWidgetManager.getInstance(getActivity()).getAppWidgetIds(new ComponentName(getActivity(), MealWidgetProvider.class));
+                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+                    getContext().sendBroadcast(intent);
                     getActivity().onBackPressed();
                 }
             });

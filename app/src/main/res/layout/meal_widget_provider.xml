@@ -9,10 +9,12 @@
     <TextView
         android:id="@+id/titleWidget"
         android:layout_width="146dp"
-        android:layout_height="30dp"
+        android:layout_height="33dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:paddingBottom="5dp"
+        android:textSize="24dp"
+        android:textColor="@color/colorPrimary"
         tools:text="Title" />
 
     <TextView
@@ -23,6 +25,7 @@
         android:layout_below="@+id/titleWidget"
         android:layout_marginTop="12dp"
         android:paddingBottom="5dp"
+        android:textColor="@color/colorPrimary"
         tools:text="Date" />
 
     <TextView
@@ -34,6 +37,7 @@
         android:layout_marginStart="14dp"
         android:layout_toEndOf="@+id/dateWidget"
         android:paddingBottom="5dp"
+        android:textColor="@color/colorPrimary"
         tools:text="Time" />
 
     <TextView
@@ -45,6 +49,7 @@
         android:layout_marginTop="11dp"
         android:paddingBottom="5dp"
         android:maxLines="1"
+        android:textColor="@color/colorPrimary"
         tools:text="Location" />
 
     <TextView
@@ -56,6 +61,7 @@
         android:layout_marginTop="11dp"
         android:ellipsize="end"
         android:maxLines="1"
+        android:textColor="@color/colorPrimary"
         tools:text="Description" />
 
 </RelativeLayout>

@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.database.Cursor;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.riso.android.mealtracker.data.DatabaseQuery;
 import com.riso.android.mealtracker.data.DbColumns;
@@ -28,7 +29,6 @@ public class MealWidgetProvider extends AppWidgetProvider {
         views.setTextViewText(R.id.timeWidget, lastMeal[2]);
         views.setTextViewText(R.id.locationWidget, lastMeal[3]);
         views.setTextViewText(R.id.descriptionWidget, lastMeal[4]);
-
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
