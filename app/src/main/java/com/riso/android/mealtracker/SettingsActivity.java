@@ -3,6 +3,7 @@ package com.riso.android.mealtracker;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.PersistableBundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,6 +27,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SettingsActivity extends AppCompatActivity {
+    private static final String SPINER_COLOR = "spincolor";
+
     String[] typeFoods;
     String[] custFields;
     @BindView(R.id.typeFoodSettingsSpinner)
@@ -45,7 +48,8 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.typeFoodSettingsEdt)
     EditText editFoodEdt;
     @BindView(R.id.removeColor)
-    Button removeColorBtn;;
+    Button removeColorBtn;
+    ;
     @BindView(R.id.addCustFld)
     Button addCustFldBtn;
     @BindView(R.id.addCustSettingsEdt)
@@ -58,7 +62,7 @@ public class SettingsActivity extends AppCompatActivity {
     private ArrayAdapter<String> foodTypesAdapter;
     private ArrayAdapter<String> custFieldsAdapter;
     private ArrayAdapter<String> colorAdapter;
-    private String[] colors = new String[]{"Purple","Deep Purple", "Orange", "Brown", "Cyan", "Yellow", "Pink"};
+    private String[] colors = new String[]{"Purple", "Deep Purple", "Orange", "Brown", "Cyan", "Yellow", "Pink"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +71,6 @@ public class SettingsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         ((AppCompatActivity) this).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) this).getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         user = selectUser();
         getFoodTypes();
         getCustomFields();
@@ -76,48 +79,11 @@ public class SettingsActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item, colors);
         colorFoodSettingsSpinner = findViewById(R.id.colorFoodSettingsSpinner);
         colorFoodSettingsSpinner.setAdapter(colorAdapter);
-        colorFoodSettingsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (colorFoodSettingsSpinner.getSelectedItem().toString()){
-                    case "Cyan": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.cyan)); break;
-                    case "Orange": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.deepOrange));break;
-                    case "Yellow": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.yellow));break;
-                    case "Pink": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.pink));break;
-                    case "Purple": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.purple));break;
-                    case "Brown": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.brown));break;
-                    case "Deep Purple": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.deepPurple));break;
-                    default: ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.green));
-                }
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
         colorNewFoodSettingsSpinner = findViewById(R.id.colorNewFoodSettingsSpinner);
         colorNewFoodSettingsSpinner.setAdapter(colorAdapter);
-        colorNewFoodSettingsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (colorNewFoodSettingsSpinner.getSelectedItem().toString()){
-                    case "Cyan": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.cyan)); break;
-                    case "Orange": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.deepOrange));break;
-                    case "Yellow": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.yellow));break;
-                    case "Pink": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.pink));break;
-                    case "Purple": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.purple));break;
-                    case "Brown": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.brown));break;
-                    case "Deep Purple": ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.deepPurple));break;
-                    default: ((TextView)parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.green));
-                }
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
 
-            }
-        });
         typeFoodSpinner = findViewById(R.id.typeFoodSettingsSpinner);
 
         foodTypesAdapter = new ArrayAdapter<String>(this,
@@ -145,112 +111,153 @@ public class SettingsActivity extends AppCompatActivity {
         addColorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                insertColorCusotm(editFoodEdt.getText().toString(),"type",colorNewFoodSettingsSpinner.getSelectedItem().toString(),user);
+                insertColorCusotm(editFoodEdt.getText().toString(), "type", colorNewFoodSettingsSpinner.getSelectedItem().toString(), user);
                 getFoodTypes();
                 foodTypesAdapter = new ArrayAdapter<String>(SettingsActivity.this, android.R.layout.simple_spinner_item, typeFoods);
                 typeFoodSpinner.setAdapter(foodTypesAdapter);
                 removeFoodSpinner.setAdapter(foodTypesAdapter);
                 editFoodEdt.setText("");
-                Toast.makeText(getApplicationContext(),"Food type was added", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Food type was added", Toast.LENGTH_SHORT).show();
             }
         });
         removeColorBtn = findViewById(R.id.removeColor);
-//        removeColorBtn.setEnabled(!isRemoveTypeDefault(removeFoodSpinner));
-//        removeFoodSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                removeColorBtn.setEnabled(!isRemoveTypeDefault(removeFoodSpinner));
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
-//        if (removeColorBtn.isEnabled()) {
-            removeColorBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (custFieldSpinner.getSelectedItem().toString().equals("Add field")){
-                    }else {
-                        removeFoodType(removeFoodSpinner.getSelectedItem().toString(), "type");
-                        getFoodTypes();
-                        if (typeFoods.length == 0) {
-                            typeFoods = new String[1];
-                            typeFoods[0] = "Add field";
-                        }
-                        foodTypesAdapter = new ArrayAdapter<String>(SettingsActivity.this, android.R.layout.simple_spinner_item, typeFoods);
-                        typeFoodSpinner.setAdapter(foodTypesAdapter);
-                        removeFoodSpinner.setAdapter(foodTypesAdapter);
-                        Toast.makeText(getApplicationContext(), "Food type was removed", Toast.LENGTH_SHORT).show();
+        removeColorBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (custFieldSpinner.getSelectedItem().toString().equals("Add field")) {
+                } else {
+                    removeFoodType(removeFoodSpinner.getSelectedItem().toString(), "type");
+                    getFoodTypes();
+                    if (typeFoods.length == 0) {
+                        typeFoods = new String[1];
+                        typeFoods[0] = "Add field";
                     }
+                    foodTypesAdapter = new ArrayAdapter<String>(SettingsActivity.this, android.R.layout.simple_spinner_item, typeFoods);
+                    typeFoodSpinner.setAdapter(foodTypesAdapter);
+                    removeFoodSpinner.setAdapter(foodTypesAdapter);
+                    Toast.makeText(getApplicationContext(), "Food type was removed", Toast.LENGTH_SHORT).show();
                 }
-            });
-//        } else {
-//            removeColorBtn.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(getApplicationContext(), "You can't remove default value", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }
+            }
+        });
 
         addCustEdt = findViewById(R.id.addCustSettingsEdt);
         addCustFldBtn = findViewById(R.id.addCustFld);
         addCustFldBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                insertColorCusotm(addCustEdt.getText().toString(),"custom","", user);
+                insertColorCusotm(addCustEdt.getText().toString(), "custom", "", user);
                 getCustomFields();
                 custFieldsAdapter = new ArrayAdapter<String>(SettingsActivity.this,
                         android.R.layout.simple_spinner_item, custFields);
                 custFieldSpinner.setAdapter(custFieldsAdapter);
                 addCustEdt.setText("");
-                Toast.makeText(getApplicationContext(),"Custom field was added", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Custom field was added", Toast.LENGTH_SHORT).show();
             }
         });
         removeCustBtn = findViewById(R.id.removeCust);
-//        removeCustBtn.setEnabled(!isRemoveCusotmDefault(custFieldSpinner));
-//        custFieldSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                removeCustBtn.setEnabled(!isRemoveCusotmDefault(custFieldSpinner));
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//
-//            }
-//        });
-//        if (removeCustBtn.isEnabled()) {
-            removeCustBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (custFieldSpinner.getSelectedItem().toString().equals("Add field")){
-                    }else{
-                        removeFoodType(custFieldSpinner.getSelectedItem().toString(), "custom");
-                        getCustomFields();
-                        if (custFields.length == 0) {
-                            custFields = new String[1];
-                            custFields[0] = "Add field";
-                        }
-                        custFieldsAdapter = new ArrayAdapter<String>(SettingsActivity.this,
-                                android.R.layout.simple_spinner_item, custFields);
-                        custFieldSpinner.setAdapter(custFieldsAdapter);
-                        Toast.makeText(getApplicationContext(), "Custom field was removed", Toast.LENGTH_SHORT).show();
+        removeCustBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (custFieldSpinner.getSelectedItem().toString().equals("Add field")) {
+                } else {
+                    removeFoodType(custFieldSpinner.getSelectedItem().toString(), "custom");
+                    getCustomFields();
+                    if (custFields.length == 0) {
+                        custFields = new String[1];
+                        custFields[0] = "Add field";
                     }
+                    custFieldsAdapter = new ArrayAdapter<String>(SettingsActivity.this,
+                            android.R.layout.simple_spinner_item, custFields);
+                    custFieldSpinner.setAdapter(custFieldsAdapter);
+                    Toast.makeText(getApplicationContext(), "Custom field was removed", Toast.LENGTH_SHORT).show();
                 }
-            });
-//        } else {
-//            removeCustBtn.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Toast.makeText(getApplicationContext(), "You can't remove default value", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//        }
+            }
+        });
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        colorFoodSettingsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (colorFoodSettingsSpinner.getSelectedItem().toString()) {
+                    case "Cyan":
+                        ((TextView) parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+                        break;
+                    case "Orange":
+                        ((TextView) parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.deepOrange));
+                        break;
+                    case "Yellow":
+                        ((TextView) parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.yellow));
+                        break;
+                    case "Pink":
+                        ((TextView) parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.pink));
+                        break;
+                    case "Purple":
+                        ((TextView) parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.purple));
+                        break;
+                    case "Brown":
+                        ((TextView) parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.brown));
+                        break;
+                    case "Deep Purple":
+                        ((TextView) parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.deepPurple));
+                        break;
+                    default:
+                        ((TextView) parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.green));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        colorNewFoodSettingsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (colorNewFoodSettingsSpinner.getSelectedItem().toString()) {
+                    case "Cyan":
+                        ((TextView) parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.cyan));
+                        break;
+                    case "Orange":
+                        ((TextView) parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.deepOrange));
+                        break;
+                    case "Yellow":
+                        ((TextView) parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.yellow));
+                        break;
+                    case "Pink":
+                        ((TextView) parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.pink));
+                        break;
+                    case "Purple":
+                        ((TextView) parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.purple));
+                        break;
+                    case "Brown":
+                        ((TextView) parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.brown));
+                        break;
+                    case "Deep Purple":
+                        ((TextView) parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.deepPurple));
+                        break;
+                    default:
+                        ((TextView) parent.getChildAt(0)).setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.green));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -276,11 +283,11 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
-    private void getFoodTypes(){
+    private void getFoodTypes() {
         try {
             Cursor c = this.getContentResolver().query(DbColumns.MealsEntry.CONTENT_URI_FIELDS,
                     new String[]{"DISTINCT " + DbColumns.MealsEntry.NAME_FLD, DbColumns.MealsEntry.COLOR},
-                    DbColumns.MealsEntry.TYPE_FLD + "= 'type' AND " + DbColumns.MealsEntry.FIELDS_USR + " in ('" + user + "')" ,
+                    DbColumns.MealsEntry.TYPE_FLD + "= 'type' AND " + DbColumns.MealsEntry.FIELDS_USR + " in ('" + user + "')",
                     null,
                     null);
             if (c.getCount() != 0) {
@@ -302,7 +309,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
-    private void getCustomFields(){
+    private void getCustomFields() {
         try {
             Cursor c = this.getContentResolver().query(DbColumns.MealsEntry.CONTENT_URI_FIELDS,
                     new String[]{"DISTINCT " + DbColumns.MealsEntry.NAME_FLD},
@@ -328,7 +335,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
-    private void insertColorCusotm (String name, String type, String color, String email){
+    private void insertColorCusotm(String name, String type, String color, String email) {
         ContentValues cv = new ContentValues();
         cv.put(DbColumns.MealsEntry.NAME_FLD, name);
         cv.put(DbColumns.MealsEntry.TYPE_FLD, type);
@@ -337,7 +344,7 @@ public class SettingsActivity extends AppCompatActivity {
         this.getContentResolver().insert(DbColumns.MealsEntry.CONTENT_URI_FIELDS, cv);
     }
 
-    private void removeFoodType(String color, String type){
+    private void removeFoodType(String color, String type) {
         getContentResolver().delete(DbColumns.MealsEntry.CONTENT_URI_FIELDS, DbColumns.MealsEntry.NAME_FLD + "= ? AND " +
                 DbColumns.MealsEntry.TYPE_FLD + "= ? ", new String[]{color, type});
     }

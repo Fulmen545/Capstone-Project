@@ -33,14 +33,16 @@ public class MainActivity extends AppCompatActivity {
         android.support.v4.app.FragmentTransaction ft = fragmentManager.beginTransaction();
         LoginFragment lf = new LoginFragment();
         MainFragment mf = new MainFragment();
-        if (isSignedIn()) {
-            // signed in. Show the "sign out" button and explanation.
-            Toast.makeText(this,"Is signed in", Toast.LENGTH_SHORT).show();
-            ft.add(android.R.id.content, mf).commit();
-        } else {
-            // not signed in. Show the "sign in" button and explanation.
-            Toast.makeText(this,"Is not signed in", Toast.LENGTH_SHORT).show();
-            ft.add(android.R.id.content, lf).commit();
+        if (savedInstanceState == null) {
+            if (isSignedIn()) {
+                // signed in. Show the "sign out" button and explanation.
+                Toast.makeText(this, "Is signed in", Toast.LENGTH_SHORT).show();
+                ft.add(android.R.id.content, mf).commit();
+            } else {
+                // not signed in. Show the "sign in" button and explanation.
+                Toast.makeText(this, "Is not signed in", Toast.LENGTH_SHORT).show();
+                ft.add(android.R.id.content, lf).commit();
+            }
         }
 
 //        setContentView(R.layout.activity_main);

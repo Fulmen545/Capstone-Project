@@ -97,7 +97,7 @@ public class MainFragment extends Fragment {
         googleLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), CalendarActivity.class);
+                Intent intent = new Intent(getActivity(), GoogleTestActivity.class);
                 startActivity(intent);
                 ((Activity) getActivity()).overridePendingTransition(0, 0);
             }
@@ -111,6 +111,17 @@ public class MainFragment extends Fragment {
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         getContext().sendBroadcast(intent);
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+//        outState.put
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
     }
 
     @Override

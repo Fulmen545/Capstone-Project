@@ -17,8 +17,10 @@ public class AddMealActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = new Bundle();
         bundle.putString(TOKEN, intent.getStringExtra(TOKEN));
-        AddMealFragment amf = new AddMealFragment();
-        amf.setArguments(bundle);
-        ft.add(android.R.id.content, amf).commit();
+        if (savedInstanceState == null) {
+            AddMealFragment amf = new AddMealFragment();
+            amf.setArguments(bundle);
+            ft.add(android.R.id.content, amf).commit();
+        }
     }
 }

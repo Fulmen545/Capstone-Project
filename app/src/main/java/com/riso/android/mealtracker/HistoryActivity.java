@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,6 +41,7 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
     private String[] color;
     private String[] fields;
     private String user;
+    String date;
     private MealAdapter mMeakAdapter;
     @BindView(R.id.rv_meals)
     RecyclerView mRecipeNamesList;
@@ -53,6 +55,9 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
         ButterKnife.bind(this);
         ((AppCompatActivity) this).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) this).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        if (savedInstanceState != null){
+            date=savedInstanceState.getString(DATE);
+        }
         user = selectUser();
         getColor();
         getStoredMeals();
@@ -67,7 +72,7 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
         } else {
             mRecipeNamesList.setVisibility(View.VISIBLE);
             no_meal_tv.setVisibility(View.GONE);
-            mMeakAdapter = new MealAdapter(HistoryActivity.this, mealsStored);
+            mMeakAdapter = new MealAdapter(getApplication(),HistoryActivity.this, mealsStored);
             mRecipeNamesList.setAdapter(mMeakAdapter);
         }
     }
@@ -75,10 +80,28 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
     @Override
     protected void onResume() {
         super.onResume();
-        getStoredMeals();
-        mMeakAdapter = new MealAdapter(HistoryActivity.this, mealsStored);
+        if (date == null) {
+            getStoredMeals();
+        } else {
+            DatabaseQuery dbquery = new DatabaseQuery(HistoryActivity.this);
+            mealsStored=dbquery.getStoredMeals(date);
+        }
+        mMeakAdapter = new MealAdapter(getApplication(),HistoryActivity.this, mealsStored);
         mRecipeNamesList.setAdapter(mMeakAdapter);
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(DATE, date);
+        super.onSaveInstanceState(outState);
+    }
+
+//    @Override
+//    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+//
+//        outState.putString(DATE, date);
+//        super.onSaveInstanceState(outState, outPersistentState);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -99,6 +122,7 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
                                                   int monthOfYear, int dayOfMonth) {
                                 // set day of month , month and year value in the edit text
                                 DatabaseQuery dbquery = new DatabaseQuery(HistoryActivity.this);
+                                date = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
                                 mealsStored=dbquery.getStoredMeals(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
                                 if (mealsStored == null){
                                     mRecipeNamesList.setVisibility(View.GONE);
@@ -107,7 +131,7 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
                                 } else {
                                     mRecipeNamesList.setVisibility(View.VISIBLE);
                                     no_meal_tv.setVisibility(View.GONE);
-                                    mMeakAdapter = new MealAdapter(HistoryActivity.this, mealsStored);
+                                    mMeakAdapter = new MealAdapter(getApplication(),HistoryActivity.this, mealsStored);
                                     mRecipeNamesList.setAdapter(mMeakAdapter);
                                 }
 

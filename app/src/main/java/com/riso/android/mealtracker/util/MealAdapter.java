@@ -15,6 +15,10 @@ import com.riso.android.mealtracker.R;
 import com.riso.android.mealtracker.data.DatabaseQuery;
 import com.riso.android.mealtracker.data.MealItem;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.text.ParseException;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -28,11 +32,13 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
 
     private MealItem[] mealItems;
     private int mealPressed;
+    private Context context;
 
 
-    public MealAdapter(ListItemClickListener mOnClickListener, MealItem[] mealItems){
+    public MealAdapter(Context context, ListItemClickListener mOnClickListener, MealItem[] mealItems){
         this.mOnClickListener = mOnClickListener;
         this.mealItems = mealItems;
+        this.context = context;
 //        this.mealPressed = mealPressed;
     }
 
@@ -122,6 +128,18 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
                 mailItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        try {
+                            GoogleCalendarEvents gce = new GoogleCalendarEvents(context);
+                            gce.sentEvent(mealItems[listIndex].typeItem, mealItems[listIndex].dateItem,
+                                    mealItems[listIndex].timeItem, mealItems[listIndex].locationItem, mealItems[listIndex].descItem,
+                                    mealItems[listIndex].colorItem, dbQuery.selectUser());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        } catch (GeneralSecurityException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         Toast.makeText(itemView.getContext(), "Testujem mail", Toast.LENGTH_SHORT).show();
                     }
                 });
