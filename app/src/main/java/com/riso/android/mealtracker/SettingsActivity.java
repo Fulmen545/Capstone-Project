@@ -27,7 +27,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SettingsActivity extends AppCompatActivity {
-    private static final String SPINER_COLOR = "spincolor";
+    private static final String SPINER_EDIT_COLOR = "spinerditcolor";
+    private static final String SPINER_ADD_COLOR = "spineraddcolor";
+    private static final String CHANGE_TYPE = "changetype";
+    private static final String REMOVE_TYPE = "removetype";
+    private static final String REMOVE_CUSTOM = "removecustom";
 
     String[] typeFoods;
     String[] custFields;
@@ -174,11 +178,21 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        if (savedInstanceState != null){
+            int typeFoodSpinnerPosition = foodTypesAdapter.getPosition(savedInstanceState.getString(CHANGE_TYPE));
+            typeFoodSpinner.setSelection(typeFoodSpinnerPosition, true);
+            int colorFoodSettingsSpinnerPosition = colorAdapter.getPosition(savedInstanceState.getString(SPINER_EDIT_COLOR));
+            colorFoodSettingsSpinner.setSelection(colorFoodSettingsSpinnerPosition, true);
+        }
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        colorAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, colors);
+        colorFoodSettingsSpinner.setAdapter(colorAdapter);
         colorFoodSettingsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -215,6 +229,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        colorNewFoodSettingsSpinner.setAdapter(colorAdapter);
         colorNewFoodSettingsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -254,8 +269,13 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(CHANGE_TYPE, typeFoodSpinner.getSelectedItem().toString());
+        outState.putString(REMOVE_TYPE, removeFoodSpinner.getSelectedItem().toString());
+        outState.putString(REMOVE_CUSTOM, custFieldSpinner.getSelectedItem().toString());
+        outState.putString(SPINER_ADD_COLOR, colorNewFoodSettingsSpinner.getSelectedItem().toString());
+        outState.putString(SPINER_EDIT_COLOR, colorFoodSettingsSpinner.getSelectedItem().toString());
+        super.onSaveInstanceState(outState);
     }
 
 
