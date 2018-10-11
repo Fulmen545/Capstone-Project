@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -33,13 +34,19 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.calendar.model.ColorDefinition;
+import com.google.api.services.calendar.model.Colors;
 import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -308,6 +315,27 @@ public class GoogleTestActivity extends AppCompatActivity implements EasyPermiss
                 .setSingleEvents(true)
                 .execute();
         List<Event> items = events.getItems();
+        Colors colors = mService.colors().get().execute();
+        for (Map.Entry<String, ColorDefinition> color : colors.getEvent().entrySet()) {
+            System.out.println("ColorId : " + color.getKey());
+            System.out.println("  Background: " + color.getValue().getBackground());
+            System.out.println("  Foreground: " + color.getValue().getForeground());
+        }
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+//        DateTime startDate = new DateTime(dt);
+        DateTime startDate = new DateTime("2018-10-28T19:30:00+01:00");
+        DateTime endDate = new DateTime("2018-10-28T19:30:00-00:00");
+        Event event1 = new Event();
+        event1.setSummary("Testujem iny event2");
+        event1.setStart(new EventDateTime().setDateTime(startDate));
+        event1.setEnd(new EventDateTime().setDateTime(endDate));
+        event1.setDescription("Tu bude description");
+        event1.setColorId("11");
+        event1.setLocation("Doma u manky");
+        event1 = mService.events().insert("primary", event1).execute();
+
+        Log.i(getClass().getSimpleName(), event1.getId());
 
         for (Event event : items) {
             DateTime start = event.getStart().getDateTime();

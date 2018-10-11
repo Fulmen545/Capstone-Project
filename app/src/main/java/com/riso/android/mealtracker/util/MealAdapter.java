@@ -128,14 +128,16 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
                 mailItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
+                        GoogleCalendarEvents googleCalendarEvents = new GoogleCalendarEvents(context, dbQuery.selectUser());
                         try {
-                            GoogleCalendarEvents gce = new GoogleCalendarEvents(context);
-                            gce.sentEvent(mealItems[listIndex].typeItem, mealItems[listIndex].dateItem,
-                                    mealItems[listIndex].timeItem, mealItems[listIndex].locationItem, mealItems[listIndex].descItem,
-                                    mealItems[listIndex].colorItem, dbQuery.selectUser());
+                            googleCalendarEvents.sentEvent(mealItems[listIndex].typeItem+ " - " +mealItems[listIndex].descItem,
+                                    mealItems[listIndex].dateItem,
+                                    mealItems[listIndex].timeItem,
+                                    mealItems[listIndex].locationItem,
+                                    mealItems[listIndex].customItem,
+                                    mealItems[listIndex].colorItem);
                         } catch (ParseException e) {
-                            e.printStackTrace();
-                        } catch (GeneralSecurityException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
                             e.printStackTrace();

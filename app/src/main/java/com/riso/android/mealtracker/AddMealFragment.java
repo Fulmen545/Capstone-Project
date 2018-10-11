@@ -41,10 +41,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.riso.android.mealtracker.data.DatabaseQuery;
 import com.riso.android.mealtracker.data.DbColumns;
+import com.riso.android.mealtracker.util.GoogleCalendarEvents;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -271,6 +274,21 @@ public class AddMealFragment extends Fragment {
                             calendar.isChecked(),
                             selectUser());
                     Toast.makeText(getContext(), "Meal was added", Toast.LENGTH_SHORT).show();
+                    if (calendar.isChecked()){
+                        GoogleCalendarEvents googleCalendarEvents = new GoogleCalendarEvents(getContext(), user);
+                        try {
+                            googleCalendarEvents.sentEvent(typeFoodSpinner.getSelectedItem().toString()+ " - " +editDesc.getText().toString(),
+                                    editDate.getText().toString(),
+                                    editTime.getText().toString(),
+                                    editLocation.getText().toString(),
+                                    custJson.toString(),
+                                    "yellow");
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     Intent intent = new Intent(getContext(), MealWidgetProvider.class);
                     intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
                     int[] ids = AppWidgetManager.getInstance(getActivity()).getAppWidgetIds(new ComponentName(getActivity(), MealWidgetProvider.class));
@@ -279,6 +297,7 @@ public class AddMealFragment extends Fragment {
                     getActivity().onBackPressed();
                 }
             });
+
         } else {
             getActivity().setTitle(R.string.edit_meal);
             edit = true;
