@@ -58,10 +58,11 @@ public class DetailMealFragment extends Fragment {
     Spinner detailSpinner;
 
     JSONObject custJson;
-    String[] custFields;
     String[] jsonKeys;
     ArrayAdapter<String> custFieldsAdapter;
     Bundle bundle;
+
+    Boolean custFields = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,19 +85,25 @@ public class DetailMealFragment extends Fragment {
         detailDescription = view.findViewById(R.id.detailDescription);
         detailDescription.setText(bundle.getString(DESCRIPTION));
         detailCustomfields = view.findViewById(R.id.detailCustomfields);
-        try {
-            custJson = new JSONObject(bundle.getString(CUST_FIELDS));
-        } catch (JSONException e) {
-            Log.e("DETAIL_FRGMT", "Could not parse malformed JSON: \"" + bundle.getString(CUST_FIELDS) + "\"");
+        if (!bundle.getString(CUST_FIELDS).equals("{}")) {
+            try {
+                custJson = new JSONObject(bundle.getString(CUST_FIELDS));
+            } catch (JSONException e) {
+                Log.e("DETAIL_FRGMT", "Could not parse malformed JSON: \"" + bundle.getString(CUST_FIELDS) + "\"");
 
-        }
-        Iterator<String> keys = custJson.keys();
-        int i = 0;
-        jsonKeys = new String[custJson.length()];
-        while (keys.hasNext()) {
-            String key = keys.next();
-            jsonKeys[i] = key;
-            i++;
+            }
+
+            Iterator<String> keys = custJson.keys();
+            int i = 0;
+            jsonKeys = new String[custJson.length()];
+            while (keys.hasNext()) {
+                String key = keys.next();
+                jsonKeys[i] = key;
+                i++;
+            }
+        } else {
+            jsonKeys = new String[]{"No cust. field"};
+            custFields = false;
         }
 
         DatabaseQuery databaseQuery = new DatabaseQuery(getContext());
@@ -105,27 +112,32 @@ public class DetailMealFragment extends Fragment {
         custFieldsAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item, jsonKeys);
         detailSpinner.setAdapter(custFieldsAdapter);
-        detailSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String editCustomValue = "";
-                try {
-                    editCustomValue = custJson.get(jsonKeys[position]).toString();
-                } catch (JSONException ignored) {
-                } finally {
-                    detailCustomfields.setText(editCustomValue);
+        if (custFields) {
+            detailSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String editCustomValue = "";
+                    try {
+                        editCustomValue = custJson.get(jsonKeys[position]).toString();
+                    } catch (JSONException ignored) {
+                    } finally {
+                        detailCustomfields.setText(editCustomValue);
+                    }
                 }
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
 
+                }
+            });
+
+            try {
+                detailCustomfields.setText(custJson.get(jsonKeys[0]).toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        });
-        try {
-            detailCustomfields.setText(custJson.get(jsonKeys[0]).toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } else {
+            detailCustomfields.setText("");
         }
 
 

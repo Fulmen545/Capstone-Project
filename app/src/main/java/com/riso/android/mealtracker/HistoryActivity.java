@@ -234,7 +234,12 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
 
     @Override
     public void onListItemClick(int listItem) {
-        getStoredMeals();
+        if (date == null) {
+            getStoredMeals();
+        } else {
+            DatabaseQuery dbquery = new DatabaseQuery(HistoryActivity.this);
+            mealsStored=dbquery.getStoredMeals(date);
+        }
         Bundle bundle = new Bundle();
         bundle.putString(ID, mealsStored[listItem].id);
         bundle.putString(TYPE, mealsStored[listItem].typeItem);

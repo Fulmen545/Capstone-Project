@@ -176,4 +176,10 @@ public class DatabaseQuery {
         }
         return custFields;
     }
+
+    public String getTypeColor(String type){
+        user = selectUser();
+        getColor();
+        return setColor(type);
+    }
 }

@@ -276,13 +276,14 @@ public class AddMealFragment extends Fragment {
                     Toast.makeText(getContext(), "Meal was added", Toast.LENGTH_SHORT).show();
                     if (calendar.isChecked()){
                         GoogleCalendarEvents googleCalendarEvents = new GoogleCalendarEvents(getContext(), user);
+                        DatabaseQuery databaseQuery = new DatabaseQuery(getContext());
                         try {
-                            googleCalendarEvents.sentEvent(typeFoodSpinner.getSelectedItem().toString()+ " - " +editDesc.getText().toString(),
+                            googleCalendarEvents.sentEvent("MT: "+ typeFoodSpinner.getSelectedItem().toString()+ " - " +editDesc.getText().toString(),
                                     editDate.getText().toString(),
                                     editTime.getText().toString(),
                                     editLocation.getText().toString(),
                                     custJson.toString(),
-                                    "yellow");
+                                    databaseQuery.getTypeColor(typeFoodSpinner.getSelectedItem().toString()));
                         } catch (ParseException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
