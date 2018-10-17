@@ -177,8 +177,8 @@ public class DatabaseQuery {
         return custFields;
     }
 
-    public String getTypeColor(String type){
-        user = selectUser();
+    public String getTypeColor(String type, String user){
+        this.user = user;
         getColor();
         return setColor(type);
     }
