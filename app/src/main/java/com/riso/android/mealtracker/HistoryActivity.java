@@ -188,7 +188,7 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
                         DbColumns.MealsEntry.GCALENDAR},
                 DbColumns.MealsEntry.MEALS_USR + "=?",
                 new String[]{user},
-                DbColumns.MealsEntry._ID + " DESC");
+                DbColumns.MealsEntry._ID + " DESC limit 12");
         if (c.getCount() != 0) {
             mealsStored = new MealItem[c.getCount()];
             int i = 0;

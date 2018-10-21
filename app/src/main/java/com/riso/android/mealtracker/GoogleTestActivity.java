@@ -39,6 +39,7 @@ import com.google.api.services.calendar.model.Colors;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.services.calendar.model.Events;
+import com.riso.android.mealtracker.data.DatabaseQuery;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -138,8 +139,9 @@ public class GoogleTestActivity extends AppCompatActivity implements EasyPermiss
     private void chooseAccount() {
         if (EasyPermissions.hasPermissions(
                 this, Manifest.permission.GET_ACCOUNTS)) {
-            String accountName = getPreferences(Context.MODE_PRIVATE)
-                    .getString(PREF_ACCOUNT_NAME, null);
+//            String accountName = getPreferences(Context.MODE_PRIVATE).getString(PREF_ACCOUNT_NAME, null);
+            DatabaseQuery databaseQuery = new DatabaseQuery(getApplication());
+            String accountName = databaseQuery.selectUser();
             if (accountName != null) {
                 mCredential.setSelectedAccountName(accountName);
                 getResultsFromApi();

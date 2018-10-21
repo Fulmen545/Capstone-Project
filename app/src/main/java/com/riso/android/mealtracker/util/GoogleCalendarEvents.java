@@ -77,7 +77,7 @@ public class GoogleCalendarEvents {
 
     public void sentEvent(String title, String date, String time, String location, String desc, String color) throws ParseException, IOException {
 
-        mService = new com.google.api.services.calendar.Calendar.Builder(
+        mService = new Calendar.Builder(
                 HTTP_TRANSPORT, jsonFactory, mCredential)
                 .setApplicationName("MealTracker")
                 .build();
@@ -127,7 +127,7 @@ public class GoogleCalendarEvents {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Log.i(getClass().getSimpleName(), events[0].getId());
+//            Log.i(getClass().getSimpleName(), events[0].getId());
             return null;
         }
     }
@@ -245,7 +245,7 @@ public class GoogleCalendarEvents {
 //    void showGooglePlayServicesAvailabilityErrorDialog(final int connectionStatusCode) {
 //        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
 //        Dialog dialog = apiAvailability.getErrorDialog(
-//                GoogleTestActivity.this,
+//                context.getApplicationContext(),
 //                connectionStatusCode,
 //                REQUEST_GOOGLE_PLAY_SERVICES);
 //        dialog.show();

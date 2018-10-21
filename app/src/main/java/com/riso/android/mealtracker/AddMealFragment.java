@@ -2,21 +2,28 @@ package com.riso.android.mealtracker;
 
 
 import android.Manifest;
+import android.accounts.AccountManager;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,16 +38,29 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.DateTime;
+import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
 import com.riso.android.mealtracker.data.DatabaseQuery;
 import com.riso.android.mealtracker.data.DbColumns;
+import com.riso.android.mealtracker.data.MealItem;
 import com.riso.android.mealtracker.util.GoogleCalendarEvents;
 
 import org.json.JSONException;
@@ -48,8 +68,16 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import pub.devrel.easypermissions.EasyPermissions;
+
+import static android.app.Activity.RESULT_OK;
 
 
 /**
@@ -66,6 +94,15 @@ public class AddMealFragment extends Fragment {
     private final String GCALENDAR = "GCALENDAR";
     private final String ID = "ID";
     private final String USER = "USER";
+
+    GoogleAccountCredential mCredential;
+    private static final String[] SCOPES = {CalendarScopes.CALENDAR};
+    static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
+    static final int REQUEST_ACCOUNT_PICKER = 1000;
+    static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
+    private static final String PREF_ACCOUNT_NAME = "accountName";
+    static final int REQUEST_AUTHORIZATION = 1001;
+
 
     Spinner typeFoodSpinner;
     Spinner custFieldSpinner;
@@ -91,6 +128,9 @@ public class AddMealFragment extends Fragment {
     boolean saved = false;
     Bundle bundle;
     String user;
+    com.google.api.services.calendar.Calendar mService;
+    ProgressDialog mProgress;
+
 
     private ArrayList permissions = new ArrayList();
 
@@ -260,11 +300,40 @@ public class AddMealFragment extends Fragment {
         save = view.findViewById(R.id.saveBtn);
 
         bundle = this.getArguments();
+
+        mCredential = GoogleAccountCredential.usingOAuth2(
+                getContext(), Arrays.asList(SCOPES))
+                .setBackOff(new ExponentialBackOff());
         if (!bundle.containsKey(ID)) {
             save.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (calendar.isChecked()) {
+//                        if (! isGooglePlayServicesAvailable()) {
+//                            acquireGooglePlayServices();
+//                        } else if (mCredential.getSelectedAccountName() == null) {
+//                            chooseAccount();
+//                        } else if (! isDeviceOnline()) {
+//                            Toast.makeText(getContext(),"No network connection available.", Toast.LENGTH_SHORT).show();
+//                        } else {
+//                            GoogleCalendarEvents googleCalendarEvents = new GoogleCalendarEvents(getContext(), user);
+//                            DatabaseQuery databaseQuery = new DatabaseQuery(getContext());
+//                            try {
+//                                googleCalendarEvents.sentEvent("MT: "+ typeFoodSpinner.getSelectedItem().toString()+ " - " +editDesc.getText().toString(),
+//                                        editDate.getText().toString(),
+//                                        editTime.getText().toString(),
+//                                        editLocation.getText().toString(),
+//                                        custJson.toString(),
+//                                        databaseQuery.getTypeColor(typeFoodSpinner.getSelectedItem().toString(), user));
+//                            } catch (ParseException e) {
+//                                e.printStackTrace();
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+                        getResultsFromApi();
 
+                    }
                     insertMeal(typeFoodSpinner.getSelectedItem().toString(),
                             editDesc.getText().toString(),
                             editDate.getText().toString(),
@@ -274,28 +343,13 @@ public class AddMealFragment extends Fragment {
                             calendar.isChecked(),
                             selectUser());
                     Toast.makeText(getContext(), "Meal was added", Toast.LENGTH_SHORT).show();
-                    if (calendar.isChecked()){
-                        GoogleCalendarEvents googleCalendarEvents = new GoogleCalendarEvents(getContext(), user);
-                        DatabaseQuery databaseQuery = new DatabaseQuery(getContext());
-                        try {
-                            googleCalendarEvents.sentEvent("MT: "+ typeFoodSpinner.getSelectedItem().toString()+ " - " +editDesc.getText().toString(),
-                                    editDate.getText().toString(),
-                                    editTime.getText().toString(),
-                                    editLocation.getText().toString(),
-                                    custJson.toString(),
-                                    databaseQuery.getTypeColor(typeFoodSpinner.getSelectedItem().toString()));
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    Intent intent = new Intent(getContext(), MealWidgetProvider.class);
-                    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-                    int[] ids = AppWidgetManager.getInstance(getActivity()).getAppWidgetIds(new ComponentName(getActivity(), MealWidgetProvider.class));
-                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-                    getContext().sendBroadcast(intent);
-                    getActivity().onBackPressed();
+
+//                    Intent intent = new Intent(getContext(), MealWidgetProvider.class);
+//                    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+//                    int[] ids = AppWidgetManager.getInstance(getActivity()).getAppWidgetIds(new ComponentName(getActivity(), MealWidgetProvider.class));
+//                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+//                    getContext().sendBroadcast(intent);
+//                    getActivity().onBackPressed();
                 }
             });
 
@@ -337,6 +391,41 @@ public class AddMealFragment extends Fragment {
             });
         }
 
+        mProgress = new ProgressDialog(getActivity());
+        mProgress.setMessage("Calling Google Calendar API ...");
+
+    }
+
+    public void getResultsFromApi() {
+        if (!isGooglePlayServicesAvailable()) {
+            acquireGooglePlayServices();
+        } else if (mCredential.getSelectedAccountName() == null) {
+            chooseAccount();
+        } else if (!isDeviceOnline()) {
+            Toast.makeText(getContext(), "No network connection available.", Toast.LENGTH_SHORT).show();
+        } else {
+            GoogleCalendarEvents googleCalendarEvents = new GoogleCalendarEvents(getContext(), user);
+            DatabaseQuery databaseQuery = new DatabaseQuery(getContext());
+            String color = databaseQuery.getTypeColor(typeFoodSpinner.getSelectedItem().toString(), user);
+            MealItem mealItem = new MealItem("X", typeFoodSpinner.getSelectedItem().toString(),
+                    editDesc.getText().toString(), editDate.getText().toString(),
+                    editTime.getText().toString(), editLocation.getText().toString(),
+                    custJson.toString(), "true", color);
+            new SendEventTask().execute(mealItem);
+
+//            try {
+//                googleCalendarEvents.sentEvent("MT: "+ typeFoodSpinner.getSelectedItem().toString()+ " - " +editDesc.getText().toString(),
+//                        editDate.getText().toString(),
+//                        editTime.getText().toString(),
+//                        editLocation.getText().toString(),
+//                        custJson.toString(),
+//                        databaseQuery.getTypeColor(typeFoodSpinner.getSelectedItem().toString(), user));
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+        }
     }
 
     @Override
@@ -476,5 +565,217 @@ public class AddMealFragment extends Fragment {
 
     }
 
+    private boolean isGooglePlayServicesAvailable() {
+        GoogleApiAvailability apiAvailability =
+                GoogleApiAvailability.getInstance();
+        final int connectionStatusCode =
+                apiAvailability.isGooglePlayServicesAvailable(getContext());
+        return connectionStatusCode == ConnectionResult.SUCCESS;
+    }
+
+    private void acquireGooglePlayServices() {
+        GoogleApiAvailability apiAvailability =
+                GoogleApiAvailability.getInstance();
+        final int connectionStatusCode =
+                apiAvailability.isGooglePlayServicesAvailable(getContext());
+        if (apiAvailability.isUserResolvableError(connectionStatusCode)) {
+            showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode);
+        }
+    }
+
+    void showGooglePlayServicesAvailabilityErrorDialog(final int connectionStatusCode) {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        Dialog dialog = apiAvailability.getErrorDialog(
+                getActivity(),
+                connectionStatusCode,
+                REQUEST_GOOGLE_PLAY_SERVICES);
+        dialog.show();
+    }
+
+    private void chooseAccount() {
+        if (EasyPermissions.hasPermissions(
+                getContext(), Manifest.permission.GET_ACCOUNTS)) {
+//            String accountName = getPreferences(Context.MODE_PRIVATE).getString(PREF_ACCOUNT_NAME, null);
+            DatabaseQuery databaseQuery = new DatabaseQuery(getContext());
+            String accountName = databaseQuery.selectUser();
+            if (accountName != null) {
+                mCredential.setSelectedAccountName(accountName);
+                getResultsFromApi();
+            } else {
+                // Start a dialog from which the user can choose an account
+                startActivityForResult(
+                        mCredential.newChooseAccountIntent(),
+                        REQUEST_ACCOUNT_PICKER);
+            }
+        } else {
+            // Request the GET_ACCOUNTS permission via a user dialog
+            EasyPermissions.requestPermissions(
+                    this,
+                    "This app needs to access your Google account (via Contacts).",
+                    REQUEST_PERMISSION_GET_ACCOUNTS,
+                    Manifest.permission.GET_ACCOUNTS);
+        }
+    }
+
+    private boolean isDeviceOnline() {
+        ConnectivityManager connMgr =
+                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_GOOGLE_PLAY_SERVICES:
+                if (resultCode != RESULT_OK) {
+//                    mOutputText.setText("This app requires Google Play Services. Please install " +
+//                            "Google Play Services on your device and relaunch this app.");
+                } else {
+                    getResultsFromApi();
+                }
+                break;
+            case REQUEST_ACCOUNT_PICKER:
+                if (resultCode == RESULT_OK && data != null &&
+                        data.getExtras() != null) {
+                    String accountName =
+                            data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                    if (accountName != null) {
+                        SharedPreferences settings =
+                                getActivity().getPreferences(Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(PREF_ACCOUNT_NAME, accountName);
+                        editor.apply();
+                        mCredential.setSelectedAccountName(accountName);
+                        getResultsFromApi();
+                    }
+                }
+                break;
+            case REQUEST_PERMISSION_GET_ACCOUNTS:
+                if (resultCode == RESULT_OK) {
+                    getResultsFromApi();
+                }
+                break;
+        }
+    }
+
+    private class SendEventTask extends AsyncTask<MealItem, Void, Void> {
+
+        private Exception mLastError = null;
+
+        SendEventTask() {
+            mCredential = GoogleAccountCredential.usingOAuth2(
+                    getActivity(), Arrays.asList(SCOPES))
+                    .setSelectedAccountName(user)
+                    .setBackOff(new ExponentialBackOff());
+
+            HttpTransport transport = AndroidHttp.newCompatibleTransport();
+            JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+            mService = new com.google.api.services.calendar.Calendar.Builder(
+                    transport, jsonFactory, mCredential)
+                    .setApplicationName("MealTracker")
+                    .build();
+        }
+
+        @Override
+        protected Void doInBackground(MealItem... params) {
+            try {
+                sentEvent(params[0]);
+            } catch (Exception e) {
+                mLastError = e;
+                cancel(true);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgress.show();
+        }
+
+        @Override
+        protected void onPostExecute(Void output) {
+            super.onPostExecute(output);
+            mProgress.hide();
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mProgress.hide();
+            if (mLastError != null) {
+                if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
+                    showGooglePlayServicesAvailabilityErrorDialog(
+                            ((GooglePlayServicesAvailabilityIOException) mLastError)
+                                    .getConnectionStatusCode());
+                } else if (mLastError instanceof UserRecoverableAuthIOException) {
+                    startActivityForResult(
+                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
+                            GoogleTestActivity.REQUEST_AUTHORIZATION);
+                } else {
+                    Toast.makeText(getActivity(), "The following error occurred:\n"
+                            + mLastError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getActivity(), "Request cancelled.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public void sentEvent(MealItem mealItem) throws ParseException, IOException {
+
+//        mService = new com.google.api.services.calendar.Calendar.Builder(
+//                HTTP_TRANSPORT, jsonFactory, mCredential)
+//                .setApplicationName("MealTracker")
+//                .build();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date dt = formatter.parse(mealItem.dateItem);
+        formatter.applyPattern("yyyy-MM-dd");
+        String newFormat = formatter.format(dt);
+//        DateTime startDate = new DateTime(dt);
+        DateTime startDate = new DateTime(newFormat + "T" + mealItem.timeItem + ":00+02:00");
+        DateTime endDate = new DateTime(newFormat + "T" + mealItem.timeItem + ":00+01:00");
+        Event event1 = new Event();
+        event1.setSummary("MT: " + mealItem.typeItem + " - " + mealItem.descItem);
+        event1.setStart(new EventDateTime().setDateTime(startDate));
+        event1.setEnd(new EventDateTime().setDateTime(endDate));
+        event1.setDescription(mealItem.customItem);
+        event1.setColorId(setColorId(mealItem.colorItem));
+        event1.setLocation(mealItem.locationItem);
+//        new GoogleCalendarEvents.SendGoogleEvent().execute(event1);
+        event1 = mService.events().insert("primary", event1).execute();
+//        event = service.events().insert("#contacts@group.v.calendar.google.com", event).execute();
+//        Log.i(getClass().getSimpleName(), event1.getId());
+    }
+
+    private String setColorId(String color) {
+        switch (color) {
+            case "red":
+                return "11";
+            case "blue":
+                return "9";
+            case "green":
+                return "10";
+            case "Cyan":
+                return "7";
+            case "Orange":
+                return "6";
+            case "Yellow":
+                return "5";
+            case "Pink":
+                return "4";
+            case "Purple":
+                return "3";
+            case "Brown":
+                return "2";
+            case "Deep Purple":
+                return "1";
+            default:
+                return "8";
+        }
+    }
 
 }
