@@ -28,6 +28,7 @@ import com.google.api.services.calendar.model.EventDateTime;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.services.calendar.model.Events;
 import com.riso.android.mealtracker.GoogleTestActivity;
+import com.riso.android.mealtracker.data.MealItem;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -102,6 +103,10 @@ public class GoogleCalendarEvents {
 //        Log.i(getClass().getSimpleName(), event1.getId());
     }
 
+    public void deleteEvent(MealItem mealItem){
+        new DeleteGoogleEvent().execute(mealItem);
+    }
+
     private String setColorId(String color){
         switch (color){
             case "red": return "11";
@@ -121,7 +126,13 @@ public class GoogleCalendarEvents {
     private class SendGoogleEvent extends AsyncTask<Event, Void, Void>{
 
         @Override
-        protected Void doInBackground(Event... events) {
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgress.show();
+        }
+
+        @Override
+        protected Void doInBackground(Event... events ) {
             try {
                 events[0] = mService.events().insert("primary", events[0]).execute();
             } catch (IOException e) {
@@ -129,6 +140,64 @@ public class GoogleCalendarEvents {
             }
 //            Log.i(getClass().getSimpleName(), events[0].getId());
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            mProgress.hide();
+        }
+    }
+
+    private class DeleteGoogleEvent extends AsyncTask<MealItem, Void, Void>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgress.show();
+        }
+
+        @Override
+        protected Void doInBackground(MealItem... mealItems ) {
+            try {
+                mService = new Calendar.Builder(
+                        HTTP_TRANSPORT, jsonFactory, mCredential)
+                        .setApplicationName("MealTracker")
+                        .build();
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                Date dt = formatter.parse(mealItems[0].dateItem);
+                formatter.applyPattern("yyyy-MM-dd");
+                String newFormat = formatter.format(dt);
+                DateTime startDate = new DateTime(newFormat+"T"+mealItems[0].timeItem+":00+02:00");
+                DateTime endDate = new DateTime(newFormat+"T"+mealItems[0].timeItem+":00+01:00");
+                Events eventsGet = mService.events().list("primary")
+                        .setMaxResults(10)
+                        .setTimeMin(startDate)
+                        .setTimeMax(endDate)
+                        .setSingleEvents(true)
+                        .execute();
+                List<Event> items = eventsGet.getItems();
+                for (Event event : items) {
+                    String eventId;
+                    if (event.getSummary().equals("MT: " +mealItems[0].typeItem + " - " + mealItems[0].descItem)) {
+                        eventId = event.getId();
+                        mService.events().delete("primary",eventId).execute();
+                    }
+                }
+//                events[0] = mService.events().insert("primary", events[0]).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+//            Log.i(getClass().getSimpleName(), events[0].getId());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            mProgress.hide();
         }
     }
 
@@ -174,27 +243,6 @@ public class GoogleCalendarEvents {
             }
         }
 
-//        @Override
-//        protected void onCancelled() {
-//            super.onCancelled();
-//            mProgress.hide();
-//            if (mLastError != null) {
-//                if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
-//                    showGooglePlayServicesAvailabilityErrorDialog(
-//                            ((GooglePlayServicesAvailabilityIOException) mLastError)
-//                                    .getConnectionStatusCode());
-//                } else if (mLastError instanceof UserRecoverableAuthIOException) {
-//                    startActivityForResult(
-//                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
-//                            GoogleTestActivity.REQUEST_AUTHORIZATION);
-//                } else {
-//                    mOutputText.setText("The following error occurred:\n"
-//                            + mLastError.getMessage());
-//                }
-//            } else {
-//                mOutputText.setText("Request cancelled.");
-//            }
-//        }
     }
 
     private List<String> getDataFromApi() throws IOException {
@@ -242,12 +290,4 @@ public class GoogleCalendarEvents {
         return eventStrings;
     }
 
-//    void showGooglePlayServicesAvailabilityErrorDialog(final int connectionStatusCode) {
-//        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
-//        Dialog dialog = apiAvailability.getErrorDialog(
-//                context.getApplicationContext(),
-//                connectionStatusCode,
-//                REQUEST_GOOGLE_PLAY_SERVICES);
-//        dialog.show();
-//    }
 }

@@ -93,6 +93,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
         ImageButton trahsItem;
         DatabaseQuery dbQuery;
         String id;
+        String calendar;
 
         public MealViewHolder(View itemView) {
             super(itemView);
@@ -120,7 +121,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
                 dateItem.setTextColor(ContextCompat.getColor(itemView.getContext(), chooseColor(mealItems[listIndex].colorItem)));
                 timeItem.setText(mealItems[listIndex].timeItem);
                 timeItem.setTextColor(ContextCompat.getColor(itemView.getContext(), chooseColor(mealItems[listIndex].colorItem)));
-                String calendar = mealItems[listIndex].gCalendarItem;
+                calendar = mealItems[listIndex].gCalendarItem;
                 id = mealItems[listIndex].id;
                 if (calendar.equals("true")) {
                     mailItem.setColorFilter(ContextCompat.getColor(itemView.getContext(), chooseColor(mealItems[listIndex].colorItem)), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -128,21 +129,32 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
                 mailItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         GoogleCalendarEvents googleCalendarEvents = new GoogleCalendarEvents(context, dbQuery.selectUser());
-                        try {
-                            googleCalendarEvents.sentEvent(mealItems[listIndex].typeItem+ " - " +mealItems[listIndex].descItem,
-                                    mealItems[listIndex].dateItem,
-                                    mealItems[listIndex].timeItem,
-                                    mealItems[listIndex].locationItem,
-                                    mealItems[listIndex].customItem,
-                                    mealItems[listIndex].colorItem);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        if (calendar.equals("true")) {
+                            googleCalendarEvents.deleteEvent(mealItems[listIndex]);
+                            dbQuery.updateGoogleEvent(mealItems[listIndex].id, "false");
+                            mealItems[listIndex].setGCalendar("false");
+                            notifyDataSetChanged();
+                            mailItem.setColorFilter(ContextCompat.getColor(itemView.getContext(), R.color.textgray), android.graphics.PorterDuff.Mode.SRC_IN);
+                        } else {
+
+                            try {
+                                googleCalendarEvents.sentEvent("MT: " +mealItems[listIndex].typeItem + " - " + mealItems[listIndex].descItem,
+                                        mealItems[listIndex].dateItem,
+                                        mealItems[listIndex].timeItem,
+                                        mealItems[listIndex].locationItem,
+                                        mealItems[listIndex].customItem,
+                                        mealItems[listIndex].colorItem);
+                                dbQuery.updateGoogleEvent(mealItems[listIndex].id, "true");
+                                mealItems[listIndex].setGCalendar("true");
+                                notifyDataSetChanged();
+                                mailItem.setColorFilter(ContextCompat.getColor(itemView.getContext(), chooseColor(mealItems[listIndex].colorItem)), android.graphics.PorterDuff.Mode.SRC_IN);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
-                        Toast.makeText(itemView.getContext(), "Testujem mail", Toast.LENGTH_SHORT).show();
                     }
                 });
                 trahsItem.setColorFilter(ContextCompat.getColor(itemView.getContext(), chooseColor(mealItems[listIndex].colorItem)), android.graphics.PorterDuff.Mode.SRC_IN);

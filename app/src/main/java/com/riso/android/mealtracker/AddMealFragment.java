@@ -7,6 +7,8 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -309,28 +311,6 @@ public class AddMealFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     if (calendar.isChecked()) {
-//                        if (! isGooglePlayServicesAvailable()) {
-//                            acquireGooglePlayServices();
-//                        } else if (mCredential.getSelectedAccountName() == null) {
-//                            chooseAccount();
-//                        } else if (! isDeviceOnline()) {
-//                            Toast.makeText(getContext(),"No network connection available.", Toast.LENGTH_SHORT).show();
-//                        } else {
-//                            GoogleCalendarEvents googleCalendarEvents = new GoogleCalendarEvents(getContext(), user);
-//                            DatabaseQuery databaseQuery = new DatabaseQuery(getContext());
-//                            try {
-//                                googleCalendarEvents.sentEvent("MT: "+ typeFoodSpinner.getSelectedItem().toString()+ " - " +editDesc.getText().toString(),
-//                                        editDate.getText().toString(),
-//                                        editTime.getText().toString(),
-//                                        editLocation.getText().toString(),
-//                                        custJson.toString(),
-//                                        databaseQuery.getTypeColor(typeFoodSpinner.getSelectedItem().toString(), user));
-//                            } catch (ParseException e) {
-//                                e.printStackTrace();
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
                         getResultsFromApi();
 
                     }
@@ -344,12 +324,12 @@ public class AddMealFragment extends Fragment {
                             selectUser());
                     Toast.makeText(getContext(), "Meal was added", Toast.LENGTH_SHORT).show();
 
-//                    Intent intent = new Intent(getContext(), MealWidgetProvider.class);
-//                    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-//                    int[] ids = AppWidgetManager.getInstance(getActivity()).getAppWidgetIds(new ComponentName(getActivity(), MealWidgetProvider.class));
-//                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-//                    getContext().sendBroadcast(intent);
-//                    getActivity().onBackPressed();
+                    Intent intent = new Intent(getContext(), MealWidgetProvider.class);
+                    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                    int[] ids = AppWidgetManager.getInstance(getActivity()).getAppWidgetIds(new ComponentName(getActivity(), MealWidgetProvider.class));
+                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+                    getContext().sendBroadcast(intent);
+                    getActivity().onBackPressed();
                 }
             });
 
@@ -412,19 +392,6 @@ public class AddMealFragment extends Fragment {
                     editTime.getText().toString(), editLocation.getText().toString(),
                     custJson.toString(), "true", color);
             new SendEventTask().execute(mealItem);
-
-//            try {
-//                googleCalendarEvents.sentEvent("MT: "+ typeFoodSpinner.getSelectedItem().toString()+ " - " +editDesc.getText().toString(),
-//                        editDate.getText().toString(),
-//                        editTime.getText().toString(),
-//                        editLocation.getText().toString(),
-//                        custJson.toString(),
-//                        databaseQuery.getTypeColor(typeFoodSpinner.getSelectedItem().toString(), user));
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
         }
     }
 
@@ -726,16 +693,10 @@ public class AddMealFragment extends Fragment {
 
     public void sentEvent(MealItem mealItem) throws ParseException, IOException {
 
-//        mService = new com.google.api.services.calendar.Calendar.Builder(
-//                HTTP_TRANSPORT, jsonFactory, mCredential)
-//                .setApplicationName("MealTracker")
-//                .build();
-
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         Date dt = formatter.parse(mealItem.dateItem);
         formatter.applyPattern("yyyy-MM-dd");
         String newFormat = formatter.format(dt);
-//        DateTime startDate = new DateTime(dt);
         DateTime startDate = new DateTime(newFormat + "T" + mealItem.timeItem + ":00+02:00");
         DateTime endDate = new DateTime(newFormat + "T" + mealItem.timeItem + ":00+01:00");
         Event event1 = new Event();
@@ -745,9 +706,7 @@ public class AddMealFragment extends Fragment {
         event1.setDescription(mealItem.customItem);
         event1.setColorId(setColorId(mealItem.colorItem));
         event1.setLocation(mealItem.locationItem);
-//        new GoogleCalendarEvents.SendGoogleEvent().execute(event1);
-        event1 = mService.events().insert("primary", event1).execute();
-//        event = service.events().insert("#contacts@group.v.calendar.google.com", event).execute();
+        mService.events().insert("primary", event1).execute();
 //        Log.i(getClass().getSimpleName(), event1.getId());
     }
 

@@ -12,7 +12,7 @@ public class MealItem {
     public final String timeItem;
     public final String locationItem;
     public final String customItem;
-    public final String gCalendarItem;
+    public String gCalendarItem;
     public  String colorItem;
 
     public MealItem(String id, String typeItem, String descItem, String dateItem,
@@ -28,6 +28,10 @@ public class MealItem {
         this.colorItem = colorItem;
         this.id=id;
 
+    }
+
+    public void setGCalendar(String value){
+        this.gCalendarItem=value;
     }
 
 }

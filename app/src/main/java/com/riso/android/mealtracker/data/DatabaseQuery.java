@@ -141,6 +141,14 @@ public class DatabaseQuery {
                 cv,DbColumns.MealsEntry.NAME_FLD + "=? AND " + DbColumns.MealsEntry.FIELDS_USR + "=?",new String[]{field, user});
     }
 
+    public void updateGoogleEvent(String id, String google){
+        user = selectUser();
+        ContentValues cv = new ContentValues();
+        cv.put(DbColumns.MealsEntry.GCALENDAR, google);
+        context.getContentResolver().update(DbColumns.MealsEntry.CONTENT_URI_MEALS,
+                cv,DbColumns.MealsEntry._ID + "=? AND " + DbColumns.MealsEntry.MEALS_USR + "=?",new String[]{id, user});
+    }
+
     public void updateMeal (String id, String mealType, String desc, String date, String time, String location, String custFields, boolean gCalendar, String email){
         ContentValues cv = new ContentValues();
         cv.put(DbColumns.MealsEntry.TYPE_ML, mealType);

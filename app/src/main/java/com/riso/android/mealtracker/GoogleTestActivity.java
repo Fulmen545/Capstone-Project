@@ -328,16 +328,16 @@ public class GoogleTestActivity extends AppCompatActivity implements EasyPermiss
 //        DateTime startDate = new DateTime(dt);
         DateTime startDate = new DateTime("2018-10-28T19:30:00+01:00");
         DateTime endDate = new DateTime("2018-10-28T19:30:00-00:00");
-        Event event1 = new Event();
-        event1.setSummary("Testujem iny event2");
-        event1.setStart(new EventDateTime().setDateTime(startDate));
-        event1.setEnd(new EventDateTime().setDateTime(endDate));
-        event1.setDescription("Tu bude description");
-        event1.setColorId("11");
-        event1.setLocation("Doma u manky");
-        event1 = mService.events().insert("primary", event1).execute();
+//        Event event1 = new Event();
+//        event1.setSummary("Testujem iny event2");
+//        event1.setStart(new EventDateTime().setDateTime(startDate));
+//        event1.setEnd(new EventDateTime().setDateTime(endDate));
+//        event1.setDescription("Tu bude description");
+//        event1.setColorId("11");
+//        event1.setLocation("Doma u manky");
+//        event1 = mService.events().insert("primary", event1).execute();
 
-        Log.i(getClass().getSimpleName(), event1.getId());
+//        Log.i(getClass().getSimpleName(), event1.getId());
 
         for (Event event : items) {
             DateTime start = event.getStart().getDateTime();
@@ -347,7 +347,7 @@ public class GoogleTestActivity extends AppCompatActivity implements EasyPermiss
                 start = event.getStart().getDate();
             }
             eventStrings.add(
-                    String.format("%s (%s)", event.getSummary(), start));
+                    String.format("%s : %s (%s)", event.getId(), event.getSummary(), start));
         }
         return eventStrings;
     }
