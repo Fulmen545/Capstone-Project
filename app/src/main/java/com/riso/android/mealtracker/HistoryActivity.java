@@ -50,6 +50,8 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
     RecyclerView mRecipeNamesList;
     @BindView(R.id.no_meal_tv)
     TextView no_meal_tv;
+    @BindView(R.id.textView2)
+    TextView headline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +66,13 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
         user = selectUser();
         getColor();
         extras = getIntent().getExtras();
+        headline = findViewById(R.id.textView2);
         if (extras == null) {
             getStoredMeals();
         } else {
+            setTitle(getResources().getString(R.string.google_history));
             mealsStored = (MealItem[]) extras.getSerializable(MEAL_ARRAY);
+            headline.setText("Meals for: " + mealsStored[0].dateItem);
         }
         no_meal_tv = findViewById(R.id.no_meal_tv);
         mRecipeNamesList = findViewById(R.id.rv_meals);
@@ -90,11 +95,15 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
         super.onResume();
         if (extras != null && date == null) {
             mealsStored = (MealItem[]) extras.getSerializable(MEAL_ARRAY);
+            setTitle(getResources().getString(R.string.google_history));
+            headline.setText("Meals for: " + mealsStored[0].dateItem);
         } else if (date == null){
             getStoredMeals();
         } else {
             DatabaseQuery dbquery = new DatabaseQuery(HistoryActivity.this);
             mealsStored=dbquery.getStoredMeals(date);
+            setTitle(getResources().getString(R.string.history));
+            headline.setText("Meals for: " + mealsStored[0].dateItem);
         }
         mMeakAdapter = new MealAdapter(getApplication(),HistoryActivity.this, mealsStored);
         mRecipeNamesList.setAdapter(mMeakAdapter);
@@ -141,6 +150,8 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
                                 } else {
                                     mRecipeNamesList.setVisibility(View.VISIBLE);
                                     no_meal_tv.setVisibility(View.GONE);
+                                    setTitle(getResources().getString(R.string.history));
+                                    headline.setText("Meals for: " + mealsStored[0].dateItem);
                                     mMeakAdapter = new MealAdapter(getApplication(),HistoryActivity.this, mealsStored);
                                     mRecipeNamesList.setAdapter(mMeakAdapter);
                                 }
