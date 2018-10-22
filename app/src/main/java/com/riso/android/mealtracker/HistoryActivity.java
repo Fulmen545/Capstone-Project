@@ -37,11 +37,14 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
     private final String GCALENDAR = "GCALENDAR";
     private final String ID = "ID";
     private final String USER = "USER";
+    private static final String MEAL_ARRAY = "meal_array";
+
     public MealItem[] mealsStored;
     private String[] color;
     private String[] fields;
     private String user;
     String date;
+    Bundle extras;
     private MealAdapter mMeakAdapter;
     @BindView(R.id.rv_meals)
     RecyclerView mRecipeNamesList;
@@ -60,7 +63,12 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
         }
         user = selectUser();
         getColor();
-        getStoredMeals();
+        extras = getIntent().getExtras();
+        if (extras == null) {
+            getStoredMeals();
+        } else {
+            mealsStored = (MealItem[]) extras.getSerializable(MEAL_ARRAY);
+        }
         no_meal_tv = findViewById(R.id.no_meal_tv);
         mRecipeNamesList = findViewById(R.id.rv_meals);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -80,7 +88,9 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
     @Override
     protected void onResume() {
         super.onResume();
-        if (date == null) {
+        if (extras != null && date == null) {
+            mealsStored = (MealItem[]) extras.getSerializable(MEAL_ARRAY);
+        } else if (date == null){
             getStoredMeals();
         } else {
             DatabaseQuery dbquery = new DatabaseQuery(HistoryActivity.this);
@@ -234,7 +244,9 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
 
     @Override
     public void onListItemClick(int listItem) {
-        if (date == null) {
+        if (extras != null && date == null) {
+            mealsStored = (MealItem[]) extras.getSerializable(MEAL_ARRAY);
+        } else if (date == null){
             getStoredMeals();
         } else {
             DatabaseQuery dbquery = new DatabaseQuery(HistoryActivity.this);

@@ -67,6 +67,7 @@ public class DetailMealFragment extends Fragment {
     String[] jsonKeys;
     ArrayAdapter<String> custFieldsAdapter;
     Bundle bundle;
+    String id;
 
     Boolean custFields = true;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
@@ -92,6 +93,8 @@ public class DetailMealFragment extends Fragment {
         detailDescription = view.findViewById(R.id.detailDescription);
         detailDescription.setText(bundle.getString(DESCRIPTION));
         detailCustomfields = view.findViewById(R.id.detailCustomfields);
+        id = bundle.getString(ID);
+
         if (!bundle.getString(CUST_FIELDS).equals("{}")) {
             try {
                 custJson = new JSONObject(bundle.getString(CUST_FIELDS));
@@ -113,7 +116,7 @@ public class DetailMealFragment extends Fragment {
             custFields = false;
         }
 
-        DatabaseQuery databaseQuery = new DatabaseQuery(getContext());
+//        DatabaseQuery databaseQuery = new DatabaseQuery(getContext());
 //        custFields = databaseQuery.getCustomFields(bundle.getString(USER));
         detailSpinner = view.findViewById(R.id.detailSpinner);
         custFieldsAdapter = new ArrayAdapter<String>(getContext(),
@@ -147,62 +150,67 @@ public class DetailMealFragment extends Fragment {
             detailCustomfields.setText("");
         }
 
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.GET_ACCOUNTS)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.GET_ACCOUNTS)) {
-                int i = 3;
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-            } else {
-                // No explanation needed; request the permission
-                EasyPermissions.requestPermissions(
-                        this,
-                        "This app needs to access your Google account (via Contacts).",
-                        REQUEST_PERMISSION_GET_ACCOUNTS,
-                        Manifest.permission.GET_ACCOUNTS);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-
-        }
+//        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.GET_ACCOUNTS)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            // Permission is not granted
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+//                    Manifest.permission.GET_ACCOUNTS)) {
+//                int i = 3;
+//                // Show an explanation to the user *asynchronously* -- don't block
+//                // this thread waiting for the user's response! After the user
+//                // sees the explanation, try again to request the permission.
+//            } else {
+//                // No explanation needed; request the permission
+//                EasyPermissions.requestPermissions(
+//                        this,
+//                        "This app needs to access your Google account (via Contacts).",
+//                        REQUEST_PERMISSION_GET_ACCOUNTS,
+//                        Manifest.permission.GET_ACCOUNTS);
+//
+//                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+//                // app-defined int constant. The callback method gets the
+//                // result of the request.
+//            }
+//
+//        }
 
 
         return view;
 
     }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case REQUEST_PERMISSION_GET_ACCOUNTS: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request.
-        }
-
-    }
+//
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        switch (requestCode) {
+//            case REQUEST_PERMISSION_GET_ACCOUNTS: {
+//                // If request is cancelled, the result arrays are empty.
+//                if (grantResults.length > 0
+//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    // permission was granted, yay! Do the
+//                    // contacts-related task you need to do.
+//                } else {
+//                    // permission denied, boo! Disable the
+//                    // functionality that depends on this permission.
+//                }
+//                return;
+//            }
+//
+//            // other 'case' lines to check for other
+//            // permissions this app might request.
+//        }
+//
+//    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_detail, menu);
+
+        if (!id.equals("x")){
+            inflater.inflate(R.menu.menu_detail, menu);
+//            MenuItem item = menu.findItem(R.id.editIcon);
+//            item.setVisible(false);
+        }
     }
 
 

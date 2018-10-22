@@ -38,6 +38,7 @@ import com.riso.android.mealtracker.data.DatabaseQuery;
 import com.riso.android.mealtracker.data.MealItem;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class CalendarActivity extends AppCompatActivity {
     com.google.api.services.calendar.Calendar mService;
     ProgressDialog mProgress;
     GoogleAccountCredential mCredential;
+    DatabaseQuery databaseQuery;
     String user;
     MealItem[] mealItems;
     String calendarDate;
@@ -67,6 +69,7 @@ public class CalendarActivity extends AppCompatActivity {
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
+    private static final String MEAL_ARRAY = "meal_array";
 
 
 
@@ -77,8 +80,11 @@ public class CalendarActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         ((AppCompatActivity) this).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) this).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        DatabaseQuery databaseQuery = new DatabaseQuery(this);
+        databaseQuery = new DatabaseQuery(this);
         user = databaseQuery.selectUser();
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = new Date();
+        calendarDate = dateFormat.format(date);
         calendarView = findViewById(R.id.simpleCalendarView);
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -91,7 +97,9 @@ public class CalendarActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 new GetEventsTask().execute(calendarDate);
+
             }
+
         });
 
         mProgress = new ProgressDialog(this);
@@ -192,7 +200,8 @@ public class CalendarActivity extends AppCompatActivity {
                     if (event.getSummary().startsWith("MT: ")) {
                         String[] typeAndDesc = splitSummary(event.getSummary());
                         String[] dateTime = splitDateTime(event.getStart().getDateTime().toString());
-                        mealItems[i] = new MealItem("x", typeAndDesc[0], typeAndDesc[1], dateTime[0], dateTime[1], event.getLocation(),event.getDescription(),"true","green");
+                        String eventColor = databaseQuery.getTypeColor(typeAndDesc[0], user);
+                        mealItems[i] = new MealItem("x", typeAndDesc[0], typeAndDesc[1], dateTime[0], dateTime[1], event.getLocation(),event.getDescription(),"true",eventColor);
                         i++;
                     }
                 }
@@ -213,6 +222,11 @@ public class CalendarActivity extends AppCompatActivity {
         protected void onPostExecute(Void output) {
             super.onPostExecute(output);
             mProgress.hide();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(MEAL_ARRAY, mealItems);
+            Intent intent = new Intent(CalendarActivity.this, HistoryActivity.class);
+            intent.putExtras(bundle);
+            startActivity(intent);
         }
 
         @Override

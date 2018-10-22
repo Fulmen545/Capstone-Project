@@ -1,10 +1,12 @@
 package com.riso.android.mealtracker.data;
 
+import java.io.Serializable;
+
 /**
  * Created by richard.janitor on 23-Sep-18.
  */
 
-public class MealItem {
+public class MealItem implements Serializable{
     public final String id;
     public final String typeItem;
     public final String descItem;

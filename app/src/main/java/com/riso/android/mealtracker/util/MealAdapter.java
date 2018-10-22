@@ -167,6 +167,10 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
 //                    notifyDataSetChanged();
                     }
                 });
+                if (mealItems[listIndex].id.equals("x")){
+                    trahsItem.setVisibility(View.GONE);
+                    mailItem.setVisibility(View.GONE);
+                }
             }
 
         }
