@@ -60,6 +60,7 @@ import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
+import com.google.api.services.calendar.model.Events;
 import com.riso.android.mealtracker.data.DatabaseQuery;
 import com.riso.android.mealtracker.data.DbColumns;
 import com.riso.android.mealtracker.data.MealItem;
@@ -132,6 +133,7 @@ public class AddMealFragment extends Fragment {
     String user;
     com.google.api.services.calendar.Calendar mService;
     ProgressDialog mProgress;
+    MealItem oldValues;
 
 
     private ArrayList permissions = new ArrayList();
@@ -242,14 +244,6 @@ public class AddMealFragment extends Fragment {
                         break;
                     }
                 }
-//                insertMeal(typeFoodSpinner.getSelectedItem().toString(),
-//                        editDesc.getText().toString(),
-//                        editDate.getText().toString(),
-//                        editTime.getText().toString(),
-//                        editLocation.getText().toString(),
-//                        custJson.toString(),
-//                        calendar.isChecked(),
-//                        selectUser());
             }
         });
 
@@ -350,12 +344,19 @@ public class AddMealFragment extends Fragment {
             if (bundle.getString(GCALENDAR).equals("true")) {
                 calendar.setChecked(true);
             }
+            oldValues = new MealItem("X", bundle.getString(TYPE),
+                    bundle.getString(DESCRIPTION), bundle.getString(DATE),
+                    bundle.getString(TIME), bundle.getString(LOCATION),
+                    bundle.getString(CUST_FIELDS), bundle.getString(GCALENDAR), bundle.getString(COLOR));
             final DatabaseQuery databaseQuery = new DatabaseQuery(getContext());
             save.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     saved = true;
                     typeFoodSpinner.setSelection(typeFoodSpinnerPosition);
+                    if (calendar.isChecked()) {
+                        getResultsFromApi();
+                    }
                     databaseQuery.updateMeal(bundle.getString(ID),
                             typeFoodSpinner.getSelectedItem().toString(),
                             editDesc.getText().toString(),
@@ -384,14 +385,17 @@ public class AddMealFragment extends Fragment {
         } else if (!isDeviceOnline()) {
             Toast.makeText(getContext(), "No network connection available.", Toast.LENGTH_SHORT).show();
         } else {
-            GoogleCalendarEvents googleCalendarEvents = new GoogleCalendarEvents(getContext(), user);
             DatabaseQuery databaseQuery = new DatabaseQuery(getContext());
             String color = databaseQuery.getTypeColor(typeFoodSpinner.getSelectedItem().toString(), user);
             MealItem mealItem = new MealItem("X", typeFoodSpinner.getSelectedItem().toString(),
                     editDesc.getText().toString(), editDate.getText().toString(),
                     editTime.getText().toString(), editLocation.getText().toString(),
                     custJson.toString(), "true", color);
-            new SendEventTask().execute(mealItem);
+            if (!bundle.containsKey(ID)) {
+                new SendEventTask().execute(mealItem);
+            } else {
+                new SendEventTask().execute(mealItem, oldValues);
+            }
         }
     }
 
@@ -648,7 +652,35 @@ public class AddMealFragment extends Fragment {
         @Override
         protected Void doInBackground(MealItem... params) {
             try {
-                sentEvent(params[0]);
+                if (!bundle.containsKey(ID)) {
+                    sentEvent(params[0]);
+                } else {
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                    Date dt = formatter.parse(params[0].dateItem);
+                    formatter.applyPattern("yyyy-MM-dd");
+                    String newFormat = formatter.format(dt);
+                    DateTime startDate = new DateTime(newFormat + "T00:00:00+02:00");
+                    DateTime endDate = new DateTime(newFormat + "T23:59:00+02:00");
+
+                    Events eventsGet = mService.events().list("primary")
+                            .setMaxResults(10)
+                            .setTimeMin(startDate)
+                            .setTimeMax(endDate)
+                            .setSingleEvents(true)
+                            .execute();
+                    List<Event> items = eventsGet.getItems();
+                    String eventId;
+                    for (Event event : items) {
+                        if (event.getSummary().equals("MT: " +params[1].typeItem + " - " + params[1].descItem)) {
+                            eventId = event.getId();
+                            if (calendar.isChecked()) {
+                                mService.events().update("primary", eventId, prepareEvent(params[0])).execute();
+                            } else {
+                                mService.events().delete("primary", eventId).execute();
+                            }
+                        }
+                    }
+                }
             } catch (Exception e) {
                 mLastError = e;
                 cancel(true);
@@ -708,6 +740,23 @@ public class AddMealFragment extends Fragment {
         event1.setLocation(mealItem.locationItem);
         mService.events().insert("primary", event1).execute();
 //        Log.i(getClass().getSimpleName(), event1.getId());
+    }
+
+    public Event prepareEvent(MealItem mealItem) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date dt = formatter.parse(mealItem.dateItem);
+        formatter.applyPattern("yyyy-MM-dd");
+        String newFormat = formatter.format(dt);
+        DateTime startDate = new DateTime(newFormat + "T" + mealItem.timeItem + ":00+02:00");
+        DateTime endDate = new DateTime(newFormat + "T" + mealItem.timeItem + ":00+01:00");
+        Event event1 = new Event();
+        event1.setSummary("MT: " + mealItem.typeItem + " - " + mealItem.descItem);
+        event1.setStart(new EventDateTime().setDateTime(startDate));
+        event1.setEnd(new EventDateTime().setDateTime(endDate));
+        event1.setDescription(mealItem.customItem);
+        event1.setColorId(setColorId(mealItem.colorItem));
+        event1.setLocation(mealItem.locationItem);
+        return event1;
     }
 
     private String setColorId(String color) {
