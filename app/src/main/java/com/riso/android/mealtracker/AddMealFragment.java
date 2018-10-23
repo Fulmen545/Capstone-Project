@@ -306,38 +306,43 @@ public class AddMealFragment extends Fragment {
             save.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (isDeviceOnline()) {
-                        if (calendar.isChecked()) {
-                            getResultsFromApi();
+                    if (!editDesc.getText().toString().equals("") && !editDate.getText().toString().equals("") && !editTime.getText().toString().equals("")) {
+                        if (isDeviceOnline()) {
+                            if (calendar.isChecked()) {
+                                getResultsFromApi();
 
-                        }
-                        insertMeal(typeFoodSpinner.getSelectedItem().toString(),
-                                editDesc.getText().toString(),
-                                editDate.getText().toString(),
-                                editTime.getText().toString(),
-                                editLocation.getText().toString(),
-                                custJson.toString(),
-                                calendar.isChecked(),
-                                selectUser());
-                        Toast.makeText(getContext(), "Meal was added", Toast.LENGTH_SHORT).show();
-
-                        Intent intent = new Intent(getContext(), MealWidgetProvider.class);
-                        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-                        int[] ids = AppWidgetManager.getInstance(getActivity()).getAppWidgetIds(new ComponentName(getActivity(), MealWidgetProvider.class));
-                        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-                        getContext().sendBroadcast(intent);
-                        getActivity().onBackPressed();
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setTitle(R.string.no_internet);
-                        builder.setMessage(R.string.sign_msg);
-                        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                // User clicked OK button
-                                dialog.cancel();
                             }
-                        });
-                        builder.show();
+                            insertMeal(typeFoodSpinner.getSelectedItem().toString(),
+                                    editDesc.getText().toString(),
+                                    editDate.getText().toString(),
+                                    editTime.getText().toString(),
+                                    editLocation.getText().toString(),
+                                    custJson.toString(),
+                                    calendar.isChecked(),
+                                    selectUser());
+                            Toast.makeText(getContext(), "Meal was added", Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(getContext(), MealWidgetProvider.class);
+                            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                            int[] ids = AppWidgetManager.getInstance(getActivity()).getAppWidgetIds(new ComponentName(getActivity(), MealWidgetProvider.class));
+                            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+                            getContext().sendBroadcast(intent);
+                            getActivity().onBackPressed();
+                        } else {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setTitle(R.string.no_internet);
+                            builder.setMessage(R.string.sign_msg);
+                            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // User clicked OK button
+                                    dialog.cancel();
+                                }
+                            });
+                            builder.show();
+                        }
+
+                    } else {
+                        alertDialog();
                     }
                 }
             });
@@ -367,25 +372,43 @@ public class AddMealFragment extends Fragment {
             save.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    saved = true;
-                    typeFoodSpinner.setSelection(typeFoodSpinnerPosition);
-                    if (calendar.isChecked()) {
-                        getResultsFromApi();
-                    }
-                    databaseQuery.updateMeal(bundle.getString(ID),
-                            typeFoodSpinner.getSelectedItem().toString(),
-                            editDesc.getText().toString(),
-                            editDate.getText().toString(),
-                            editTime.getText().toString(),
-                            editLocation.getText().toString(),
-                            custJson.toString(),
-                            calendar.isChecked(),
-                            selectUser());
-                    Toast.makeText(getContext(), "Meal was edited", Toast.LENGTH_SHORT).show();
+                    if (!editDesc.getText().toString().equals("") && !editDate.getText().toString().equals("") && !editTime.getText().toString().equals("")) {
+                        saved = true;
+                        typeFoodSpinner.setSelection(typeFoodSpinnerPosition);
+                        if (isDeviceOnline()) {
+                            if (calendar.isChecked()) {
+                                getResultsFromApi();
+                            }
+                            databaseQuery.updateMeal(bundle.getString(ID),
+                                    typeFoodSpinner.getSelectedItem().toString(),
+                                    editDesc.getText().toString(),
+                                    editDate.getText().toString(),
+                                    editTime.getText().toString(),
+                                    editLocation.getText().toString(),
+                                    custJson.toString(),
+                                    calendar.isChecked(),
+                                    selectUser());
+                            Toast.makeText(getContext(), "Meal was edited", Toast.LENGTH_SHORT).show();
+                        } else {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setTitle(R.string.no_internet);
+                            builder.setMessage(R.string.sign_msg);
+                            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // User clicked OK button
+                                    dialog.cancel();
+                                }
+                            });
+                            builder.show();
+                        }
 //                    getActivity().onBackPressed();
+                    } else {
+                        alertDialog();
+                    }
                 }
             });
         }
+
 
         mProgress = new ProgressDialog(getActivity());
         mProgress.setMessage("Calling Google Calendar API ...");
@@ -799,6 +822,19 @@ public class AddMealFragment extends Fragment {
             default:
                 return "8";
         }
+    }
+
+    public void alertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.missing_title);
+        builder.setMessage(R.string.missing_fields);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                dialog.cancel();
+            }
+        });
+        builder.show();
     }
 
 }

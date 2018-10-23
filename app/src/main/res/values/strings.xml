@@ -27,6 +27,8 @@
     <string name="checboxGoogle">Add to Google Calendar</string>
     <string name="saveBtnString">Save</string>
     <string name="settings">Settings</string>
+    <string name="missing_title">Required field is empty</string>
+    <string name="missing_fields">Fill Description, Date and Time fields and click on Save again</string>
 
     <!--Settings-->
     <string name="confirmColorBtn">Cofirm</string>
