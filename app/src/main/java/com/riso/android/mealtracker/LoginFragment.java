@@ -1,12 +1,17 @@
 package com.riso.android.mealtracker;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Log;
@@ -74,8 +79,21 @@ public class LoginFragment extends Fragment {
     }
 
     private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        if (isDeviceOnline()) {
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+            startActivityForResult(signInIntent, RC_SIGN_IN);
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.no_internet);
+            builder.setMessage(R.string.sign_msg);
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User clicked OK button
+                    dialog.cancel();
+                }
+            });
+            builder.show();
+        }
     }
 
 
@@ -135,22 +153,10 @@ public class LoginFragment extends Fragment {
         getContext().getContentResolver().insert(DbColumns.MealsEntry.CONTENT_URI_USERS, cv);
     }
 
-//    public void updateUserTbl(String email, String token){
-//        ContentValues cv = new ContentValues();
-//        cv.put(DbColumns.MealsEntry.TOKEN, token);
-//        cv.put(DbColumns.MealsEntry.USER, "true");
-//    }
-//
-//    public void isInsideDb(String firstName, String email, String token) {
-//        Cursor c = getActivity().getContentResolver().query(DbColumns.MealsEntry.CONTENT_URI_USERS,
-//                new String[]{DbColumns.MealsEntry.TOKEN},
-//                DbColumns.MealsEntry.EMAIL + "=?",
-//                new String[]{email},
-//                null);
-//        if (!c.moveToNext()) {
-//            insertUser(firstName,email,token);
-//        } else {
-//
-//        }
-//    }?
+    private boolean isDeviceOnline() {
+        ConnectivityManager connMgr =
+                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
+    }
 }

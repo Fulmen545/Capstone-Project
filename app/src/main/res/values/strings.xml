@@ -6,6 +6,9 @@
     <string name="signInButton">Sign In</string>
     <string name="signOutLabel">Sign Out</string>
     <string name="signInLabel">Sign in with your Google Account</string>
+    <string name="ok">Ok</string>
+    <string name="no_internet">No internet connection</string>
+    <string name="sign_msg">Connect to internet and sign in.</string>
 
     <!--Main screen-->
     <string name="addMeal">Add Meal</string>

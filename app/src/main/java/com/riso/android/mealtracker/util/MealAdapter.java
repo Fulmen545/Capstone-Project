@@ -1,7 +1,11 @@
 package com.riso.android.mealtracker.util;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -129,6 +133,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
                 mailItem.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (isDeviceOnline()){
                         GoogleCalendarEvents googleCalendarEvents = new GoogleCalendarEvents(context, dbQuery.selectUser());
                         if (calendar.equals("true")) {
                             googleCalendarEvents.deleteEvent(mealItems[listIndex]);
@@ -154,6 +159,9 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
+                        }
+                        } else {
+                            Toast.makeText(context, R.string.no_internet, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -212,5 +220,12 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
             int clickedPosition = getAdapterPosition();
             mOnClickListener.onListItemClick(clickedPosition);
         }
+    }
+
+    public boolean isDeviceOnline() {
+        ConnectivityManager connMgr =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
     }
 }

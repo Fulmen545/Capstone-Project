@@ -5,12 +5,16 @@ import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -98,9 +102,22 @@ public class MainFragment extends Fragment {
         googleLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), CalendarActivity.class);
-                startActivity(intent);
-                ((Activity) getActivity()).overridePendingTransition(0, 0);
+                if (isDeviceOnline()) {
+                    Intent intent = new Intent(getActivity(), CalendarActivity.class);
+                    startActivity(intent);
+                    ((Activity) getActivity()).overridePendingTransition(0, 0);
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(R.string.no_internet);
+                    builder.setMessage(R.string.sign_msg);
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User clicked OK button
+                            dialog.cancel();
+                        }
+                    });
+                    builder.show();
+                }
             }
         });
 
@@ -135,7 +152,20 @@ public class MainFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.signOut) {
-            signOut();
+            if (isDeviceOnline()) {
+                signOut();
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(R.string.no_internet);
+                builder.setMessage(R.string.sign_msg);
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK button
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -147,8 +177,8 @@ public class MainFragment extends Fragment {
 
     }
 
-    private void removeUser(){
-        getContext().getContentResolver().delete(DbColumns.MealsEntry.CONTENT_URI_USERS,null,null);
+    private void removeUser() {
+        getContext().getContentResolver().delete(DbColumns.MealsEntry.CONTENT_URI_USERS, null, null);
     }
 
     private void signOut() {
@@ -161,6 +191,13 @@ public class MainFragment extends Fragment {
                     }
                 });
         removeUser();
+    }
+
+    private boolean isDeviceOnline() {
+        ConnectivityManager connMgr =
+                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
     }
 
 }

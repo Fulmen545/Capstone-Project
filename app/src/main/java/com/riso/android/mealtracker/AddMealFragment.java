@@ -11,6 +11,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -24,6 +25,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -304,26 +306,39 @@ public class AddMealFragment extends Fragment {
             save.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (calendar.isChecked()) {
-                        getResultsFromApi();
+                    if (isDeviceOnline()) {
+                        if (calendar.isChecked()) {
+                            getResultsFromApi();
 
+                        }
+                        insertMeal(typeFoodSpinner.getSelectedItem().toString(),
+                                editDesc.getText().toString(),
+                                editDate.getText().toString(),
+                                editTime.getText().toString(),
+                                editLocation.getText().toString(),
+                                custJson.toString(),
+                                calendar.isChecked(),
+                                selectUser());
+                        Toast.makeText(getContext(), "Meal was added", Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(getContext(), MealWidgetProvider.class);
+                        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                        int[] ids = AppWidgetManager.getInstance(getActivity()).getAppWidgetIds(new ComponentName(getActivity(), MealWidgetProvider.class));
+                        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+                        getContext().sendBroadcast(intent);
+                        getActivity().onBackPressed();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle(R.string.no_internet);
+                        builder.setMessage(R.string.sign_msg);
+                        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User clicked OK button
+                                dialog.cancel();
+                            }
+                        });
+                        builder.show();
                     }
-                    insertMeal(typeFoodSpinner.getSelectedItem().toString(),
-                            editDesc.getText().toString(),
-                            editDate.getText().toString(),
-                            editTime.getText().toString(),
-                            editLocation.getText().toString(),
-                            custJson.toString(),
-                            calendar.isChecked(),
-                            selectUser());
-                    Toast.makeText(getContext(), "Meal was added", Toast.LENGTH_SHORT).show();
-
-                    Intent intent = new Intent(getContext(), MealWidgetProvider.class);
-                    intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-                    int[] ids = AppWidgetManager.getInstance(getActivity()).getAppWidgetIds(new ComponentName(getActivity(), MealWidgetProvider.class));
-                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-                    getContext().sendBroadcast(intent);
-                    getActivity().onBackPressed();
                 }
             });
 
@@ -671,7 +686,7 @@ public class AddMealFragment extends Fragment {
                     List<Event> items = eventsGet.getItems();
                     String eventId;
                     for (Event event : items) {
-                        if (event.getSummary().equals("MT: " +params[1].typeItem + " - " + params[1].descItem)) {
+                        if (event.getSummary().equals("MT: " + params[1].typeItem + " - " + params[1].descItem)) {
                             eventId = event.getId();
                             if (calendar.isChecked()) {
                                 mService.events().update("primary", eventId, prepareEvent(params[0])).execute();
