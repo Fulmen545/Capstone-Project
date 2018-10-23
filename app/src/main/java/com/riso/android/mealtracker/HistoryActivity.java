@@ -45,6 +45,7 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
     private String user;
     String date;
     Bundle extras;
+    boolean notEmpty = true;
     private MealAdapter mMeakAdapter;
     @BindView(R.id.rv_meals)
     RecyclerView mRecipeNamesList;
@@ -66,15 +67,20 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
         user = selectUser();
         getColor();
         extras = getIntent().getExtras();
+        no_meal_tv = findViewById(R.id.no_meal_tv);
         headline = findViewById(R.id.textView2);
         if (extras == null) {
             getStoredMeals();
         } else {
             setTitle(getResources().getString(R.string.google_history));
             mealsStored = (MealItem[]) extras.getSerializable(MEAL_ARRAY);
-            headline.setText("Meals for: " + mealsStored[0].dateItem);
+            try {
+                headline.setText("Meals for: " + mealsStored[0].dateItem);
+            } catch (Exception e){
+                mealsStored = null;
+                notEmpty=false;
+            }
         }
-        no_meal_tv = findViewById(R.id.no_meal_tv);
         mRecipeNamesList = findViewById(R.id.rv_meals);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecipeNamesList.setLayoutManager(layoutManager);
@@ -93,7 +99,7 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
     @Override
     protected void onResume() {
         super.onResume();
-        if (extras != null && date == null) {
+        if (extras != null && date == null && notEmpty) {
             mealsStored = (MealItem[]) extras.getSerializable(MEAL_ARRAY);
             setTitle(getResources().getString(R.string.google_history));
             headline.setText("Meals for: " + mealsStored[0].dateItem);
