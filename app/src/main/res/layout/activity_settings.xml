@@ -1,201 +1,205 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/add_meal_padding"
-    tools:context="com.riso.android.mealtracker.SettingsActivity">
+    android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:text="@string/typeLabel"
-         />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <Spinner
+        android:id="@+id/typeFoodSettingsSpinner"
+        android:layout_width="@dimen/spinner_width"
+        android:layout_height="24dp"
+        android:layout_marginTop="4dp"
+        android:theme="@style/AddMeal"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-        <Spinner
-            android:id="@+id/typeFoodSettingsSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:theme="@style/AddMeal"
-            android:layout_weight="3"
-            android:layout_margin="5dp" />
+    <Spinner
+        android:id="@+id/colorFoodSettingsSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/typeFoodSettingsSpinner"
+        app:layout_constraintEnd_toEndOf="@+id/typeFoodSettingsSpinner"
+        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintStart_toStartOf="@+id/confirmColor"
+        app:layout_constraintTop_toBottomOf="@+id/typeFoodSettingsSpinner"
+        app:layout_constraintVertical_bias="0.428" />
 
-        <Spinner
-            android:id="@+id/colorFoodSettingsSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="5dp" />
+    <Button
+        android:id="@+id/confirmColor"
+        android:layout_width="@dimen/settings_btn"
+        android:layout_height="@dimen/custom_height"
+        android:layout_marginEnd="16dp"
+        android:padding="10dp"
+        android:text="@string/confirmColorBtn"
+        app:layout_constraintBottom_toTopOf="@+id/colorFoodSettingsSpinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/colorFoodSettingsSpinner"
+        app:layout_constraintVertical_bias="0.437" />
 
-        <Button
-            android:id="@+id/confirmColor"
-            android:layout_width="@dimen/settings_btn"
-            android:layout_height="@dimen/custom_height"
-            android:layout_weight="1"
-            android:focusable="false"
-            android:padding="10dp"
-            android:text="@string/confirmColorBtn"/>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/typeFoodSettingsEdt"
+        android:layout_width="@dimen/edt_width"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp">
+        android:layout_marginTop="24dp"
+        android:maxLines="1"
+        app:layout_constraintStart_toStartOf="@+id/typeFoodSettingsSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/typeFoodSettingsSpinner" />
 
-        <EditText
-            android:id="@+id/typeFoodSettingsEdt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:layout_weight="3"
-            android:layout_margin="5dp" />
+    <Spinner
+        android:id="@+id/colorNewFoodSettingsSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:theme="@style/AddMeal"
+        app:layout_constraintBottom_toTopOf="@+id/typeFoodSettingsEdt"
+        app:layout_constraintEnd_toStartOf="@+id/colorFoodSettingsSpinner"
+        app:layout_constraintHorizontal_bias="0.461"
+        app:layout_constraintStart_toEndOf="@+id/colorFoodSettingsSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/typeFoodSettingsEdt"
+        app:layout_constraintVertical_bias="0.461" />
 
-        <Spinner
-            android:id="@+id/colorNewFoodSettingsSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:theme="@style/AddMeal"
-            android:layout_weight="1"
-            android:layout_margin="5dp" />
-
-        <Button
-            android:id="@+id/addColor"
-            android:layout_width="@dimen/settings_btn"
-            android:layout_height="@dimen/custom_height"
-            android:layout_weight="1"
-            android:focusable="false"
-            android:padding="10dp"
-            android:text="@string/addBtnString"/>
-
-    </LinearLayout>
+    <Button
+        android:id="@+id/addColor"
+        android:layout_width="@dimen/settings_btn"
+        android:layout_height="@dimen/custom_height"
+        android:layout_marginEnd="8dp"
+        android:padding="10dp"
+        android:text="@string/addBtnString"
+        app:layout_constraintBottom_toTopOf="@+id/typeFoodSettingsEdt"
+        app:layout_constraintEnd_toStartOf="@+id/confirmColor"
+        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintStart_toEndOf="@+id/confirmColor"
+        app:layout_constraintTop_toBottomOf="@+id/typeFoodSettingsEdt" />
 
     <TextView
+        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:text="@string/removeType"
         android:theme="@style/AddMeal"
-        android:paddingTop="10dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/typeFoodSettingsEdt" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <Spinner
+        android:id="@+id/removeTypeSettingsSpinner"
+        android:layout_width="@dimen/spinner_width"
+        android:layout_height="24dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-        <Spinner
-            android:id="@+id/removeTypeSettingsSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:layout_margin="5dp" />
-
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:visibility="invisible"/>
-
-        <Button
-            android:id="@+id/removeColor"
-            android:layout_width="@dimen/settings_btn"
-            android:layout_height="@dimen/custom_height"
-            android:layout_weight="1"
-            android:focusable="false"
-            android:padding="10dp"
-            android:text="@string/removeBtnString"/>
-
-    </LinearLayout>
-
+    <Button
+        android:id="@+id/removeColor"
+        android:layout_width="@dimen/settings_btn"
+        android:layout_height="@dimen/custom_height"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:focusable="false"
+        android:padding="10dp"
+        android:text="@string/removeBtnString"
+        app:layout_constraintBottom_toTopOf="@+id/removeTypeSettingsSpinner"
+        app:layout_constraintEnd_toStartOf="@+id/addColor"
+        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintStart_toEndOf="@+id/addColor"
+        app:layout_constraintTop_toBottomOf="@+id/removeTypeSettingsSpinner" />
 
     <View
+        android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="10dp"
-        android:background="@color/colorPrimary" />
+        android:background="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/removeColor" />
 
     <TextView
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="15dp"
         android:text="@string/custFields"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line" />
 
-    <LinearLayout
-        android:paddingTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <Spinner
+        android:id="@+id/custSettingsSpinner"
+        android:layout_width="@dimen/spinner_width"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:theme="@style/AddMeal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
-        <Spinner
-            android:id="@+id/custSettingsSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:theme="@style/AddMeal"
-            android:layout_weight="3"
-            android:layout_margin="5dp" />
-
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="5dp"
-            android:visibility="invisible"/>
-
-        <Button
-            android:id="@+id/removeCust"
-            android:layout_width="@dimen/settings_btn"
-            android:layout_height="@dimen/custom_height"
-            android:layout_weight="1"
-            android:focusable="false"
-            android:padding="10dp"
-            android:text="@string/removeBtnString"/>
-
-    </LinearLayout>
+    <Button
+        android:id="@+id/removeCust"
+        android:layout_width="@dimen/settings_btn"
+        android:layout_height="@dimen/custom_height"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/removeBtnString"
+        app:layout_constraintBottom_toTopOf="@+id/custSettingsSpinner"
+        app:layout_constraintEnd_toStartOf="@+id/removeColor"
+        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintStart_toEndOf="@+id/removeColor"
+        app:layout_constraintTop_toBottomOf="@+id/custSettingsSpinner"
+        app:layout_constraintVertical_bias="0.555" />
 
     <TextView
+        android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="15dp"
         android:text="@string/addCustLabel"
         android:theme="@style/AddMeal"
-        android:paddingTop="10dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/custSettingsSpinner" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/addCustSettingsEdt"
+        android:layout_width="@dimen/spinner_width"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp">
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:maxLines="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
-        <EditText
-            android:id="@+id/addCustSettingsEdt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:layout_weight="3"
-            android:layout_margin="5dp" />
+    <Button
+        android:id="@+id/addCustFld"
+        android:layout_width="@dimen/settings_btn"
+        android:layout_height="@dimen/custom_height"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/addBtnString"
+        app:layout_constraintBottom_toTopOf="@+id/addCustSettingsEdt"
+        app:layout_constraintEnd_toStartOf="@+id/removeCust"
+        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintStart_toEndOf="@+id/removeCust"
+        app:layout_constraintTop_toBottomOf="@+id/addCustSettingsEdt"
+        app:layout_constraintVertical_bias="0.489" />
 
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:theme="@style/AddMeal"
-            android:layout_margin="5dp"
-            android:visibility="invisible"/>
-
-        <Button
-            android:id="@+id/addCustFld"
-            android:layout_width="@dimen/settings_btn"
-            android:layout_height="@dimen/custom_height"
-            android:layout_weight="1"
-            android:focusable="false"
-            android:padding="10dp"
-            android:text="@string/addBtnString"/>
-
-    </LinearLayout>
-
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
