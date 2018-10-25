@@ -8,12 +8,13 @@
 
     <CalendarView
         android:id="@+id/simpleCalendarView"
+        android:contentDescription="@string/google_calendar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/getEventsBtn"
-        android:layout_width="371dp"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/fab_elevation"
         android:layout_marginEnd="@dimen/fab_elevation"
@@ -21,7 +22,7 @@
         android:background="@color/colorPrimary"
         android:text="@string/btn_text"
         android:theme="@style/Button"
-        android:contentDescription="@string/app_name"
+        android:contentDescription="@string/btn_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

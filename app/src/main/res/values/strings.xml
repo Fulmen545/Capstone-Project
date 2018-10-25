@@ -14,6 +14,7 @@
     <string name="invalid_lat_long_used">Invalid latitude</string>
     <string name="no_address_found">No address found</string>
     <string name="address_found">Address found</string>
+    <string name="logo">App logo</string>
 
     <!--Main screen-->
     <string name="addMeal">Add Meal</string>
@@ -23,10 +24,13 @@
     <!--Add Meal screen-->
     <string name="screenNameAddMeal">Add Meal</string>
     <string name="typeLabel">Type of food</string>
+    <string name="typeLabelSpinner">Type of food dropdown</string>
     <string name="description">Description</string>
+    <string name="edt_description">Description field</string>
     <string name="date">Date</string>
     <string name="time">Time</string>
     <string name="location">Location</string>
+    <string name="edt_location">Location field</string>
     <string name="customizable">Customizable Fields</string>
     <string name="addBtnString">Add</string>
     <string name="checboxGoogle">Add to Google Calendar</string>
@@ -41,6 +45,14 @@
     <string name="removeBtnString">Remove</string>
     <string name="custFields">Customizable Fields</string>
     <string name="addCustLabel">Add new Customizable Fields</string>
+    <string name="custField">Custom field</string>
+    <string name="color_spinner">Color dropdown</string>
+    <string name="confirmColorSpeak">Confirm color button</string>
+    <string name="editTextType">Field for adding food type</string>
+    <string name="editTextCust">Field for adding custom field</string>
+    <string name="add_btn">Add button</string>
+    <string name="rmv_btn">Remove button</string>
+    <string name="custom_spinner">Custom meal dropdown</string>
 
 
     <!--History-->
@@ -60,6 +72,10 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="btn_text">Get Meals</string>
+
+    <!--Meal Item-->
+    <string name="trash">Delete meal</string>
+    <string name="mail">Send/receive meal</string>
 
 
 </resources>

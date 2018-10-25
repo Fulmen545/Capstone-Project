@@ -10,79 +10,86 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
         android:text="@string/typeLabel"
+        android:contentDescription="@string/typeLabel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/typeFoodSettingsSpinner"
         android:layout_width="@dimen/spinner_width"
-        android:layout_height="24dp"
-        android:layout_marginTop="4dp"
+        android:layout_height="@dimen/settings_spinner_height"
+        android:layout_marginTop="@dimen/fab_elevation"
         android:theme="@style/AddMeal"
+        android:contentDescription="@string/typeLabelSpinner"
         app:layout_constraintStart_toStartOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Spinner
         android:id="@+id/colorFoodSettingsSpinner"
         android:layout_width="wrap_content"
-        android:layout_height="24dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_height="@dimen/settings_spinner_height"
+        android:layout_marginBottom="@dimen/nomeal_margin"
+        android:layout_marginStart="@dimen/nomeal_margin"
+        android:contentDescription="@string/color_spinner"
         app:layout_constraintBottom_toTopOf="@+id/typeFoodSettingsSpinner"
         app:layout_constraintEnd_toEndOf="@+id/typeFoodSettingsSpinner"
-        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintHorizontal_bias="@dimen/bias1"
         app:layout_constraintStart_toStartOf="@+id/confirmColor"
         app:layout_constraintTop_toBottomOf="@+id/typeFoodSettingsSpinner"
-        app:layout_constraintVertical_bias="0.428" />
+        app:layout_constraintVertical_bias="@dimen/bias2" />
 
     <Button
         android:id="@+id/confirmColor"
         android:layout_width="@dimen/settings_btn"
         android:layout_height="@dimen/custom_height"
-        android:layout_marginEnd="16dp"
-        android:padding="10dp"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:padding="@dimen/settings_padding"
         android:text="@string/confirmColorBtn"
+        android:contentDescription="@string/confirmColorSpeak"
         app:layout_constraintBottom_toTopOf="@+id/colorFoodSettingsSpinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/colorFoodSettingsSpinner"
-        app:layout_constraintVertical_bias="0.437" />
+        app:layout_constraintVertical_bias="@dimen/bias3" />
 
     <EditText
         android:id="@+id/typeFoodSettingsEdt"
         android:layout_width="@dimen/edt_width"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="@dimen/settings_spinner_height"
         android:maxLines="1"
+        android:contentDescription="@string/editTextType"
         app:layout_constraintStart_toStartOf="@+id/typeFoodSettingsSpinner"
         app:layout_constraintTop_toBottomOf="@+id/typeFoodSettingsSpinner" />
 
     <Spinner
         android:id="@+id/colorNewFoodSettingsSpinner"
         android:layout_width="wrap_content"
-        android:layout_height="24dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_height="@dimen/settings_spinner_height"
+        android:layout_marginBottom="@dimen/nomeal_margin"
+        android:layout_marginEnd="@dimen/nomeal_margin"
         android:theme="@style/AddMeal"
+        android:contentDescription="@string/color_spinner"
         app:layout_constraintBottom_toTopOf="@+id/typeFoodSettingsEdt"
         app:layout_constraintEnd_toStartOf="@+id/colorFoodSettingsSpinner"
-        app:layout_constraintHorizontal_bias="0.461"
+        app:layout_constraintHorizontal_bias="@dimen/bias4"
         app:layout_constraintStart_toEndOf="@+id/colorFoodSettingsSpinner"
         app:layout_constraintTop_toBottomOf="@+id/typeFoodSettingsEdt"
-        app:layout_constraintVertical_bias="0.461" />
+        app:layout_constraintVertical_bias="@dimen/bias4" />
 
     <Button
         android:id="@+id/addColor"
         android:layout_width="@dimen/settings_btn"
         android:layout_height="@dimen/custom_height"
-        android:layout_marginEnd="8dp"
-        android:padding="10dp"
+        android:layout_marginEnd="@dimen/nomeal_margin"
+        android:padding="@dimen/settings_padding"
         android:text="@string/addBtnString"
+        android:contentDescription="@string/add_btn"
         app:layout_constraintBottom_toTopOf="@+id/typeFoodSettingsEdt"
         app:layout_constraintEnd_toStartOf="@+id/confirmColor"
-        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintHorizontal_bias="@dimen/hor_bias"
         app:layout_constraintStart_toEndOf="@+id/confirmColor"
         app:layout_constraintTop_toBottomOf="@+id/typeFoodSettingsEdt" />
 
@@ -90,18 +97,20 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
         android:text="@string/removeType"
         android:theme="@style/AddMeal"
+        android:contentDescription="@string/removeType"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/typeFoodSettingsEdt" />
 
     <Spinner
         android:id="@+id/removeTypeSettingsSpinner"
         android:layout_width="@dimen/spinner_width"
-        android:layout_height="24dp"
-        android:layout_marginTop="4dp"
+        android:layout_height="@dimen/settings_spinner_height"
+        android:layout_marginTop="@dimen/fab_elevation"
+        android:contentDescription="@string/typeLabelSpinner"
         app:layout_constraintStart_toStartOf="@+id/textView3"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
@@ -109,25 +118,25 @@
         android:id="@+id/removeColor"
         android:layout_width="@dimen/settings_btn"
         android:layout_height="@dimen/custom_height"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_weight="1"
+        android:layout_marginEnd="@dimen/nomeal_margin"
+        android:layout_marginTop="@dimen/nomeal_margin"
         android:focusable="false"
-        android:padding="10dp"
+        android:padding="@dimen/settings_padding"
         android:text="@string/removeBtnString"
+        android:contentDescription="@string/rmv_btn"
         app:layout_constraintBottom_toTopOf="@+id/removeTypeSettingsSpinner"
         app:layout_constraintEnd_toStartOf="@+id/addColor"
-        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintHorizontal_bias="@dimen/hor_bias"
         app:layout_constraintStart_toEndOf="@+id/addColor"
         app:layout_constraintTop_toBottomOf="@+id/removeTypeSettingsSpinner" />
 
     <View
         android:id="@+id/line"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="@dimen/line"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/settings_padding"
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -137,19 +146,21 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
         android:text="@string/custFields"
+        android:contentDescription="@string/custFields"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/line" />
 
     <Spinner
         android:id="@+id/custSettingsSpinner"
         android:layout_width="@dimen/spinner_width"
-        android:layout_height="24dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_height="@dimen/settings_spinner_height"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
         android:theme="@style/AddMeal"
+        android:contentDescription="@string/custom_spinner"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
@@ -157,24 +168,26 @@
         android:id="@+id/removeCust"
         android:layout_width="@dimen/settings_btn"
         android:layout_height="@dimen/custom_height"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="@dimen/nomeal_margin"
+        android:layout_marginTop="@dimen/nomeal_margin"
         android:text="@string/removeBtnString"
+        android:contentDescription="@string/rmv_btn"
         app:layout_constraintBottom_toTopOf="@+id/custSettingsSpinner"
         app:layout_constraintEnd_toStartOf="@+id/removeColor"
-        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintHorizontal_bias="@dimen/hor_bias"
         app:layout_constraintStart_toEndOf="@+id/removeColor"
         app:layout_constraintTop_toBottomOf="@+id/custSettingsSpinner"
-        app:layout_constraintVertical_bias="0.555" />
+        app:layout_constraintVertical_bias="@dimen/bias5" />
 
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/fab_margin"
         android:text="@string/addCustLabel"
         android:theme="@style/AddMeal"
+        android:contentDescription="@string/addCustLabel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/custSettingsSpinner" />
 
@@ -182,9 +195,10 @@
         android:id="@+id/addCustSettingsEdt"
         android:layout_width="@dimen/spinner_width"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginTop="@dimen/nomeal_margin"
         android:maxLines="1"
+        android:contentDescription="@string/editTextCust"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
@@ -192,14 +206,15 @@
         android:id="@+id/addCustFld"
         android:layout_width="@dimen/settings_btn"
         android:layout_height="@dimen/custom_height"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="@dimen/nomeal_margin"
+        android:layout_marginEnd="@dimen/nomeal_margin"
         android:text="@string/addBtnString"
+        android:contentDescription="@string/add_btn"
         app:layout_constraintBottom_toTopOf="@+id/addCustSettingsEdt"
         app:layout_constraintEnd_toStartOf="@+id/removeCust"
-        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintHorizontal_bias="@dimen/hor_bias"
         app:layout_constraintStart_toEndOf="@+id/removeCust"
         app:layout_constraintTop_toBottomOf="@+id/addCustSettingsEdt"
-        app:layout_constraintVertical_bias="0.489" />
+        app:layout_constraintVertical_bias="@dimen/bias6" />
 
 </android.support.constraint.ConstraintLayout>

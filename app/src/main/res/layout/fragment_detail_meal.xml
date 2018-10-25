@@ -5,42 +5,6 @@
     android:layout_height="match_parent"
     tools:context="com.riso.android.mealtracker.DetailMealFragment">
 
-    <!--<android.support.design.widget.AppBarLayout-->
-    <!--android:id="@+id/app_bar_layout"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:elevation="@dimen/fab_elevation"-->
-    <!--android:layout_height="@dimen/bar_height">-->
-
-    <!--<android.support.design.widget.CollapsingToolbarLayout-->
-    <!--android:id="@+id/toolbar_container"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--app:collapsedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"-->
-    <!--app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"-->
-    <!--app:expandedTitleMarginStart="72dp"-->
-    <!--app:layout_scrollFlags="scroll|exitUntilCollapsed">-->
-
-    <!--<android.support.v7.widget.Toolbar-->
-    <!--android:id="@+id/toolbar"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="?actionBarSize"-->
-    <!--android:layout_gravity="bottom">-->
-
-    <!--<TextView-->
-    <!--android:id="@+id/detailTitle"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--tools:text="Breakfast"-->
-    <!--android:textColor="@color/white"-->
-    <!--android:textSize="@dimen/menu_item_text"-->
-    <!--android:textStyle="bold"-->
-
-    <!--android:contentDescription="@string/app_name" />-->
-
-    <!--</android.support.v7.widget.Toolbar>-->
-
-    <!--</android.support.design.widget.CollapsingToolbarLayout>-->
-    <!--</android.support.design.widget.AppBarLayout>-->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -51,22 +15,24 @@
 
             <TextView
                 android:id="@+id/detailDate"
-                android:layout_width="133dp"
-                android:layout_height="41dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_width="@dimen/detail_date_width"
+                android:layout_height="@dimen/detail_date_height"
+                android:layout_marginStart="@dimen/fab_margin"
+                android:layout_marginTop="@dimen/fab_margin"
                 android:textSize="@dimen/menu_item_text"
+                android:contentDescription="@string/date"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Date" />
 
             <TextView
                 android:id="@+id/detailTIme"
-                android:layout_width="138dp"
-                android:layout_height="41dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="12dp"
+                android:layout_width="@dimen/detail_date_width"
+                android:layout_height="@dimen/detail_date_height"
+                android:layout_marginEnd="@dimen/nomeal_margin"
+                android:layout_marginStart="@dimen/history_padding"
                 android:textSize="@dimen/menu_item_text"
+                android:contentDescription="@string/time"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.16"
                 app:layout_constraintStart_toEndOf="@+id/detailDate"
@@ -75,11 +41,12 @@
 
             <TextView
                 android:id="@+id/detailLocation"
-                android:layout_width="331dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="12dp"
+                android:layout_width="@dimen/detail_location_width"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/nomeal_margin"
+                android:layout_marginTop="@dimen/history_padding"
                 android:textSize="@dimen/menu_item_text"
+                android:contentDescription="@string/location"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/detailDate"
@@ -88,20 +55,22 @@
 
             <TextView
                 android:id="@+id/detailDescTV"
-                android:layout_width="88dp"
+                android:layout_width="@dimen/detail_desc_width"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/menu_item_padding"
                 android:text="@string/description"
+                android:contentDescription="@string/description"
                 android:textColor="@color/textgray"
                 app:layout_constraintStart_toStartOf="@+id/detailLocation"
                 app:layout_constraintTop_toBottomOf="@+id/detailLocation" />
 
             <TextView
                 android:id="@+id/detailDescription"
-                android:layout_width="331dp"
+                android:layout_width="@dimen/detail_location_width"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginEnd="@dimen/nomeal_margin"
+                android:layout_marginTop="@dimen/nomeal_margin"
+                android:contentDescription="@string/edt_description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/detailDescTV"
@@ -110,31 +79,34 @@
 
             <TextView
                 android:id="@+id/detailCustFields"
-                android:layout_width="139dp"
+                android:layout_width="@dimen/detail_date_width"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/menu_item_padding"
                 android:text="@string/custFields"
+                android:contentDescription="@string/custFields"
                 android:textColor="@color/textgray"
                 app:layout_constraintStart_toStartOf="@+id/detailDescription"
                 app:layout_constraintTop_toBottomOf="@+id/detailDescription" />
 
             <Spinner
                 android:id="@+id/detailSpinner"
-                android:layout_width="152dp"
+                android:layout_width="@dimen/detail_spinner_width"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/nomeal_margin"
+                android:contentDescription="@string/custom_spinner"
                 app:layout_constraintStart_toStartOf="@+id/detailCustFields"
                 app:layout_constraintTop_toBottomOf="@+id/detailCustFields" />
 
             <TextView
                 android:id="@+id/detailCustomfields"
-                android:layout_width="331dp"
+                android:layout_width="@dimen/detail_location_width"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="12dp"
-                android:paddingBottom="30dp"
-                android:text="TextView"
+                android:layout_marginBottom="@dimen/nomeal_margin"
+                android:layout_marginEnd="@dimen/nomeal_margin"
+                android:layout_marginTop="@dimen/history_padding"
+                android:paddingBottom="@dimen/detail_margin"
+                tools:text="TextView"
+                android:contentDescription="@string/editTextCust"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

@@ -14,7 +14,8 @@
 
         <LinearLayout
             android:id="@+id/addMealItem"
-            android:layout_width="wrap_content"
+            android:contentDescription="@string/addMeal"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/menu_item_padding"
@@ -40,7 +41,8 @@
 
         <LinearLayout
             android:id="@+id/history"
-            android:layout_width="wrap_content"
+            android:contentDescription="@string/history"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/menu_item_padding"
@@ -66,7 +68,8 @@
 
         <LinearLayout
             android:id="@+id/googleCal"
-            android:layout_width="wrap_content"
+            android:contentDescription="@string/calendar"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/menu_item_padding"

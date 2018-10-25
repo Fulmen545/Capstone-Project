@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="logo">250dp</dimen>
     <dimen name="menu_item_padding">20dp</dimen>
     <dimen name="menu_item_text">20sp</dimen>
     <dimen name="menu_item_image_height">150dp</dimen>
@@ -9,7 +10,7 @@
     <dimen name="edt_width">115dp</dimen>
     <dimen name="custom_height">40dp</dimen>
 
-    <dimen name="settings_btn">80dp</dimen>
+    <dimen name="settings_btn">90dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="bar_height">168dp</dimen>
@@ -20,6 +21,62 @@ Refer to App Widget Documentation for margin information
 http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     -->
     <dimen name="widget_margin">8dp</dimen>
+
+    <!--History-->
+    <dimen name="history_padding">12dp</dimen>
+    <dimen name="history_padding_bottom">60dp</dimen>
+    <dimen name="history_text_size">18sp</dimen>
+    <dimen name="nomeal_width">297dp</dimen>
+    <dimen name="nomeal_height">66dp</dimen>
+    <dimen name="nomeal_margin">8dp</dimen>
+
+    <!--Main-->
+    <dimen name="signin_button_width">200dp</dimen>
+    <dimen name="signin_button_margin">26dp</dimen>
+    <dimen name="signin_hint_padding">35dp</dimen>
+    <dimen name="signin_hint_marginBot">17dp</dimen>
+    <dimen name="signin_hint_marginStart">34dp</dimen>
+
+    <!--Settings-->
+    <dimen name="settings_spinner_height">24dp</dimen>
+    <dimen name="settings_padding">10dp</dimen>
+    <dimen name="line">1dp</dimen>
+    <dimen name="hor_bias">0.476</dimen>
+    <dimen name="bias1">0.51</dimen>
+    <dimen name="bias2">0.428</dimen>
+    <dimen name="bias3">0.437</dimen>
+    <dimen name="bias4">0.461</dimen>
+    <dimen name="bias5">0.555</dimen>
+    <dimen name="bias6">0.489</dimen>
+
+    <!--Add Meal-->
+    <dimen name="add_margin">5dp</dimen>
+    <dimen name="add_height">80dp</dimen>
+
+    <!--Detail-->
+    <dimen name="detail_location_width">331dp</dimen>
+    <dimen name="detail_desc_width">88dp</dimen>
+    <dimen name="detail_date_width">133dp</dimen>
+    <dimen name="detail_date_height">41dp</dimen>
+    <dimen name="detail_spinner_width">152dp</dimen>
+    <dimen name="detail_margin">30dp</dimen>
+
+    <!--Meal Item-->
+    <dimen name="mi_title_width">146dp</dimen>
+    <dimen name="mi_date_width">186dp</dimen>
+    <dimen name="mi_icon_width">40dp</dimen>
+    <dimen name="mi_icon_height">38dp</dimen>
+    <dimen name="mi_location_width">297dp</dimen>
+    <dimen name="mi_marginh">2dp</dimen>
+    <dimen name="mi_padding">11dp</dimen>
+
+    <!--Widget-->
+    <dimen name="wg_title_width">33dp</dimen>
+    <dimen name="wg_date_width">156dp</dimen>
+    <dimen name="wg_time_width">101dp</dimen>
+    <dimen name="wg_text">24sp</dimen>
+    <dimen name="wg_margin">14sp</dimen>
+
 
 
 </resources>
