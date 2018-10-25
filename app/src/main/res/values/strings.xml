@@ -9,6 +9,11 @@
     <string name="ok">Ok</string>
     <string name="no_internet">No internet connection</string>
     <string name="sign_msg">Connect to internet and sign in.</string>
+    <string name="no_location_data_provided">No location data provided</string>
+    <string name="service_not_available">Location service not available</string>
+    <string name="invalid_lat_long_used">Invalid latitude</string>
+    <string name="no_address_found">No address found</string>
+    <string name="address_found">Address found</string>
 
     <!--Main screen-->
     <string name="addMeal">Add Meal</string>

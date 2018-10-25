@@ -16,11 +16,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -49,7 +53,10 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
@@ -66,6 +73,7 @@ import com.google.api.services.calendar.model.Events;
 import com.riso.android.mealtracker.data.DatabaseQuery;
 import com.riso.android.mealtracker.data.DbColumns;
 import com.riso.android.mealtracker.data.MealItem;
+import com.riso.android.mealtracker.util.FetchAddressIntentService;
 import com.riso.android.mealtracker.util.GoogleCalendarEvents;
 
 import org.json.JSONException;
@@ -79,6 +87,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -106,12 +115,21 @@ public class AddMealFragment extends Fragment {
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
     private static final String PREF_ACCOUNT_NAME = "accountName";
-    static final int REQUEST_AUTHORIZATION = 1001;
+    private static final String PACKAGE_NAME = "com.riso.android.mealtracker.util";
+    static final String RECEIVER = PACKAGE_NAME + ".RECEIVER";
+    static final String RESULT_DATA_KEY = PACKAGE_NAME + ".RESULT_DATA_KEY";
+    static final String LOCATION_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
+    static final int SUCCESS_RESULT = 0;
+    static final int FAILURE_RESULT = 1;
 
+
+    private String mAddressOutput;
+    AddressResultReceiver  mResultReceiver;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private Location mLastLocation;
 
     Spinner typeFoodSpinner;
     Spinner custFieldSpinner;
-    String[] arraySpinner = new String[]{"Breakfast", "Lunch", "Dinner"};
     String[] typeFoods;
     String[] custFields;
     EditText editDate;
@@ -158,6 +176,8 @@ public class AddMealFragment extends Fragment {
         user = selectUser();
         getFoodTypes();
         getCustomFields();
+        mResultReceiver = new AddressResultReceiver(new Handler());
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         typeFoodSpinner = view.findViewById(R.id.typeFoodSpinner);
         foodTypesAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item, typeFoods);
@@ -249,50 +269,51 @@ public class AddMealFragment extends Fragment {
             }
         });
 
-        if (mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                    .addApi(LocationServices.API)
-                    .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                        @Override
-                        public void onConnectionSuspended(int cause) {
-                        }
-
-                        @Override
-                        public void onConnected(Bundle connectionHint) {
-
-                        }
-                    })
-                    .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
-                        @Override
-                        public void onConnectionFailed(ConnectionResult result) {
-                        }
-                    }).build();
-            mGoogleApiClient.connect();
-        } else {
-            mGoogleApiClient.connect();
-        }
+//        if (mGoogleApiClient == null) {
+//            mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+//                    .addApi(LocationServices.API)
+//                    .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+//                        @Override
+//                        public void onConnectionSuspended(int cause) {
+//                        }
+//
+//                        @Override
+//                        public void onConnected(Bundle connectionHint) {
+//
+//                        }
+//                    })
+//                    .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
+//                        @Override
+//                        public void onConnectionFailed(ConnectionResult result) {
+//                        }
+//                    }).build();
+//            mGoogleApiClient.connect();
+//        } else {
+//            mGoogleApiClient.connect();
+//        }
 //        permissions.add(ACCESS_FINE_LOCATION);
 //        permissions.add(ACCESS_COARSE_LOCATION);
         editLocation = view.findViewById(R.id.editLocation);
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            Location mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            if (mLocation != null) {
-                editLocation.setText("Lat.:" + mLocation.getLatitude() + " Long.:" + mLocation.getLongitude());
-
-            } else {
-                Toast.makeText(getContext(), "Couldn't access location", Toast.LENGTH_SHORT).show();
-                editLocation.setText("");
-            }
-        } else {
-            editLocation.setText("");
-        }
+//        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+//                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            //    ActivityCompat#requestPermissions
+//            // here to request the missing permissions, and then overriding
+//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//            //                                          int[] grantResults)
+//            // to handle the case where the user grants the permission. See the documentation
+//            // for ActivityCompat#requestPermissions for more details.
+//            Location mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+//            if (mLocation != null) {
+//                editLocation.setText("Lat.:" + mLocation.getLatitude() + " Long.:" + mLocation.getLongitude());
+//
+//            } else {
+//                Toast.makeText(getContext(), "Couldn't access location", Toast.LENGTH_SHORT).show();
+//                editLocation.setText("");
+//            }
+//        } else {
+//            editLocation.setText("");
+//        }
+        getAddress();
         editDesc = view.findViewById(R.id.editDescription);
         calendar = view.findViewById(R.id.calChckbx);
         save = view.findViewById(R.id.saveBtn);
@@ -835,6 +856,87 @@ public class AddMealFragment extends Fragment {
             }
         });
         builder.show();
+    }
+
+    /**
+     * Receiver for data sent from FetchAddressIntentService.
+     */
+    private class AddressResultReceiver extends ResultReceiver {
+        AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        /**
+         *  Receives data sent from FetchAddressIntentService and updates the UI in MainActivity.
+         */
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+
+            // Display the address string or an error message sent from the intent service.
+            mAddressOutput = resultData.getString(RESULT_DATA_KEY);
+//            displayAddressOutput();
+
+            // Show a toast message if an address was found.
+            if (resultCode == SUCCESS_RESULT) {
+                Toast.makeText(getActivity(),getString(R.string.address_found),Toast.LENGTH_SHORT).show();
+                editLocation.setText(mAddressOutput);
+            }
+
+            // Reset. Enable the Fetch Address button and stop showing the progress bar.
+//            mAddressRequested = false;
+//            updateUIWidgets();
+        }
+    }
+
+    @SuppressWarnings("MissingPermission")
+    private void getAddress() {
+        mFusedLocationClient.getLastLocation()
+                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location == null) {
+                            Log.w("ADDMEAL", "onSuccess:null");
+                            return;
+                        }
+
+                        mLastLocation = location;
+
+                        // Determine whether a Geocoder is available.
+                        if (!Geocoder.isPresent()) {
+//                            showSnackbar(getString(R.string.no_geocoder_available));
+                            return;
+                        }
+
+                        // If the user pressed the fetch address button before we had the location,
+                        // this will be set to true indicating that we should kick off the intent
+                        // service after fetching the location.
+
+                            startIntentService();
+
+                    }
+                })
+                .addOnFailureListener(getActivity(), new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("ADDMEAL", "getLastLocation:onFailure", e);
+                    }
+                });
+    }
+
+    private void startIntentService() {
+        // Create an intent for passing to the intent service responsible for fetching the address.
+        Intent intent = new Intent(getActivity(), FetchAddressIntentService.class);
+
+        // Pass the result receiver as an extra to the service.
+        intent.putExtra(RECEIVER, mResultReceiver);
+
+        // Pass the location data as an extra to the service.
+        intent.putExtra(LOCATION_DATA_EXTRA, mLastLocation);
+
+        // Start the service. If the service isn't already running, it is instantiated and started
+        // (creating a process for it if needed); if it is running then it remains running. The
+        // service kills itself automatically once all intents are processed.
+        getActivity().startService(intent);
     }
 
 }

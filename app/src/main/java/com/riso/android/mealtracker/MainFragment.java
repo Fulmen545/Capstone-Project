@@ -1,21 +1,25 @@
 package com.riso.android.mealtracker;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +40,9 @@ import com.riso.android.mealtracker.data.DbColumns;
 import java.util.concurrent.Executor;
 
 import butterknife.BindView;
+import pub.devrel.easypermissions.EasyPermissions;
+
+import static android.support.constraint.Constraints.TAG;
 
 
 /**
@@ -43,7 +50,8 @@ import butterknife.BindView;
  */
 public class MainFragment extends Fragment {
     private static final String TOKEN = "token";
-
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
+    static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
     public MainFragment() {
         // Required empty public constructor
@@ -83,10 +91,14 @@ public class MainFragment extends Fragment {
         addMealLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AddMealActivity.class);
-                intent.putExtra(TOKEN, token);
-                startActivity(intent);
-                ((Activity) getActivity()).overridePendingTransition(0, 0);
+                if (!checkPermissions()) {
+                    requestPermissions();
+                } else {
+                    Intent intent = new Intent(getActivity(), AddMealActivity.class);
+                    intent.putExtra(TOKEN, token);
+                    startActivity(intent);
+                    ((Activity) getActivity()).overridePendingTransition(0, 0);;
+                }
             }
         });
         historyLayout = view.findViewById(R.id.history);
@@ -199,5 +211,48 @@ public class MainFragment extends Fragment {
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return (networkInfo != null && networkInfo.isConnected());
     }
+
+    private boolean checkPermissions() {
+        int permissionState = ActivityCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION);
+        return permissionState == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermissions() {
+        boolean shouldProvideRationale =
+                ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                        Manifest.permission.ACCESS_FINE_LOCATION);
+
+        // Provide an additional rationale to the user. This would happen if the user denied the
+        // request previously, but didn't check the "Don't ask again" checkbox.
+        if (shouldProvideRationale) {
+            Log.i(TAG, "Displaying permission rationale to provide additional context.");
+
+            EasyPermissions.requestPermissions(
+                    this,
+                    "This app needs to access your Location.",
+                    REQUEST_PERMISSIONS_REQUEST_CODE,
+                    Manifest.permission.ACCESS_FINE_LOCATION);
+
+            EasyPermissions.requestPermissions(
+                    this,
+                    "This app needs to access your Google account (via Contacts).",
+                    REQUEST_PERMISSION_GET_ACCOUNTS,
+                    Manifest.permission.GET_ACCOUNTS);
+
+
+
+        } else {
+            Log.i(TAG, "Requesting permission");
+            // Request permission. It's possible this can be auto answered if device policy
+            // sets the permission in a given state or the user denied the permission
+            // previously and checked "Never ask again".
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.GET_ACCOUNTS},
+                    REQUEST_PERMISSIONS_REQUEST_CODE);
+        }
+    }
+
+
 
 }
