@@ -85,14 +85,12 @@ public class CalendarActivity extends AppCompatActivity {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = new Date();
         calendarDate = dateFormat.format(date);
-        calendarView = findViewById(R.id.simpleCalendarView);
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 calendarDate= String.format("%02d/%02d/%04d", dayOfMonth, month+1, year);
             }
         });
-        getEventsBtn = findViewById(R.id.getEventsBtn);
         getEventsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -249,52 +247,6 @@ public class CalendarActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(CalendarActivity.this, "Request cancelled.", Toast.LENGTH_SHORT).show();
             }
-        }
-    }
-
-//    public void getEvents(DateTime mealItem) throws ParseException, IOException {
-//
-//        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-//        Date dt = formatter.parse(mealItem.dateItem);
-//        formatter.applyPattern("yyyy-MM-dd");
-//        String newFormat = formatter.format(dt);
-//        DateTime startDate = new DateTime(newFormat + "T" + mealItem.timeItem + ":00+02:00");
-//        DateTime endDate = new DateTime(newFormat + "T" + mealItem.timeItem + ":00+01:00");
-//        Event event1 = new Event();
-//        event1.setSummary("MT: " + mealItem.typeItem + " - " + mealItem.descItem);
-//        event1.setStart(new EventDateTime().setDateTime(startDate));
-//        event1.setEnd(new EventDateTime().setDateTime(endDate));
-//        event1.setDescription(mealItem.customItem);
-//        event1.setColorId(setColorId(mealItem.colorItem));
-//        event1.setLocation(mealItem.locationItem);
-//        mService.events().insert("primary", event1).execute();
-////        Log.i(getClass().getSimpleName(), event1.getId());
-//    }
-
-    private String setColorId(String color) {
-        switch (color) {
-            case "red":
-                return "11";
-            case "blue":
-                return "9";
-            case "green":
-                return "10";
-            case "Cyan":
-                return "7";
-            case "Orange":
-                return "6";
-            case "Yellow":
-                return "5";
-            case "Pink":
-                return "4";
-            case "Purple":
-                return "3";
-            case "Brown":
-                return "2";
-            case "Deep Purple":
-                return "1";
-            default:
-                return "8";
         }
     }
 

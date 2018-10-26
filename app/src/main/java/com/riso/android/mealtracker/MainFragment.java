@@ -40,6 +40,7 @@ import com.riso.android.mealtracker.data.DbColumns;
 import java.util.concurrent.Executor;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import pub.devrel.easypermissions.EasyPermissions;
 
 import static android.support.constraint.Constraints.TAG;
@@ -79,6 +80,8 @@ public class MainFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
         setHasOptionsMenu(true);
+        ButterKnife.bind(this, view);
+        ButterKnife.setDebug(true);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             token = bundle.getString(TOKEN);
@@ -87,7 +90,6 @@ public class MainFragment extends Fragment {
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
-        addMealLayout = view.findViewById(R.id.addMealItem);
         addMealLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,7 +103,6 @@ public class MainFragment extends Fragment {
                 }
             }
         });
-        historyLayout = view.findViewById(R.id.history);
         historyLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,7 +111,6 @@ public class MainFragment extends Fragment {
                 ((Activity) getActivity()).overridePendingTransition(0, 0);
             }
         });
-        googleLayout = view.findViewById(R.id.googleCal);
         googleLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

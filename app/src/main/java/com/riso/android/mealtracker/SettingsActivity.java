@@ -77,27 +77,15 @@ public class SettingsActivity extends AppCompatActivity {
         final DatabaseQuery databaseQuery = new DatabaseQuery(this);
         colorAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, colors);
-        colorFoodSettingsSpinner = findViewById(R.id.colorFoodSettingsSpinner);
         colorFoodSettingsSpinner.setAdapter(colorAdapter);
-
-        colorNewFoodSettingsSpinner = findViewById(R.id.colorNewFoodSettingsSpinner);
         colorNewFoodSettingsSpinner.setAdapter(colorAdapter);
-
-
-        typeFoodSpinner = findViewById(R.id.typeFoodSettingsSpinner);
-
         foodTypesAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, typeFoods);
         typeFoodSpinner.setAdapter(foodTypesAdapter);
-        custFieldSpinner = findViewById(R.id.custSettingsSpinner);
         custFieldsAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, custFields);
         custFieldSpinner.setAdapter(custFieldsAdapter);
-        removeFoodSpinner = findViewById(R.id.removeTypeSettingsSpinner);
-//        ArrayAdapter<String> removeFoodAdapter = new ArrayAdapter<String>(this,
-//                android.R.layout.simple_spinner_item, typeFoods);
         removeFoodSpinner.setAdapter(foodTypesAdapter);
-        confirmColorBtn = findViewById(R.id.confirmColor);
         confirmColorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,8 +94,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        editFoodEdt = findViewById(R.id.typeFoodSettingsEdt);
-        addColorBtn = findViewById(R.id.addColor);
         addColorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,7 +106,6 @@ public class SettingsActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Food type was added", Toast.LENGTH_SHORT).show();
             }
         });
-        removeColorBtn = findViewById(R.id.removeColor);
         removeColorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,8 +125,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        addCustEdt = findViewById(R.id.addCustSettingsEdt);
-        addCustFldBtn = findViewById(R.id.addCustFld);
         addCustFldBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,7 +137,6 @@ public class SettingsActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Custom field was added", Toast.LENGTH_SHORT).show();
             }
         });
-        removeCustBtn = findViewById(R.id.removeCust);
         removeCustBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

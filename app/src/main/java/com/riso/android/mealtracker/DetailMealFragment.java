@@ -81,18 +81,13 @@ public class DetailMealFragment extends Fragment {
         setHasOptionsMenu(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        ButterKnife.bind(getActivity());
+        ButterKnife.bind(this, view);
         bundle = this.getArguments();
         getActivity().setTitle(bundle.getString(TYPE));
-        detailDate = view.findViewById(R.id.detailDate);
         detailDate.setText(bundle.getString(DATE));
-        detailTIme = view.findViewById(R.id.detailTIme);
         detailTIme.setText(bundle.getString(TIME));
-        detailLocation = view.findViewById(R.id.detailLocation);
         detailLocation.setText(bundle.getString(LOCATION));
-        detailDescription = view.findViewById(R.id.detailDescription);
         detailDescription.setText(bundle.getString(DESCRIPTION));
-        detailCustomfields = view.findViewById(R.id.detailCustomfields);
         id = bundle.getString(ID);
 
         if (!bundle.getString(CUST_FIELDS).equals("{}")) {
@@ -118,7 +113,6 @@ public class DetailMealFragment extends Fragment {
 
 //        DatabaseQuery databaseQuery = new DatabaseQuery(getContext());
 //        custFields = databaseQuery.getCustomFields(bundle.getString(USER));
-        detailSpinner = view.findViewById(R.id.detailSpinner);
         custFieldsAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item, jsonKeys);
         detailSpinner.setAdapter(custFieldsAdapter);

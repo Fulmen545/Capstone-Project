@@ -39,7 +39,7 @@ dependencies {
 
 //    implementation 'com.google.android.gms:play-services:15.0.1'
     implementation 'com.google.apis:google-api-services-calendar:v3-rev87-1.19.0' exclude module: 'httpclient'
-    annotationProcessor 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

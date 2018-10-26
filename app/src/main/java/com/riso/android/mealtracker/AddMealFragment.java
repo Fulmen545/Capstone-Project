@@ -89,6 +89,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import pub.devrel.easypermissions.EasyPermissions;
 
 import static android.app.Activity.RESULT_OK;
@@ -128,20 +130,30 @@ public class AddMealFragment extends Fragment {
     private FusedLocationProviderClient mFusedLocationClient;
     private Location mLastLocation;
 
+    @BindView(R.id.typeFoodSpinner)
     Spinner typeFoodSpinner;
+    @BindView(R.id.customSpinner)
     Spinner custFieldSpinner;
     String[] typeFoods;
     String[] custFields;
+    @BindView(R.id.editDate)
     EditText editDate;
+    @BindView(R.id.editTime)
     EditText editTime;
+    @BindView(R.id.editDescription)
     EditText editDesc;
     DatePickerDialog datePickerDialog;
     GoogleApiClient mGoogleApiClient;
+    @BindView(R.id.editLocation)
     EditText editLocation;
+    @BindView(R.id.addBtn)
     Button addBtn;
     JSONObject custJson = new JSONObject();
+    @BindView(R.id.editCusotom)
     EditText editCustom;
+    @BindView(R.id.saveBtn)
     Button save;
+    @BindView(R.id.calChckbx)
     CheckBox calendar;
 
     ArrayAdapter<String> foodTypesAdapter;
@@ -172,18 +184,16 @@ public class AddMealFragment extends Fragment {
         setHasOptionsMenu(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ButterKnife.bind(this, view);
 
         user = selectUser();
         getFoodTypes();
         getCustomFields();
         mResultReceiver = new AddressResultReceiver(new Handler());
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        typeFoodSpinner = view.findViewById(R.id.typeFoodSpinner);
         foodTypesAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item, typeFoods);
-//        adapter.setDropDownViewResource(android.R.layout.activity_list_item);
         typeFoodSpinner.setAdapter(foodTypesAdapter);
-        custFieldSpinner = view.findViewById(R.id.customSpinner);
         custFieldsAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item, custFields);
         custFieldSpinner.setAdapter(custFieldsAdapter);
@@ -204,7 +214,6 @@ public class AddMealFragment extends Fragment {
 
             }
         });
-        editDate = view.findViewById(R.id.editDate);
         editDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -230,7 +239,6 @@ public class AddMealFragment extends Fragment {
 
             }
         });
-        editTime = view.findViewById(R.id.editTime);
         editTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -250,8 +258,6 @@ public class AddMealFragment extends Fragment {
                 mTimePicker.show();
             }
         });
-        editCustom = view.findViewById(R.id.editCusotom);
-        addBtn = view.findViewById(R.id.addBtn);
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -269,57 +275,8 @@ public class AddMealFragment extends Fragment {
             }
         });
 
-//        if (mGoogleApiClient == null) {
-//            mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-//                    .addApi(LocationServices.API)
-//                    .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-//                        @Override
-//                        public void onConnectionSuspended(int cause) {
-//                        }
-//
-//                        @Override
-//                        public void onConnected(Bundle connectionHint) {
-//
-//                        }
-//                    })
-//                    .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
-//                        @Override
-//                        public void onConnectionFailed(ConnectionResult result) {
-//                        }
-//                    }).build();
-//            mGoogleApiClient.connect();
-//        } else {
-//            mGoogleApiClient.connect();
-//        }
-//        permissions.add(ACCESS_FINE_LOCATION);
-//        permissions.add(ACCESS_COARSE_LOCATION);
-        editLocation = view.findViewById(R.id.editLocation);
-//        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-//                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            //    ActivityCompat#requestPermissions
-//            // here to request the missing permissions, and then overriding
-//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//            //                                          int[] grantResults)
-//            // to handle the case where the user grants the permission. See the documentation
-//            // for ActivityCompat#requestPermissions for more details.
-//            Location mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-//            if (mLocation != null) {
-//                editLocation.setText("Lat.:" + mLocation.getLatitude() + " Long.:" + mLocation.getLongitude());
-//
-//            } else {
-//                Toast.makeText(getContext(), "Couldn't access location", Toast.LENGTH_SHORT).show();
-//                editLocation.setText("");
-//            }
-//        } else {
-//            editLocation.setText("");
-//        }
         getAddress();
-        editDesc = view.findViewById(R.id.editDescription);
-        calendar = view.findViewById(R.id.calChckbx);
-        save = view.findViewById(R.id.saveBtn);
-
         bundle = this.getArguments();
-
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());

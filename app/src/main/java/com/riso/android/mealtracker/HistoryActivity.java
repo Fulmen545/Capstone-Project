@@ -67,8 +67,6 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
         user = selectUser();
         getColor();
         extras = getIntent().getExtras();
-        no_meal_tv = findViewById(R.id.no_meal_tv);
-        headline = findViewById(R.id.textView2);
         if (extras == null) {
             getStoredMeals();
         } else {
@@ -81,7 +79,6 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
                 notEmpty=false;
             }
         }
-        mRecipeNamesList = findViewById(R.id.rv_meals);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecipeNamesList.setLayoutManager(layoutManager);
         if (mealsStored == null){
