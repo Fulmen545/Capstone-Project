@@ -92,7 +92,7 @@
     <string name="contacts_req">This app needs to access your Google account (via Contacts).</string>
     <string name="location_req">This app needs to access your Location.</string>
     <string name="json_parse">Could not parse malformed JSON: "</string>
-    <string name="meals_for">Meals for: </string>
+    <string name="meals_for">Meals for:  </string>
     <string name="no_meals_day">No meals are recorded for day
 </string>
     <string name="color_updated">Color was updated</string>

@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/menu_item_image_height"
                 android:src="@drawable/meal3"
-                app:srcCompat="@drawable/meal" />
+                app:srcCompat="@drawable/logo" />
 
             <TextView
                 android:id="@+id/titleAddMeal"
@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/menu_item_image_height"
                 android:src="@drawable/history"
-                app:srcCompat="@drawable/meal" />
+                app:srcCompat="@drawable/logo" />
 
             <TextView
                 android:id="@+id/titleHistory"
@@ -81,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/menu_item_image_height"
                 android:src="@drawable/googlecal"
-                app:srcCompat="@drawable/meal" />
+                app:srcCompat="@drawable/logo" />
 
             <TextView
                 android:id="@+id/titleGoogleCal"

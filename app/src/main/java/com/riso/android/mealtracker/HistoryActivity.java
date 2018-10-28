@@ -2,7 +2,10 @@ package com.riso.android.mealtracker;
 
 import android.app.DatePickerDialog;
 import android.app.FragmentManager;
+import android.support.v4.app.LoaderManager;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
@@ -26,7 +29,7 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HistoryActivity extends AppCompatActivity implements MealAdapter.ListItemClickListener{
+public class HistoryActivity extends AppCompatActivity implements MealAdapter.ListItemClickListener, LoaderManager.LoaderCallbacks<Cursor>{
     private final String TYPE = "MEAL_TYPE";
     private final String DESCRIPTION = "DESCRIPTION";
     private final String DATE = "DATE";
@@ -53,6 +56,8 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
     TextView no_meal_tv;
     @BindView(R.id.textView2)
     TextView headline;
+    ProgressDialog mProgress;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,7 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
         ButterKnife.bind(this);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getSupportActionBar().setDisplayShowHomeEnabled(true);
+        mProgress = new ProgressDialog(this);
         if (savedInstanceState != null){
             date=savedInstanceState.getString(DATE);
         }
@@ -68,7 +74,7 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
         getColor();
         extras = getIntent().getExtras();
         if (extras == null) {
-            getStoredMeals();
+            getSupportLoaderManager().initLoader(0,null, this);
         } else {
             setTitle(getResources().getString(R.string.google_history));
             mealsStored = (MealItem[]) extras.getSerializable(MEAL_ARRAY);
@@ -91,6 +97,8 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
             mMeakAdapter = new MealAdapter(getApplication(),HistoryActivity.this, mealsStored);
             mRecipeNamesList.setAdapter(mMeakAdapter);
         }
+
+
     }
 
     @Override
@@ -101,7 +109,7 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
             setTitle(getResources().getString(R.string.google_history));
             headline.setText(getString(R.string.meals_for) + mealsStored[0].dateItem);
         } else if (date == null){
-            getStoredMeals();
+            getSupportLoaderManager().initLoader(0,null, this);
         } else {
             DatabaseQuery dbquery = new DatabaseQuery(HistoryActivity.this);
             mealsStored=dbquery.getStoredMeals(date);
@@ -273,5 +281,24 @@ public class HistoryActivity extends AppCompatActivity implements MealAdapter.Li
         Intent intent = new Intent(this, MealDetailActivity.class);
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+
+    @Override
+    public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        getStoredMeals();
+//        mProgress.show();
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
+//        mProgress.hide();
+
+    }
+
+    @Override
+    public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
+
     }
 }
