@@ -77,5 +77,29 @@
     <string name="trash">Delete meal</string>
     <string name="mail">Send/receive meal</string>
 
+    <!--Toasts-->
+    <string name="welcome">Welcome </string>
+    <string name="exit">Please click BACK again to exit</string>
+    <string name="field_added">Field was added</string>
+    <string name="meal_added">Meal was added</string>
+    <string name="calling_api">Calling Google Calendar API ...</string>
+    <string name="appname">MealTracker</string>
+    <string name="following_error">The following error occurred:
+</string>
+    <string name="req_cancel">Request cancelled.</string>
+    <string name="select_time">Select time</string>
+    <string name="onsuccess">onSuccess:null</string>
+    <string name="contacts_req">This app needs to access your Google account (via Contacts).</string>
+    <string name="location_req">This app needs to access your Location.</string>
+    <string name="json_parse">Could not parse malformed JSON: "</string>
+    <string name="meals_for">Meals for: </string>
+    <string name="no_meals_day">No meals are recorded for day
+</string>
+    <string name="color_updated">Color was updated</string>
+    <string name="type_added">Food type was added</string>
+    <string name="type_removed">Food type was removed</string>
+    <string name="cust_added">Custom field was added</string>
+    <string name="cust_removed">Custom field was removed</string>
+
 
 </resources>

@@ -54,10 +54,6 @@ public class MainFragment extends Fragment {
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
-    public MainFragment() {
-        // Required empty public constructor
-    }
-
     GoogleSignInClient mGoogleSignInClient;
     @BindView(R.id.addMealItem)
     LinearLayout addMealLayout;
@@ -99,7 +95,7 @@ public class MainFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), AddMealActivity.class);
                     intent.putExtra(TOKEN, token);
                     startActivity(intent);
-                    ((Activity) getActivity()).overridePendingTransition(0, 0);;
+                    getActivity().overridePendingTransition(0, 0);
                 }
             }
         });
@@ -108,7 +104,7 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), HistoryActivity.class);
                 startActivity(intent);
-                ((Activity) getActivity()).overridePendingTransition(0, 0);
+                getActivity().overridePendingTransition(0, 0);
             }
         });
         googleLayout.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +113,7 @@ public class MainFragment extends Fragment {
                 if (isDeviceOnline()) {
                     Intent intent = new Intent(getActivity(), CalendarActivity.class);
                     startActivity(intent);
-                    ((Activity) getActivity()).overridePendingTransition(0, 0);
+                    getActivity().overridePendingTransition(0, 0);
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(R.string.no_internet);
@@ -141,17 +137,6 @@ public class MainFragment extends Fragment {
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
         getContext().sendBroadcast(intent);
 
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-//        outState.put
-    }
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
     }
 
     @Override
@@ -226,24 +211,24 @@ public class MainFragment extends Fragment {
         // Provide an additional rationale to the user. This would happen if the user denied the
         // request previously, but didn't check the "Don't ask again" checkbox.
         if (shouldProvideRationale) {
-            Log.i(TAG, "Displaying permission rationale to provide additional context.");
+//            Log.i(TAG, "Displaying permission rationale to provide additional context.");
 
             EasyPermissions.requestPermissions(
                     this,
-                    "This app needs to access your Location.",
+                    getString(R.string.location_req),
                     REQUEST_PERMISSIONS_REQUEST_CODE,
                     Manifest.permission.ACCESS_FINE_LOCATION);
 
             EasyPermissions.requestPermissions(
                     this,
-                    "This app needs to access your Google account (via Contacts).",
+                    getString(R.string.contacts_req),
                     REQUEST_PERMISSION_GET_ACCOUNTS,
                     Manifest.permission.GET_ACCOUNTS);
 
 
 
         } else {
-            Log.i(TAG, "Requesting permission");
+//            Log.i(TAG, "Requesting permission");
             // Request permission. It's possible this can be auto answered if device policy
             // sets the permission in a given state or the user denied the permission
             // previously and checked "Never ask again".

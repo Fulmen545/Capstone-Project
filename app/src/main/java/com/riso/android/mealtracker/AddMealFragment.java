@@ -110,6 +110,7 @@ public class AddMealFragment extends Fragment {
     private final String GCALENDAR = "GCALENDAR";
     private final String ID = "ID";
     private final String USER = "USER";
+    private final String TAG = "ADMEAL";
 
     GoogleAccountCredential mCredential;
     private static final String[] SCOPES = {CalendarScopes.CALENDAR};
@@ -254,7 +255,7 @@ public class AddMealFragment extends Fragment {
                         editTime.setText(String.format("%02d:%02d", selectedHour, selectedMinute));
                     }
                 }, hour, minute, true);
-                mTimePicker.setTitle("Select Time");
+                mTimePicker.setTitle(getString(R.string.select_time));
                 mTimePicker.show();
             }
         });
@@ -268,7 +269,7 @@ public class AddMealFragment extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        Toast.makeText(getContext(), "Field was added", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.field_added), Toast.LENGTH_SHORT).show();
                         break;
                     }
                 }
@@ -298,7 +299,7 @@ public class AddMealFragment extends Fragment {
                                     custJson.toString(),
                                     calendar.isChecked(),
                                     selectUser());
-                            Toast.makeText(getContext(), "Meal was added", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.meal_added), Toast.LENGTH_SHORT).show();
 
                             Intent intent = new Intent(getContext(), MealWidgetProvider.class);
                             intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
@@ -366,7 +367,7 @@ public class AddMealFragment extends Fragment {
                                     custJson.toString(),
                                     calendar.isChecked(),
                                     selectUser());
-                            Toast.makeText(getContext(), "Meal was edited", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getString(R.string.meal_added), Toast.LENGTH_SHORT).show();
                         } else {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             builder.setTitle(R.string.no_internet);
@@ -389,7 +390,7 @@ public class AddMealFragment extends Fragment {
 
 
         mProgress = new ProgressDialog(getActivity());
-        mProgress.setMessage("Calling Google Calendar API ...");
+        mProgress.setMessage(getString(R.string.calling_api));
 
     }
 
@@ -399,7 +400,7 @@ public class AddMealFragment extends Fragment {
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (!isDeviceOnline()) {
-            Toast.makeText(getContext(), "No network connection available.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.no_internet), Toast.LENGTH_SHORT).show();
         } else {
             DatabaseQuery databaseQuery = new DatabaseQuery(getContext());
             String color = databaseQuery.getTypeColor(typeFoodSpinner.getSelectedItem().toString(), user);
@@ -730,11 +731,11 @@ public class AddMealFragment extends Fragment {
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             GoogleTestActivity.REQUEST_AUTHORIZATION);
                 } else {
-                    Toast.makeText(getActivity(), "The following error occurred:\n"
+                    Toast.makeText(getActivity(), getString(R.string.following_error)
                             + mLastError.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(getActivity(), "Request cancelled.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.req_cancel), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -852,7 +853,7 @@ public class AddMealFragment extends Fragment {
                     @Override
                     public void onSuccess(Location location) {
                         if (location == null) {
-                            Log.w("ADDMEAL", "onSuccess:null");
+                            Log.w(TAG, getString(R.string.onsuccess));
                             return;
                         }
 
@@ -875,7 +876,7 @@ public class AddMealFragment extends Fragment {
                 .addOnFailureListener(getActivity(), new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w("ADDMEAL", "getLastLocation:onFailure", e);
+                        Log.w(TAG, e.toString());
                     }
                 });
     }

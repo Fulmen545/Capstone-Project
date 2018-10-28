@@ -78,8 +78,8 @@ public class CalendarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
         ButterKnife.bind(this);
-        ((AppCompatActivity) this).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) this).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.getSupportActionBar().setDisplayShowHomeEnabled(true);
         databaseQuery = new DatabaseQuery(this);
         user = databaseQuery.selectUser();
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -101,7 +101,7 @@ public class CalendarActivity extends AppCompatActivity {
         });
 
         mProgress = new ProgressDialog(this);
-        mProgress.setMessage("Calling Google Calendar API ...");
+        mProgress.setMessage(getString(R.string.calling_api));
     }
 
     @Override
@@ -241,11 +241,11 @@ public class CalendarActivity extends AppCompatActivity {
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             GoogleTestActivity.REQUEST_AUTHORIZATION);
                 } else {
-                    Toast.makeText(CalendarActivity.this, "The following error occurred:\n"
+                    Toast.makeText(CalendarActivity.this, getString(R.string.following_error)
                             + mLastError.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(CalendarActivity.this, "Request cancelled.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CalendarActivity.this, getString(R.string.req_cancel), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -282,7 +282,7 @@ public class CalendarActivity extends AppCompatActivity {
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (! isDeviceOnline()) {
-            Toast.makeText(this, "No network connection available.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.no_internet), Toast.LENGTH_SHORT).show();
         } else {
             new GetEventsTask().execute(calendarDate);
         }
@@ -332,7 +332,7 @@ public class CalendarActivity extends AppCompatActivity {
             // Request the GET_ACCOUNTS permission via a user dialog
             EasyPermissions.requestPermissions(
                     this,
-                    "This app needs to access your Google account (via Contacts).",
+                    getString(R.string.contacts_req),
                     REQUEST_PERMISSION_GET_ACCOUNTS,
                     Manifest.permission.GET_ACCOUNTS);
         }

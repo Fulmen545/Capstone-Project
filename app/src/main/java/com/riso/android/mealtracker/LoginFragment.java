@@ -37,6 +37,8 @@ import butterknife.ButterKnife;
 public class LoginFragment extends Fragment {
     private static final int RC_SIGN_IN = 1;
     private static final String TOKEN = "token";
+    private static final String LOGIN = "login";
+    private static final String SIGNIN = "SignIn";
 
 
     @BindView(R.id.signIn)
@@ -112,9 +114,9 @@ public class LoginFragment extends Fragment {
             try {
                 insertUser(account.getGivenName(), account.getEmail(), account.getId());
             } catch (Exception ex){
-                Log.e("LOGIN", "Riso: " + ex);
+                Log.e(LOGIN, ex.toString());
             }
-            Toast.makeText(getContext(),"Welcome " + account.getGivenName(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(),getString(R.string.welcome) + account.getGivenName(), Toast.LENGTH_LONG).show();
             Bundle bundle = new Bundle();
             bundle.putString(TOKEN, token);
             MainFragment mf = new MainFragment();
@@ -123,7 +125,7 @@ public class LoginFragment extends Fragment {
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w("SignIn", "signInResult:failed code=" + e.getStatusCode());
+            Log.w(SIGNIN,  e.toString());
 //            updateUI(null);
         }
     }

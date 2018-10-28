@@ -28,6 +28,7 @@ public class SettingsActivity extends AppCompatActivity {
     private static final String CHANGE_TYPE = "changetype";
     private static final String REMOVE_TYPE = "removetype";
     private static final String REMOVE_CUSTOM = "removecustom";
+    private static final String TAG = "SETTINGS";
 
     String[] typeFoods;
     String[] custFields;
@@ -49,7 +50,6 @@ public class SettingsActivity extends AppCompatActivity {
     EditText editFoodEdt;
     @BindView(R.id.removeColor)
     Button removeColorBtn;
-    ;
     @BindView(R.id.addCustFld)
     Button addCustFldBtn;
     @BindView(R.id.addCustSettingsEdt)
@@ -69,8 +69,8 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         ButterKnife.bind(this);
-        ((AppCompatActivity) this).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) this).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.getSupportActionBar().setDisplayShowHomeEnabled(true);
         user = selectUser();
         getFoodTypes();
         getCustomFields();
@@ -90,7 +90,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 databaseQuery.updateColor(colorFoodSettingsSpinner.getSelectedItem().toString(), typeFoodSpinner.getSelectedItem().toString());
-                Toast.makeText(SettingsActivity.this, "Color was updated", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SettingsActivity.this, getString(R.string.color_updated), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -103,7 +103,7 @@ public class SettingsActivity extends AppCompatActivity {
                 typeFoodSpinner.setAdapter(foodTypesAdapter);
                 removeFoodSpinner.setAdapter(foodTypesAdapter);
                 editFoodEdt.setText("");
-                Toast.makeText(getApplicationContext(), "Food type was added", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.type_added), Toast.LENGTH_SHORT).show();
             }
         });
         removeColorBtn.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +120,7 @@ public class SettingsActivity extends AppCompatActivity {
                     foodTypesAdapter = new ArrayAdapter<String>(SettingsActivity.this, android.R.layout.simple_spinner_item, typeFoods);
                     typeFoodSpinner.setAdapter(foodTypesAdapter);
                     removeFoodSpinner.setAdapter(foodTypesAdapter);
-                    Toast.makeText(getApplicationContext(), "Food type was removed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.type_removed), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -134,7 +134,7 @@ public class SettingsActivity extends AppCompatActivity {
                         android.R.layout.simple_spinner_item, custFields);
                 custFieldSpinner.setAdapter(custFieldsAdapter);
                 addCustEdt.setText("");
-                Toast.makeText(getApplicationContext(), "Custom field was added", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.cust_added), Toast.LENGTH_SHORT).show();
             }
         });
         removeCustBtn.setOnClickListener(new View.OnClickListener() {
@@ -151,7 +151,7 @@ public class SettingsActivity extends AppCompatActivity {
                     custFieldsAdapter = new ArrayAdapter<String>(SettingsActivity.this,
                             android.R.layout.simple_spinner_item, custFields);
                     custFieldSpinner.setAdapter(custFieldsAdapter);
-                    Toast.makeText(getApplicationContext(), "Custom field was removed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.cust_removed), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -302,7 +302,7 @@ public class SettingsActivity extends AppCompatActivity {
                 typeFoods[0] = "Add field";
             }
         } catch (Exception ex) {
-            Log.e("ADDMEAL", "RISO EX: " + ex);
+            Log.e(TAG,  ex.toString());
         }
 
     }
@@ -328,7 +328,7 @@ public class SettingsActivity extends AppCompatActivity {
                 custFields[0] = "Add field";
             }
         } catch (Exception ex) {
-            Log.e("ADDMEAL", "RISO EX: " + ex);
+            Log.e(TAG,  ex.toString());
         }
 
     }

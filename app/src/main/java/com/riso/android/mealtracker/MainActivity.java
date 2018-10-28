@@ -36,11 +36,9 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             if (isSignedIn()) {
                 // signed in. Show the "sign out" button and explanation.
-                Toast.makeText(this, "Is signed in", Toast.LENGTH_SHORT).show();
                 ft.add(android.R.id.content, mf).commit();
             } else {
                 // not signed in. Show the "sign in" button and explanation.
-                Toast.makeText(this, "Is not signed in", Toast.LENGTH_SHORT).show();
                 ft.add(android.R.id.content, lf).commit();
             }
         }
@@ -70,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.exit), Toast.LENGTH_SHORT).show();
 
         new Handler().postDelayed(new Runnable() {
 

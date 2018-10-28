@@ -102,12 +102,12 @@ public class GoogleTestActivity extends AppCompatActivity implements EasyPermiss
         mOutputText.setPadding(16, 16, 16, 16);
         mOutputText.setVerticalScrollBarEnabled(true);
         mOutputText.setMovementMethod(new ScrollingMovementMethod());
-        mOutputText.setText(
-                "Click the \'" + BUTTON_TEXT +"\' button to test the API.");
+//        mOutputText.setText(
+//                "Click the \'" + BUTTON_TEXT +"\' button to test the API.");
         activityLayout.addView(mOutputText);
 
         mProgress = new ProgressDialog(this);
-        mProgress.setMessage("Calling Google Calendar API ...");
+        mProgress.setMessage(getString(R.string.calling_api));
 
         setContentView(activityLayout);
 
@@ -123,7 +123,7 @@ public class GoogleTestActivity extends AppCompatActivity implements EasyPermiss
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (! isDeviceOnline()) {
-            mOutputText.setText("No network connection available.");
+            mOutputText.setText(getString(R.string.no_internet));
         } else {
             new MakeRequestTask(mCredential).execute();
         }
@@ -155,7 +155,7 @@ public class GoogleTestActivity extends AppCompatActivity implements EasyPermiss
             // Request the GET_ACCOUNTS permission via a user dialog
             EasyPermissions.requestPermissions(
                     this,
-                    "This app needs to access your Google account (via Contacts).",
+                    getString(R.string.contacts_req),
                     REQUEST_PERMISSION_GET_ACCOUNTS,
                     Manifest.permission.GET_ACCOUNTS);
         }
@@ -167,8 +167,8 @@ public class GoogleTestActivity extends AppCompatActivity implements EasyPermiss
         switch(requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
-                    mOutputText.setText("This app requires Google Play Services. Please install " +
-                            "Google Play Services on your device and relaunch this app.");
+//                    mOutputText.setText("This app requires Google Play Services. Please install " +
+//                            "Google Play Services on your device and relaunch this app.");
                 } else {
                     getResultsFromApi();
                 }
@@ -277,10 +277,10 @@ public class GoogleTestActivity extends AppCompatActivity implements EasyPermiss
             super.onPostExecute(output);
             mProgress.hide();
             if (output == null || output.size() == 0) {
-                mOutputText.setText("No results returned.");
+//                mOutputText.setText("No results returned.");
             } else {
-                output.add(0, "Data retrieved using the Google Calendar API:");
-                mOutputText.setText(TextUtils.join("\n", output));
+//                output.add(0, "Data retrieved using the Google Calendar API:");
+//                mOutputText.setText(TextUtils.join("\n", output));
             }
         }
 
@@ -298,11 +298,11 @@ public class GoogleTestActivity extends AppCompatActivity implements EasyPermiss
                             ((UserRecoverableAuthIOException) mLastError).getIntent(),
                             GoogleTestActivity.REQUEST_AUTHORIZATION);
                 } else {
-                    mOutputText.setText("The following error occurred:\n"
-                            + mLastError.getMessage());
+//                    mOutputText.setText("The following error occurred:\n"
+//                            + mLastError.getMessage());
                 }
             } else {
-                mOutputText.setText("Request cancelled.");
+//                mOutputText.setText("Request cancelled.");
             }
         }
     }
@@ -318,11 +318,11 @@ public class GoogleTestActivity extends AppCompatActivity implements EasyPermiss
                 .execute();
         List<Event> items = events.getItems();
         Colors colors = mService.colors().get().execute();
-        for (Map.Entry<String, ColorDefinition> color : colors.getEvent().entrySet()) {
-            System.out.println("ColorId : " + color.getKey());
-            System.out.println("  Background: " + color.getValue().getBackground());
-            System.out.println("  Foreground: " + color.getValue().getForeground());
-        }
+//        for (Map.Entry<String, ColorDefinition> color : colors.getEvent().entrySet()) {
+//            System.out.println("ColorId : " + color.getKey());
+//            System.out.println("  Background: " + color.getValue().getBackground());
+//            System.out.println("  Foreground: " + color.getValue().getForeground());
+//        }
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 //        DateTime startDate = new DateTime(dt);

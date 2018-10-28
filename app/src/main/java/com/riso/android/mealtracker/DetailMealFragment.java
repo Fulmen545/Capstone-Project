@@ -50,6 +50,7 @@ public class DetailMealFragment extends Fragment {
     private final String GCALENDAR = "GCALENDAR";
     private final String ID = "ID";
     private final String USER = "USER";
+    private final String TAG = "DETAIL_FRGMT";
     @BindView(R.id.detailDate)
     TextView detailDate;
     @BindView(R.id.detailTIme)
@@ -94,7 +95,7 @@ public class DetailMealFragment extends Fragment {
             try {
                 custJson = new JSONObject(bundle.getString(CUST_FIELDS));
             } catch (JSONException e) {
-                Log.e("DETAIL_FRGMT", "Could not parse malformed JSON: \"" + bundle.getString(CUST_FIELDS) + "\"");
+                Log.e(TAG, getString(R.string.json_parse) + bundle.getString(CUST_FIELDS) + "\"");
 
             }
 
